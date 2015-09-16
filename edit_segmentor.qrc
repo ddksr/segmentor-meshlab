@@ -1,0 +1,5 @@
+<RCC>
+	<qresource prefix="/" >
+		<file>images/segmentor.png</file>
+	</qresource>
+</RCC>
