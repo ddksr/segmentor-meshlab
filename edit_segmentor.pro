@@ -2,10 +2,12 @@ include (../../shared.pri)
 
 
 HEADERS       = edit_segmentor_factory.h \
-                edit_segmentor_recover.h
-				 
+                edit_segmentor_recover.h \
+                segRecoverDialog.h
+                 
 SOURCES       = edit_segmentor_factory.cpp \
-                edit_segmentor_recover.cpp
+                edit_segmentor_recover.cpp \
+                segRecoverDialog.cpp                
 
 TARGET        = edit_segmentor
 

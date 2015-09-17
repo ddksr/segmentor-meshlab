@@ -1,31 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SegmentorWidget</class>
- <widget class="QWidget" name="SegmentorWidget">
+ <class>SegmentorRecoverDialog</class>
+ <widget class="QDockWidget" name="SegmentorRecoverDialog">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>670</width>
-    <height>486</height>
+    <width>400</width>
+    <height>300</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Segmentor Recovery</string>
   </property>
-  <widget class="QPushButton" name="btnPlaceSeeds">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>430</y>
-     <width>102</width>
-     <height>29</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Place seeds</string>
-   </property>
-  </widget>
+  <widget class="QWidget" name="dockWidgetContents"/>
  </widget>
  <resources/>
  <connections/>

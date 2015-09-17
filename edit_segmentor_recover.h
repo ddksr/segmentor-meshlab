@@ -2,12 +2,14 @@
 #define EDIT_SEGMENTOR_H
 
 #include <QObject>
-#include <common/interfaces.h>
-#include <meshlab/glarea.h>
 #include <Qt>
 #include <QDialog>
 #include <QDockWidget>
 #include <QUrl>
+#include <common/interfaces.h>
+#include <meshlab/glarea.h>
+
+#include "segRecoverDialog.h"
 
 class EditSegmentorRecoverPlugin : public QObject, public MeshEditInterface
 {
@@ -21,7 +23,8 @@ public:
 	bool StartEdit(MeshDocument &/*m*/, GLArea * /*parent*/);
 	static const QString Info();
 	
-    void EndEdit(MeshModel &/*m*/, GLArea * /*parent*/) {}
+    void EndEdit(MeshModel &/*m*/, GLArea * /*parent*/);
+	
     void Decorate(MeshModel &/*m*/, GLArea * /*parent*/, QPainter *p) {}
     void Decorate (MeshModel &/*m*/, GLArea * ) {}
     void mousePressEvent(QMouseEvent *, MeshModel &, GLArea * ) {}
@@ -36,6 +39,9 @@ public:
 
 	MeshDocument *md; 
 	GLArea *gla;
+	segRecoverDialog *recoverDialog;
+
+	bool editDialogOn;
 
 private:
 	void loadSettings();
