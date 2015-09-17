@@ -3,32 +3,32 @@
 
 EditSegmentorFactory::EditSegmentorFactory()
 {
-	editSegmentorRecover = new QAction(QIcon(":/images/segmentor.png"),"Segmentor", this);
+  editSegmentorRecover = new QAction(QIcon(":/images/segmentor.png"),"Segmentor", this);
 	
-	actionList << editSegmentorRecover;
+  actionList << editSegmentorRecover;
 	
-	foreach(QAction *editAction, actionList)
-		editAction->setCheckable(false); 
+  foreach(QAction *editAction, actionList)
+	editAction->setCheckable(false); 
 }
 
 //gets a list of actions available from this plugin
 QList<QAction *> EditSegmentorFactory::actions() const
 {
-	return actionList;
+  return actionList;
 }
 
 //get the edit tool for the given action
 MeshEditInterface* EditSegmentorFactory::getMeshEditInterface(QAction *action)
 {
-	if(action == editSegmentorRecover)
+  if(action == editSegmentorRecover)
 	{
-		return new EditSegmentorRecoverPlugin();
+	  return new EditSegmentorRecoverPlugin();
 	} else assert(0); //should never be asked for an action that isnt here
 }
 
 QString EditSegmentorFactory::getEditToolDescription(QAction *)
 {
-	return EditSegmentorRecoverPlugin::Info();
+  return EditSegmentorRecoverPlugin::Info();
 }
 
 MESHLAB_PLUGIN_NAME_EXPORTER(EditSegmentorFactory)
