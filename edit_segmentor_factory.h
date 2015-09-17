@@ -12,7 +12,7 @@ class EditSegmentorFactory : public QObject, public MeshEditInterfaceFactory
 
 public:
 	EditSegmentorFactory();
-	virtual ~EditSegmentorFactory() { delete editSegmentor; }
+	virtual ~EditSegmentorFactory() { delete editSegmentorRecover; }
 
 	//gets a list of actions available from this plugin
 	virtual QList<QAction *> actions() const;
@@ -25,7 +25,7 @@ public:
 	
 private:
 	QList <QAction *> actionList;
-	QAction *editSegmentor;
+	QAction *editSegmentorRecover;
 };
 
 #endif

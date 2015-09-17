@@ -9,14 +9,14 @@
 #include <QDockWidget>
 #include <QUrl>
 
-class EditSegmentorPlugin : public QObject, public MeshEditInterface
+class EditSegmentorRecoverPlugin : public QObject, public MeshEditInterface
 {
 	Q_OBJECT
 	Q_INTERFACES(MeshEditInterface)
 		
 public:
-    EditSegmentorPlugin();
-    virtual ~EditSegmentorPlugin() {}
+    EditSegmentorRecoverPlugin();
+    virtual ~EditSegmentorRecoverPlugin() {}
 
 	bool StartEdit(MeshDocument &/*m*/, GLArea * /*parent*/);
 	static const QString Info();

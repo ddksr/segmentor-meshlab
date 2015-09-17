@@ -1,12 +1,12 @@
 #include <Qt>
 #include <QSettings>
 #include <QDir>
-#include "edit_segmentor.h"
+#include "edit_segmentor_recover.h"
 
 using namespace std;
 using namespace vcg;
 
-EditSegmentorPlugin::EditSegmentorPlugin() {
+EditSegmentorRecoverPlugin::EditSegmentorRecoverPlugin() {
 	qFont.setFamily("Helvetica");
 	qFont.setPixelSize(12);
 	
@@ -16,22 +16,23 @@ EditSegmentorPlugin::EditSegmentorPlugin() {
 	loadSettings();
 }
 
-const QString EditSegmentorPlugin::Info() 
+const QString EditSegmentorRecoverPlugin::Info() 
 {
 	return tr("Segmentor for Meshlab.");
 }
 
-bool EditSegmentorPlugin::StartEdit(MeshDocument &_md, GLArea *_gla ) {
+bool EditSegmentorRecoverPlugin::StartEdit(MeshDocument &_md, GLArea *_gla ) {
 	this->md = &_md;
 	gla = _gla;
 	QWidget* parent = gla->window();
+
 	return false;
 }
-void EditSegmentorPlugin::loadSettings() {
+void EditSegmentorRecoverPlugin::loadSettings() {
 	QSettings settings(settingsFile, QSettings::NativeFormat);
 }
 
-void EditSegmentorPlugin::saveSettings() {
+void EditSegmentorRecoverPlugin::saveSettings() {
 	QSettings settings(settingsFile, QSettings::NativeFormat);
 	settings.sync();
 }

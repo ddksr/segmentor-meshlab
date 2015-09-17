@@ -28,3 +28,4 @@
 *.app
 Makefile
 moc_*
+ui_*

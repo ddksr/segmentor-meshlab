@@ -1,11 +1,11 @@
 #include "edit_segmentor_factory.h"
-#include "edit_segmentor.h"
+#include "edit_segmentor_recover.h"
 
 EditSegmentorFactory::EditSegmentorFactory()
 {
-	editSegmentor = new QAction(QIcon(":/images/segmentor.png"),"Segmentor", this);
+	editSegmentorRecover = new QAction(QIcon(":/images/segmentor.png"),"Segmentor", this);
 	
-	actionList << editSegmentor;
+	actionList << editSegmentorRecover;
 	
 	foreach(QAction *editAction, actionList)
 		editAction->setCheckable(false); 
@@ -20,15 +20,15 @@ QList<QAction *> EditSegmentorFactory::actions() const
 //get the edit tool for the given action
 MeshEditInterface* EditSegmentorFactory::getMeshEditInterface(QAction *action)
 {
-	if(action == editSegmentor)
+	if(action == editSegmentorRecover)
 	{
-		return new EditSegmentorPlugin();
+		return new EditSegmentorRecoverPlugin();
 	} else assert(0); //should never be asked for an action that isnt here
 }
 
 QString EditSegmentorFactory::getEditToolDescription(QAction *)
 {
-	return EditSegmentorPlugin::Info();
+	return EditSegmentorRecoverPlugin::Info();
 }
 
 MESHLAB_PLUGIN_NAME_EXPORTER(EditSegmentorFactory)
