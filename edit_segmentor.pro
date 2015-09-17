@@ -15,4 +15,6 @@ RESOURCES     = edit_segmentor.qrc
 
 FORMS         = ui/edit_segmentor_recover.ui
 
+CONFIG+=debug
+
 #QT += network

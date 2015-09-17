@@ -16,6 +16,8 @@ EditSegmentorRecoverPlugin::EditSegmentorRecoverPlugin() {
 	settingsFile = QDir::homePath()+ QDir::separator() + "segmentor.ini";
 	loadSettings();
 
+	recoverDialog = NULL;
+
 	qDebug() << "End Init Edit Segmentor Recover";
 }
 
