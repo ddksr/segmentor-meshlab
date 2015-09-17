@@ -40,12 +40,9 @@ public:
 	MeshDocument *md; 
 	GLArea *gla;
 	segRecoverDialog *recoverDialog;
+	QSettings *recoverySettings;
 
 	bool editDialogOn;
-
-private:
-	void loadSettings();
-	void saveSettings();
 
 	QString settingsFile;
 

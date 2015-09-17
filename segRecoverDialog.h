@@ -2,19 +2,22 @@
 #define SEGRECOVER_DIALOG_H
 
 #include <QDialog>
+#include <QSettings>
 #include <QDockWidget>
 #include <qfiledialog.h>
 
+#include <common/interfaces.h>
+#include <meshlab/glarea.h>
+
+#include "libsegmentor/common.h"
 #include "ui_edit_segmentor_recover.h"
 
 class segRecoverDialog : public QDockWidget
 {
   Q_OBJECT
 
- private:
-  
  public:
-  segRecoverDialog(QWidget *parent);
+  segRecoverDialog(QWidget *, QSettings *);
 
 
  public:
@@ -22,6 +25,14 @@ class segRecoverDialog : public QDockWidget
 
   void closeEvent ( QCloseEvent * event ) ;
 
+ private:
+  QSettings *iniConfig;
+  RecoverySettings *config;
+  
+  void obtainSettings();
+  void storeSettings();
+  void recoverSettings();
+  
  signals:
   void closing();
 

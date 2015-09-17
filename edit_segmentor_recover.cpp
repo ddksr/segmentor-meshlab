@@ -14,7 +14,9 @@ EditSegmentorRecoverPlugin::EditSegmentorRecoverPlugin() {
 	qDebug() << "Init Edit Segmentor Recover";
 
 	settingsFile = QDir::homePath()+ QDir::separator() + "segmentor.ini";
-	loadSettings();
+	
+	QSettings settings(settingsFile, QSettings::NativeFormat);
+	recoverySettings = &settings;
 
 	recoverDialog = NULL;
 
@@ -35,8 +37,8 @@ bool EditSegmentorRecoverPlugin::StartEdit(MeshDocument &_md, GLArea *_gla ) {
   if (recoverDialog != NULL) {
 	delete recoverDialog;
   }
-  
-  recoverDialog = new segRecoverDialog(gla->window());
+
+  recoverDialog = new segRecoverDialog(gla->window(), recoverySettings);
   recoverDialog->show();
   
   editDialogOn = true;
@@ -49,14 +51,4 @@ void EditSegmentorRecoverPlugin::EndEdit(MeshModel &_md, GLArea *_gla) {
   editDialogOn = false;
   recoverDialog->hide();
   delete recoverDialog;
-}
-
-
-void EditSegmentorRecoverPlugin::loadSettings() {
-  QSettings settings(settingsFile, QSettings::NativeFormat);
-}
-
-void EditSegmentorRecoverPlugin::saveSettings() {
-  QSettings settings(settingsFile, QSettings::NativeFormat);
-  settings.sync();
 }

@@ -3,7 +3,8 @@ include (../../shared.pri)
 
 HEADERS       = edit_segmentor_factory.h \
                 edit_segmentor_recover.h \
-                segRecoverDialog.h
+                segRecoverDialog.h \
+                libsegmentor/common.h
                  
 SOURCES       = edit_segmentor_factory.cpp \
                 edit_segmentor_recover.cpp \
