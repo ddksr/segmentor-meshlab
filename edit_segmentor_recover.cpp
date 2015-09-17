@@ -30,7 +30,9 @@ bool EditSegmentorRecoverPlugin::StartEdit(MeshDocument &_md, GLArea *_gla ) {
 
   qDebug() << "SEG: Start Edit";
 
-  delete recoverDialog;
+  if (recoverDialog != NULL) {
+	delete recoverDialog;
+  }
   
   recoverDialog = new segRecoverDialog(gla->window());
   recoverDialog->show();
