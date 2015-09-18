@@ -6,21 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>772</width>
-    <height>628</height>
+    <width>765</width>
+    <height>662</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Segmentor Recovery</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>0</y>
       <width>751</width>
-      <height>598</height>
+      <height>631</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="main" stretch="60,30">
@@ -32,6 +32,164 @@
      </property>
      <item>
       <layout class="QVBoxLayout" name="paramsLayout">
+       <item>
+        <layout class="QGridLayout" name="gridLayout">
+         <item row="4" column="0">
+          <widget class="QCheckBox" name="cbSphere">
+           <property name="text">
+            <string>Sphere</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLineEdit" name="inputSqDist">
+             <property name="toolTip">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputSqErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="0">
+          <widget class="QCheckBox" name="cbCylinder">
+           <property name="text">
+            <string>Cylinder</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0">
+          <widget class="QCheckBox" name="cbPlane">
+           <property name="maximumSize">
+            <size>
+             <width>65</width>
+             <height>24</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Plane</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0">
+          <widget class="QCheckBox" name="cb2os">
+           <property name="text">
+            <string>2nd order surface</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QLineEdit" name="inputPlaneDist"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputPlaneErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="7" column="0">
+          <widget class="QCheckBox" name="cbTorus">
+           <property name="text">
+            <string>Torus</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="0">
+          <widget class="QCheckBox" name="cbCone">
+           <property name="text">
+            <string>Cone</string>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_6">
+           <item>
+            <widget class="QLineEdit" name="inputSphereDist"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputSphereErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="5" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QLineEdit" name="inputCylinderDist"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputCylinderErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="2" column="0">
+          <widget class="QCheckBox" name="cbSq">
+           <property name="text">
+            <string>Superquadric</string>
+           </property>
+          </widget>
+         </item>
+         <item row="7" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_9">
+           <item>
+            <widget class="QLineEdit" name="inputTorusDIst"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputTorusErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="3" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QLineEdit" name="input2osDist"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="input2osErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="6" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_8">
+           <item>
+            <widget class="QLineEdit" name="inputConeDIst"/>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputConeErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_9">
+           <property name="text">
+            <string>Shapes</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <widget class="QLabel" name="label_10">
+             <property name="text">
+              <string>Max. distance</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Max. error</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
        <item>
         <layout class="QFormLayout" name="formParams">
          <property name="fieldGrowthPolicy">
@@ -47,12 +205,18 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="inputK2"/>
+         </item>
          <item row="1" column="0">
           <widget class="QLabel" name="label_2">
            <property name="text">
             <string>Selection konstant k3</string>
            </property>
           </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="inputK3"/>
          </item>
          <item row="2" column="0">
           <widget class="QLabel" name="label_3">
@@ -61,12 +225,18 @@
            </property>
           </widget>
          </item>
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="inputPlanarNormalCompatibility"/>
+         </item>
          <item row="3" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Growing steps</string>
            </property>
           </widget>
+         </item>
+         <item row="3" column="1">
+          <widget class="QLineEdit" name="inputGrowingSteps"/>
          </item>
          <item row="4" column="0">
           <widget class="QLabel" name="label_5">
@@ -75,12 +245,18 @@
            </property>
           </widget>
          </item>
+         <item row="4" column="1">
+          <widget class="QLineEdit" name="inputRegionCompatibility"/>
+         </item>
          <item row="5" column="0">
           <widget class="QLabel" name="label_6">
            <property name="text">
             <string>Max. number of seeds</string>
            </property>
           </widget>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="inputMaxNumOfSeeds"/>
          </item>
          <item row="6" column="0">
           <widget class="QLabel" name="label_7">
@@ -89,33 +265,15 @@
            </property>
           </widget>
          </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="inputVarianceOfNoise"/>
+         </item>
          <item row="7" column="0">
           <widget class="QLabel" name="label_8">
            <property name="text">
             <string>Post processing maximum error</string>
            </property>
           </widget>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="inputK2"/>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="inputK3"/>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="inputPlanarNormalCompatibility"/>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="inputGrowingSteps"/>
-         </item>
-         <item row="4" column="1">
-          <widget class="QLineEdit" name="inputRegionCompatibility"/>
-         </item>
-         <item row="5" column="1">
-          <widget class="QLineEdit" name="inputMaxNumOfSeeds"/>
-         </item>
-         <item row="6" column="1">
-          <widget class="QLineEdit" name="inputVarianceOfNoise"/>
          </item>
          <item row="7" column="1">
           <widget class="QLineEdit" name="inputPostProcessingMaxError"/>

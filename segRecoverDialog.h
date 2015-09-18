@@ -2,7 +2,6 @@
 #define SEGRECOVER_DIALOG_H
 
 #include <QDialog>
-#include <QSettings>
 #include <QDockWidget>
 #include <qfiledialog.h>
 
@@ -17,21 +16,20 @@ class segRecoverDialog : public QDockWidget
   Q_OBJECT
 
  public:
-  segRecoverDialog(QWidget *, QSettings *);
+  segRecoverDialog(QWidget *);
 
 
  public:
   Ui::SegmentorRecoverDialog ui;
+  void obtainSettings();
+  void storeSettings();
+  void recoverSettings();
 
   void closeEvent ( QCloseEvent * event ) ;
 
  private:
   QSettings *iniConfig;
-  RecoverySettings *config;
-  
-  void obtainSettings();
-  void storeSettings();
-  void recoverSettings();
+  RecoverySettings config;
   
  signals:
   void closing();

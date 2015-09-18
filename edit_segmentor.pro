@@ -8,7 +8,7 @@ HEADERS       = edit_segmentor_factory.h \
                  
 SOURCES       = edit_segmentor_factory.cpp \
                 edit_segmentor_recover.cpp \
-                segRecoverDialog.cpp                
+                segRecoverDialog.cpp
 
 TARGET        = edit_segmentor
 

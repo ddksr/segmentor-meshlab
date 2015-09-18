@@ -1,6 +1,5 @@
 #include <Qt>
 #include <QSettings>
-#include <QDir>
 #include "edit_segmentor_recover.h"
 #include "segRecoverDialog.h"
 
@@ -12,11 +11,6 @@ EditSegmentorRecoverPlugin::EditSegmentorRecoverPlugin() {
 	qFont.setPixelSize(12);
 	
 	qDebug() << "Init Edit Segmentor Recover";
-
-	settingsFile = QDir::homePath()+ QDir::separator() + "segmentor.ini";
-	
-	QSettings settings(settingsFile, QSettings::NativeFormat);
-	recoverySettings = &settings;
 
 	recoverDialog = NULL;
 
@@ -38,7 +32,7 @@ bool EditSegmentorRecoverPlugin::StartEdit(MeshDocument &_md, GLArea *_gla ) {
 	delete recoverDialog;
   }
 
-  recoverDialog = new segRecoverDialog(gla->window(), recoverySettings);
+  recoverDialog = new segRecoverDialog(gla->window());
   recoverDialog->show();
   
   editDialogOn = true;
