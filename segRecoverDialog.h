@@ -9,6 +9,7 @@
 #include <meshlab/glarea.h>
 
 #include "libsegmentor/common.h"
+#include "libsegmentor/segmentor.h"
 #include "ui_edit_segmentor_recover.h"
 
 class segRecoverDialog : public QDockWidget
@@ -17,6 +18,7 @@ class segRecoverDialog : public QDockWidget
 
  public:
   segRecoverDialog(QWidget *);
+  ~segRecoverDialog();
 
 
  public:
@@ -28,11 +30,17 @@ class segRecoverDialog : public QDockWidget
   void closeEvent ( QCloseEvent * event ) ;
 
  private:
-  QSettings *iniConfig;
-  RecoverySettings config;
+  Segmentor *seg;
+  QString settingsFile;
+  RecoverySettings *config;
+
+ private slots:
+  void handleStoreSettings();
+  void handleRestoreSettings();
   
  signals:
   void closing();
+  void released();
 
 };
 		

@@ -21,11 +21,11 @@ struct RecoverySettings {
   int growingSteps;
   int selections;
   int seedSize;
-  float regitonCompatibility;
+  float regionCompatibility;
   int maxNumOfSeeds;
   float varianceOfNoise;
   float postProcessingMaxError;
-  bool newDiscrepancy;
+  bool isNewDiscrepancy;
   bool usePostProcessing;
 };
 

@@ -4,6 +4,8 @@
 #include <QObject>
 #include <common/interfaces.h>
 
+#include "libsegmentor/segmentor.h"
+
 class EditSegmentorFactory : public QObject, public MeshEditInterfaceFactory
 {
 	Q_OBJECT
@@ -12,7 +14,10 @@ class EditSegmentorFactory : public QObject, public MeshEditInterfaceFactory
 
 public:
 	EditSegmentorFactory();
-	virtual ~EditSegmentorFactory() { delete editSegmentorRecover; }
+	virtual ~EditSegmentorFactory() {
+	  delete editSegmentorRecover;
+	  delete Segmentor::Instance();
+	}
 
 	//gets a list of actions available from this plugin
 	virtual QList<QAction *> actions() const;

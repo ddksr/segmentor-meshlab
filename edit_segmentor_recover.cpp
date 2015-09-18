@@ -1,5 +1,6 @@
 #include <Qt>
 #include <QSettings>
+
 #include "edit_segmentor_recover.h"
 #include "segRecoverDialog.h"
 
@@ -7,14 +8,14 @@ using namespace std;
 using namespace vcg;
 
 EditSegmentorRecoverPlugin::EditSegmentorRecoverPlugin() {
-	qFont.setFamily("Helvetica");
-	qFont.setPixelSize(12);
+  qFont.setFamily("Helvetica");
+  qFont.setPixelSize(12);
 	
-	qDebug() << "Init Edit Segmentor Recover";
+  qDebug() << "Init Edit Segmentor Recover";
 
-	recoverDialog = NULL;
+  recoverDialog = NULL;
 
-	qDebug() << "End Init Edit Segmentor Recover";
+  qDebug() << "End Init Edit Segmentor Recover";
 }
 
 const QString EditSegmentorRecoverPlugin::Info() 

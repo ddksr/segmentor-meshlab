@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>765</width>
-    <height>662</height>
+    <width>775</width>
+    <height>738</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>10</x>
       <y>0</y>
       <width>751</width>
-      <height>631</height>
+      <height>701</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="main" stretch="60,30">
@@ -136,7 +136,7 @@
          <item row="7" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_9">
            <item>
-            <widget class="QLineEdit" name="inputTorusDIst"/>
+            <widget class="QLineEdit" name="inputTorusDist"/>
            </item>
            <item>
             <widget class="QLineEdit" name="inputTorusErr"/>
@@ -156,7 +156,7 @@
          <item row="6" column="1">
           <layout class="QHBoxLayout" name="horizontalLayout_8">
            <item>
-            <widget class="QLineEdit" name="inputConeDIst"/>
+            <widget class="QLineEdit" name="inputConeDist"/>
            </item>
            <item>
             <widget class="QLineEdit" name="inputConeErr"/>
@@ -228,67 +228,87 @@
          <item row="2" column="1">
           <widget class="QLineEdit" name="inputPlanarNormalCompatibility"/>
          </item>
-         <item row="3" column="0">
+         <item row="4" column="0">
           <widget class="QLabel" name="label_4">
            <property name="text">
             <string>Growing steps</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="4" column="1">
           <widget class="QLineEdit" name="inputGrowingSteps"/>
          </item>
-         <item row="4" column="0">
+         <item row="7" column="0">
           <widget class="QLabel" name="label_5">
            <property name="text">
             <string>Region Compatibility</string>
            </property>
           </widget>
          </item>
-         <item row="4" column="1">
+         <item row="7" column="1">
           <widget class="QLineEdit" name="inputRegionCompatibility"/>
          </item>
-         <item row="5" column="0">
+         <item row="8" column="0">
           <widget class="QLabel" name="label_6">
            <property name="text">
             <string>Max. number of seeds</string>
            </property>
           </widget>
          </item>
-         <item row="5" column="1">
+         <item row="8" column="1">
           <widget class="QLineEdit" name="inputMaxNumOfSeeds"/>
          </item>
-         <item row="6" column="0">
+         <item row="9" column="0">
           <widget class="QLabel" name="label_7">
            <property name="text">
             <string>Variance of noise</string>
            </property>
           </widget>
          </item>
-         <item row="6" column="1">
+         <item row="9" column="1">
           <widget class="QLineEdit" name="inputVarianceOfNoise"/>
          </item>
-         <item row="7" column="0">
+         <item row="10" column="0">
           <widget class="QLabel" name="label_8">
            <property name="text">
             <string>Post processing maximum error</string>
            </property>
           </widget>
          </item>
-         <item row="7" column="1">
+         <item row="10" column="1">
           <widget class="QLineEdit" name="inputPostProcessingMaxError"/>
+         </item>
+         <item row="6" column="0">
+          <widget class="QLabel" name="label_12">
+           <property name="text">
+            <string>Seed size</string>
+           </property>
+          </widget>
+         </item>
+         <item row="6" column="1">
+          <widget class="QLineEdit" name="inputSeedSize"/>
+         </item>
+         <item row="5" column="1">
+          <widget class="QLineEdit" name="inputSelections"/>
+         </item>
+         <item row="5" column="0">
+          <widget class="QLabel" name="label_13">
+           <property name="text">
+            <string>Selections</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QCheckBox" name="cbNewDiscrepancy">
          <property name="text">
           <string>New discrepancy</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="cbPostProcessing">
          <property name="text">
           <string>Post-processing</string>
          </property>
@@ -300,6 +320,12 @@
           <widget class="QPushButton" name="btnRestoreSettings">
            <property name="text">
             <string>Restore settings</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
+           </property>
+           <property name="flat">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
