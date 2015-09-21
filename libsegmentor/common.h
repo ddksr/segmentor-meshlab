@@ -1,5 +1,5 @@
-#ifndef LIBSEGMENTOR_COMMON_H
-#define LIBSEGMENTOR_COMMON_H
+#ifndef LIBSEGMENTOR_COMMON
+#define LIBSEGMENTOR_COMMON
 
 struct ShapeSettings {
   bool on;

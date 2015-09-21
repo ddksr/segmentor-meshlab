@@ -8,6 +8,7 @@
 #include <common/interfaces.h>
 #include <meshlab/glarea.h>
 
+#include "segMesh.h"
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
 #include "ui_edit_segmentor_recover.h"
@@ -17,7 +18,7 @@ class segRecoverDialog : public QDockWidget
   Q_OBJECT
 
  public:
-  segRecoverDialog(QWidget *);
+  segRecoverDialog(QWidget *, MeshModel*, GLArea*);
   ~segRecoverDialog();
 
 

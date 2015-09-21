@@ -23,8 +23,8 @@ const QString EditSegmentorRecoverPlugin::Info()
   return tr("Segmentor for Meshlab.");
 }
 
-bool EditSegmentorRecoverPlugin::StartEdit(MeshDocument &_md, GLArea *_gla ) {
-  this->md = &_md;
+bool EditSegmentorRecoverPlugin::StartEdit(MeshModel &_m, GLArea *_gla ) {
+  this->model = &_m;
   gla = _gla;
 
   qDebug() << "SEG: Start Edit";
@@ -33,12 +33,12 @@ bool EditSegmentorRecoverPlugin::StartEdit(MeshDocument &_md, GLArea *_gla ) {
 	delete recoverDialog;
   }
 
-  recoverDialog = new segRecoverDialog(gla->window());
+  recoverDialog = new segRecoverDialog(gla->window(), model, gla);
   recoverDialog->show();
   
   editDialogOn = true;
   
-  return false;
+  return true;
 }
 
 void EditSegmentorRecoverPlugin::EndEdit(MeshModel &_md, GLArea *_gla) {

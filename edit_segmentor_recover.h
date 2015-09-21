@@ -21,7 +21,7 @@ public:
     EditSegmentorRecoverPlugin();
     virtual ~EditSegmentorRecoverPlugin() {}
 
-	bool StartEdit(MeshDocument &/*m*/, GLArea * /*parent*/);
+	bool StartEdit(MeshModel &/*m*/, GLArea * /*parent*/);
 	static const QString Info();
 	
     void EndEdit(MeshModel &/*m*/, GLArea * /*parent*/);
@@ -38,7 +38,7 @@ public:
 	
 	QFont qFont;
 
-	MeshDocument *md; 
+	MeshModel *model; 
 	GLArea *gla;
 	segRecoverDialog *recoverDialog;
 	QSettings *recoverySettings;

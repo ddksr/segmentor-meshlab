@@ -1,6 +1,3 @@
-#include "segRecoverDialog.h"
-#include "edit_segmentor_recover.h"
-
 #include <Qt>
 #include <QMessageBox>
 #include <QSettings>
@@ -9,6 +6,9 @@
 
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
+#include "segRecoverDialog.h"
+#include "edit_segmentor_recover.h"
+#include "segMesh.h"
 
 using namespace std;
 
@@ -21,7 +21,7 @@ segRecoverDialog::~segRecoverDialog() {
   delete config;
 }
 
-segRecoverDialog::segRecoverDialog(QWidget *parent) : QDockWidget(parent)
+segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : QDockWidget(parent)
 {
   
   segRecoverDialog::ui.setupUi(this);
@@ -59,9 +59,10 @@ segRecoverDialog::segRecoverDialog(QWidget *parent) : QDockWidget(parent)
   };
 
   segRecoverDialog::recoverSettings();
-  
+
+  segMesh *mesh = new segMesh(m);
   seg = Segmentor::Instance();
-  seg->setUp(config);
+  seg->setUp(config, mesh);
 }
 
 void segRecoverDialog::obtainSettings() {

@@ -4,13 +4,15 @@ include (../../shared.pri)
 HEADERS       = edit_segmentor_factory.h \
                 edit_segmentor_recover.h \
                 segRecoverDialog.h \
-                libsegmentor/common.h \
-                libsegmentor/segmentor.h
+                segMesh.h \
+                libsegmentor/*.h
                  
 SOURCES       = edit_segmentor_factory.cpp \
                 edit_segmentor_recover.cpp \
                 segRecoverDialog.cpp \
-                libsegmentor/segmentor.cpp
+                segMesh.cpp \
+                libsegmentor/*.cpp \
+                libsegmentor/*.c
 
 TARGET        = edit_segmentor
 
