@@ -29,9 +29,6 @@ mmhead *doub_mh = &default_mmh;
 ndm_errfu ndm_exit = exit;
 
 
-
-
-
 #ifndef ANSI
 double **dtensor( r, ml, mh, nl, nh)
 /**********************************/

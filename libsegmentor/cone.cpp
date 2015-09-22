@@ -1174,39 +1174,6 @@ void cone::set_parameters(double *value)
   zmax = value[10];
   }
 
-void cone::rif_write(FILE *f)
-{ vector3D axis,n,n2,n2crossa,add,b;
-  double d = a[1] + 1 / a[6],cospsi,sinpsi,rad1,rad2; 
-
-  axis.el(0) = cos(a[4])*sin(a[5]);
-  axis.el(1) = sin(a[4])*sin(a[5]);
-  axis.el(2) = cos(a[5]);
-    
-  // cout << "\nDraw axis: " << axis;
-
-  n.el(0) = cos(a[2])*sin(a[3]);
-  n.el(1) = sin(a[2])*sin(a[3]);
-  n.el(2) = cos(a[3]);
-  n2 = n;
-  n.multiply_col(0,d);
-
-  n2crossa = n2.outer(axis);
-  
-  cospsi = n2crossa.norm();
-
-  add.el(0) = n.el(0) + a[11];
-  add.el(1) = n.el(1) + a[12];
-  add.el(2) = n.el(2) + a[13];
-
-  b = add + axis;
-
-  sinpsi = n2.inner(axis);
-
-  rad1 = (1/a[6])/cospsi;
-  rad2 = fabs(rad1 + sinpsi / cospsi);
-
-  fprintf(f,"G 5 {%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf};\n",add.el(0),add.el(1),add.el(2),fabs(rad1),b.el(0),b.el(1),b.el(2),rad2);
-  }
 
 struct point cone::project(struct point &p)
 { vector3D axis,n,v,r,x;

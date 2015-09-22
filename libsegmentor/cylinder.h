@@ -62,7 +62,6 @@ public:
   MODELTYPE what_model() { return(CCYLINDER);}
   void parameters(char **name, double *value);
   void set_parameters(double *value);
-  void rif_write(FILE *f);
   struct point project(struct point& p);
   virtual void rotate(symatrix& A);
   virtual void translate(vector3D& v);

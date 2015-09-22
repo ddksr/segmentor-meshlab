@@ -42,7 +42,6 @@ public:
   void get_normal_vector(double &x, double &y, double &z);
   double model_distance();
   MODELTYPE what_model() { return(CPLANE); }
-  void rif_write(FILE *f);
   void parameters(char **name, double *value);
   void set_parameters(double *value);
   struct point project(struct point &p);

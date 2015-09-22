@@ -649,38 +649,6 @@ void cylinder::set_parameters(double *value)
   zmax = value[9];
   }
 
-void cylinder::rif_write(FILE *f)
-{ vector3D axis,n,ntheta,nphi0,add;
-  double d = a[1] + 1 / a[5]; 
-
-  axis.el(0) = cos(a[2])*cos(a[3])*cos(a[4]) - sin(a[2])*sin(a[4]);
-  axis.el(1) = sin(a[2])*cos(a[3])*cos(a[4]) + cos(a[2])*sin(a[4]);
-  axis.el(2) = -sin(a[3])*cos(a[4]);
-    
-  // cout << "\nDraw axis: " << axis;
-
-  n.el(0) = cos(a[2])*sin(a[3]);
-  n.el(1) = sin(a[2])*sin(a[3]);
-  n.el(2) = cos(a[3]);
-  n.multiply_col(0,d);
-
-  ntheta.el(0) = cos(a[2])*cos(a[3]);
-  ntheta.el(1) = sin(a[2])*cos(a[3]);
-  ntheta.el(2) = -sin(a[3]);
-
-  ntheta.multiply_col(0,cos(a[4]));
-
-  nphi0.el(0) = -sin(a[2]);
-  nphi0.el(1) = cos(a[2]);
-  nphi0.el(2) = 0.0;
-
-  nphi0.multiply_col(0,sin(a[4]));
-  
-  add = ntheta + nphi0;
-
- fprintf(f,"G 2 {%lf,%lf,%lf,%lf,%lf,%lf,%lf};\n",n.el(0)+a[11],n.el(1)+a[12],n.el(2)+a[13],add.el(0),add.el(1),add.el(2),1/fabs(a[5]));
- }
-
 struct point cylinder::project(struct point &p)
 { vector3D axis,n,v,x,t,mr;
   struct point p1;

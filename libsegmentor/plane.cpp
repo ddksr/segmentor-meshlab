@@ -186,10 +186,6 @@ void plane::get_normal_vector(double &x, double &y, double &z)
   z = c;
   }
   
-void plane::rif_write(FILE *f)
-{ fprintf(f,"G 1 {%7.5lf,%7.5lf,%7.5lf,%8.4lf};",a,b,c,d);
-  }
-
 void plane::parameters(char **name, double *value)
 { sprintf(name[0],"a"); value[0] = a;
   sprintf(name[1],"b"); value[1] = b;

@@ -1,4 +1,4 @@
- #include <math.h>
+#include <math.h>
 #include <sys/types.h>
 #include <time.h>
 #include <stdlib.h>
@@ -7,8 +7,6 @@
 #define TINY 1.0e-20;
 
 #define RIDICULOUS_NUMBER -1000000000
-
-
 
 #define SQR( x ) ((x)*(x))
 

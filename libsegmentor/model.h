@@ -44,9 +44,6 @@ public:
   virtual void get_normal_vector(double &x, double &y, double &z) = 0;
   virtual double model_distance() { return(0.0); }
   virtual MODELTYPE what_model() = 0;
-  virtual void rif_write (FILE *f) 
-  { if (f) f = f;   // to avoid stupid compiler warnings.
-    }
   virtual void parameters(char **name, double *value) = 0;
   virtual void set_parameters(double *value) = 0;
   void describe_model(char *s);

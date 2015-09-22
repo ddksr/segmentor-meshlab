@@ -73,7 +73,6 @@ public:
   void draw();
   void print();   
   void save(FILE *f); 
-  void rif_write(FILE *f);
   void clear() { can_grow_var = 1; }
   virtual ~description();
   double& cameraX();

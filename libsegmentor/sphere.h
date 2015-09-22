@@ -41,7 +41,6 @@ public:
   int no_param() { return(4); }
   void get_normal_vector(double &x, double &y, double &z);
   MODELTYPE what_model() { return(CSPHERE); }
-  void rif_write(FILE *f);
   void parameters(char **name, double *value);
   void set_parameters(double *value);
   struct point project(struct point &p);
