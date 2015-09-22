@@ -18,7 +18,7 @@ class model
 {
 
 public:  
-  
+
   static int image_height, image_width;             // for model drawing
   static double minx,miny,dx,dy;       // for model drawing
   static image *theImage;              // for model drawing
@@ -34,8 +34,7 @@ public:
   virtual double distance(struct point& p) { return(fabs(signed_distance(p))); } // distance function
   virtual double abs_signed_distance(struct point &p) = 0;
   virtual double signed_distance(struct point &p);
-  virtual void draw() = 0;
-  virtual void drawGL() = 0;
+
   virtual void print() = 0;
   virtual void fprint(FILE *f) = 0;
   virtual void save(FILE *f) = 0;                 // save model parameters to file

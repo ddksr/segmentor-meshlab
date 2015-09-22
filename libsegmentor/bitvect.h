@@ -1,7 +1,7 @@
 // bitvect.H
 
-#ifndef BITVECT
-#define BITVECT 1
+#ifndef LIBSEGMENTOR_BITVECT
+#define LIBSEGMENTOR_BITVECT 1
 
 #include <iostream>
 #include <stdio.h>
