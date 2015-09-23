@@ -9,6 +9,7 @@
 #include "segRecoverDialog.h"
 #include "edit_segmentor_recover.h"
 #include "segMesh.h"
+#include "segDrawer.h"
 
 using namespace std;
 
@@ -61,8 +62,9 @@ segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : 
   segRecoverDialog::recoverSettings();
 
   segMesh *mesh = new segMesh(m);
+  MeshlabDrawer* d = new MeshlabDrawer((image*) mesh);
   seg = Segmentor::Instance();
-  seg->setUp(config, mesh);
+  seg->setUp(config, mesh, (Drawer*)d);
 }
 
 void segRecoverDialog::obtainSettings() {

@@ -1,6 +1,11 @@
 #ifndef LIBSEGMENTOR_COMMON
 #define LIBSEGMENTOR_COMMON
 
+#define PI 3.1415926535
+
+
+#include "model.h"
+
 struct ShapeSettings {
   bool on;
   float dist;
@@ -27,6 +32,13 @@ struct RecoverySettings {
   float postProcessingMaxError;
   bool isNewDiscrepancy;
   bool usePostProcessing;
+};
+
+class Drawer {
+ public:
+  virtual void prepare(model*) {}
+  virtual void draw() {}
+  virtual void clear() {}
 };
 
 #endif

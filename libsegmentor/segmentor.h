@@ -1,8 +1,6 @@
 #ifndef SEGMENTOR
 #define SEGMENTOR
 
-#define PI 3.1415926535
-
 #include "common.h"
 #include "image.h"
 
@@ -15,7 +13,8 @@ class Segmentor {
 
   static Segmentor* Instance();
 
-  void setUp(RecoverySettings*, image*);
+  void setUp(RecoverySettings*, image*, Drawer*);
+  Drawer* getDrawer();
 
  private:
   Segmentor();
@@ -25,6 +24,7 @@ class Segmentor {
   image *im;
   
   RecoverySettings* conf;
+  Drawer* drawer;
   static Segmentor *_inst;
   
 };

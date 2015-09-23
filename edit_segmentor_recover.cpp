@@ -3,6 +3,7 @@
 
 #include "edit_segmentor_recover.h"
 #include "segRecoverDialog.h"
+#include "segDrawer.h"
 
 using namespace std;
 using namespace vcg;
@@ -30,7 +31,7 @@ bool EditSegmentorRecoverPlugin::StartEdit(MeshModel &_m, GLArea *_gla ) {
   qDebug() << "SEG: Start Edit";
 
   if (recoverDialog != NULL) {
-	delete recoverDialog;
+	//delete recoverDialog;
   }
 
   recoverDialog = new segRecoverDialog(gla->window(), model, gla);
@@ -41,9 +42,17 @@ bool EditSegmentorRecoverPlugin::StartEdit(MeshModel &_m, GLArea *_gla ) {
   return true;
 }
 
-void EditSegmentorRecoverPlugin::EndEdit(MeshModel &_md, GLArea *_gla) {
+void EditSegmentorRecoverPlugin::EndEdit(MeshModel &_m, GLArea *_gla) {
   qDebug() << "SEG: End Edit";
   editDialogOn = false;
   recoverDialog->hide();
   delete recoverDialog;
+}
+
+void EditSegmentorRecoverPlugin::Decorate(MeshModel &_m, GLArea * _gla) {
+  qDebug() << "Decorate called";
+  MeshlabDrawer* d = (MeshlabDrawer*)Segmentor::Instance()->getDrawer();
+  if (d != NULL) {
+	d->draw();
+  }
 }

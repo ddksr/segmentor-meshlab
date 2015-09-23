@@ -21,13 +21,13 @@ public:
     EditSegmentorRecoverPlugin();
     virtual ~EditSegmentorRecoverPlugin() {}
 
-	bool StartEdit(MeshModel &/*m*/, GLArea * /*parent*/);
 	static const QString Info();
 	
+	bool StartEdit(MeshModel &/*m*/, GLArea * /*parent*/);
     void EndEdit(MeshModel &/*m*/, GLArea * /*parent*/);
+	void Decorate(MeshModel &, GLArea*);
 	
-    void Decorate(MeshModel &/*m*/, GLArea * /*parent*/, QPainter *p) {}
-    void Decorate (MeshModel &/*m*/, GLArea * ) {}
+	//void Decorate(MeshModel &/*m*/, GLArea * /*parent*/, QPainter *p) {}
     void mousePressEvent(QMouseEvent *, MeshModel &, GLArea * ) {}
     void mouseMoveEvent(QMouseEvent *, MeshModel &, GLArea * ) {}
     void mouseReleaseEvent(QMouseEvent *event, MeshModel &/*m*/, GLArea * ) {}

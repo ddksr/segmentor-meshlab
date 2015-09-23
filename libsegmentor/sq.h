@@ -10,16 +10,16 @@
 #include <stdio.h>
 
 class sq : public model
-{ double a1,a2,a3,e1,e2,px,py,pz,phi,theta,psi;    // SQ parameters
+{ 
+  
+  double f(double x, double y, double z) const;
+  void sq_draw(int no_hidding = 0);
+
+public:
+  double a1,a2,a3,e1,e2,px,py,pz,phi,theta,psi;    // SQ parameters
   hmatrix l_from_g,g_from_l;
   
   
-  double f(double x, double y, double z) const;
-  double map_eta(double);
-  double map_omega(double);
-  void sq_draw(int no_hidding = 0);
-
-public:    
   sq() {}
   sq(region& r);
   sq(FILE *f);
@@ -59,6 +59,10 @@ public:
   void parameters(char **name, double *value);
   void set_parameters(double *value);
 
+  double map_eta(double);
+  double map_omega(double);
+
+  
   };
 
 
