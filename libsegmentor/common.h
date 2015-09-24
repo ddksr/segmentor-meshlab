@@ -36,16 +36,22 @@ struct RecoverySettings {
 
 class Drawer {
  public:
+  virtual void prepare(model*, float, float, float) {}
+  virtual void prepare(region*, float, float, float) {}
   virtual void prepare(model*) {}
+  virtual void prepare(region*) {}
   virtual void draw() {}
   virtual void clear() {}
 };
 
 class ProgressIndicator {
  public:
+  virtual void setProcessName(const char*) {}
   virtual void clear() {}
   virtual void clear(int, int) {}
   virtual void set(int) {}
 };
+
+
 
 #endif

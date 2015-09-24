@@ -12,6 +12,8 @@
 #include "cylinder_d.h"
 #include "surface2_d.h"
 
+#include <QDebug>
+
 Segmentor* Segmentor::_inst = NULL;
 
 Segmentor* Segmentor::Instance() {
@@ -27,6 +29,9 @@ void Segmentor::setUp(RecoverySettings* c, image* img, Drawer* d, ProgressIndica
   conf = c;
   drawer = d;
   progress = pi;
+
+  segmentation::drawer = d;
+  segmentation::progress = pi;
 
   im = img;
   normals = img->calcNormals();
@@ -59,7 +64,10 @@ Segmentor::Segmentor() {
   im = normals = NULL;
   numOfDescriptions = 0;
   
+  descriptions = NULL;
+  modelType = NULL;
   dneigh = NULL;
+  
   A = new symatrix(3);
   A->identity();
 }
@@ -109,13 +117,15 @@ void Segmentor::refreshConfig() {
 }
 
 void Segmentor::placeSeeds() {
+  drawer->clear();
+  
   segmentation ls;
   bool found;
-
+  qDebug() << "Started placing seeds";
   if (conf->seedSize <= 2) return;
   ls.init_list(descriptions[0].segmentationImage, descriptions[0].normals);
   for (int i = 0; i < NUM_OF_MODELS; i++) {
-	if (! models[i]->on) { return; }
+	if (! models[i]->on) { continue; }
 	for (int j = 0; j < numOfDescriptions; j++) {
 	  if (modelType[j] == i) {
 		if (!found) {
@@ -125,15 +135,19 @@ void Segmentor::placeSeeds() {
 		  ls += descriptions[j];
 		}
 	  }
-	  descriptions[numOfDescriptions].init_list(im, normals);
-	  if (found) {
-		descriptions[numOfDescriptions].place_seeds(conf->seedSize, (MODELTYPE)i, &ls);
-	  } else {
-		descriptions[numOfDescriptions].place_seeds(conf->seedSize, (MODELTYPE)i);
-	  }
-	  if (descriptions[numOfDescriptions].n > 0) { numOfDescriptions++; }
 	}
+	descriptions[numOfDescriptions].init_list(im, normals);
+	if (found) {
+	  qDebug() << "found one";
+	  descriptions[numOfDescriptions].place_seeds(conf->seedSize, (MODELTYPE)i, &ls);
+	} else {
+	  qDebug() << "no previous desc found";
+	  descriptions[numOfDescriptions].place_seeds(conf->seedSize, (MODELTYPE)i);
+	}
+	if (descriptions[numOfDescriptions].n > 0) { numOfDescriptions++; }
+	
   }
+  qDebug() << "Finished placing seeds:" << numOfDescriptions;
 }
 
 void Segmentor::grow() {

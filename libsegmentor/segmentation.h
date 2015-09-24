@@ -8,7 +8,7 @@ enum { RSNORMAL, RSGEOMVIEW, RSSTAGES};
 #include "description.h"
 #include "matrix.h"
 #include "image.h"
-
+#include "common.h"
 
 #include "gsbqp.h"
 #include <stdio.h>
@@ -21,6 +21,10 @@ class segmentation
 public:  
   static description **d;
   static double pp_max_err,pp_max_dist;
+
+  static ProgressIndicator *progress;
+  static Drawer *drawer;
+  
   int size,n,showtype;
   int *handle;
   image *segmentationImage;

@@ -28,9 +28,10 @@ public:
 	void Decorate(MeshModel &, GLArea*);
 	
 	//void Decorate(MeshModel &/*m*/, GLArea * /*parent*/, QPainter *p) {}
-    void mousePressEvent(QMouseEvent *, MeshModel &, GLArea * ) {}
-    void mouseMoveEvent(QMouseEvent *, MeshModel &, GLArea * ) {}
-    void mouseReleaseEvent(QMouseEvent *event, MeshModel &/*m*/, GLArea * ) {}
+    void mousePressEvent(QMouseEvent *, MeshModel &, GLArea *);
+    void mouseMoveEvent(QMouseEvent *, MeshModel &, GLArea *);
+    void mouseReleaseEvent(QMouseEvent *, MeshModel &, GLArea *);
+
 	void drawFace(CMeshO::FacePointer fp,MeshModel &m, GLArea *gla, QPainter *p) {}
 
 	// IMPORTANT: because if true, dialog will fail

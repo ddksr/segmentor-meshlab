@@ -1,5 +1,3 @@
-// list.C
-
 #include "segmentation.h"
 #include "planar_d.h"
 #include "sq_d.h"
@@ -12,6 +10,12 @@
 #include "transformation.h"
 
 #include <iostream>
+
+// TMP TMP TMP
+#include <QDebug>
+
+Drawer* segmentation::drawer = NULL;
+ProgressIndicator* segmentation::progress = NULL;
 
 std::ostream& operator<<(std::ostream&s, struct point& p)
 { int i;
@@ -119,34 +123,30 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type)
   
   for (j = r.miny; j <= r.maxy; j++)
     for (i = r.minx; i <= r.maxx; i++)
-      if (r.included(i,j))
-      { rn = new region(segmentationImage);
+      if (r.included(i,j)) {
+		rn = new region(segmentationImage);
         rn -> set_point(i,j);
         nb = rn -> neighbourhood() & r;
-        while (rn->point_count() < seed_size && nb.point_count()>0)
-        { *rn |= nb;
+        while (rn->point_count() < seed_size && nb.point_count()>0) {
+		  *rn |= nb;
           nb = rn->neighbourhood() & r;
-          } 
-        if (rn->point_count() >= seed_size && dn < dsize && n < size) 
-        { d[dn] = create(*rn, type);
+		} 
+        if (rn->point_count() >= seed_size && dn < dsize && n < size) {
+		  d[dn] = create(*rn, type);
           d[dn] -> normals = normals;
-          if (d[dn]->error() < d[dn]->max_error())
-          { //d[dn] -> draw();
+          if (d[dn]->error() < d[dn]->max_error()) {
             d[dn] -> print();
+			segmentation::drawer->prepare(d[dn]->mmodel);
+			segmentation::drawer->prepare(rn);
             handle[n++] = dn++;
-            } else
-	  { //std::cout << "\nDescription creation failed - too big error " << d[dn]->error() << " ";
-	    // std::cout << "\n";
-            // d[dn]->mmodel->print();
+		  } else { //failed
             delete d[dn];
-            }
-          } else
-	{ // std::cout << "\nDescription creation failed - not enough points for seed" << dn << ' ' << n
-	  //   << ' ' << rn->point_count();
-          }
+		  }
+		} else {}
         r &= (~(*rn));  
         delete rn;
-        }
+	  }
+  qDebug() << "Placing seeds done";
   }
 
 void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l)
@@ -178,8 +178,10 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l)
           { d[dn] = create(*rn, type);
             d[dn] -> normals = normals;
             if (d[dn]->error() < d[dn]->max_error())
-            { //d[dn] -> draw();
+            { 
               d[dn] -> print();
+			  segmentation::drawer->prepare(d[dn]->mmodel);
+			  segmentation::drawer->prepare(rn);
               handle[n++] = dn++;
               } else
 	    { //std::cout << "\nDescription creation failed - too big error " << d[dn]->error() << " ";
@@ -230,8 +232,10 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l, i
           { d[dn] = create(*rn, type);
             d[dn] -> normals = normals;
             if (d[dn]->error() < d[dn]->max_error())
-            { //d[dn] -> draw();
+            { 
               d[dn] -> print();
+			  segmentation::drawer->prepare(d[dn]->mmodel);
+			  segmentation::drawer->prepare(rn);
               handle[n++] = dn++;
               hd++;
               } else

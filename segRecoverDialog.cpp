@@ -63,7 +63,7 @@ segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : 
 
   segMesh *mesh = new segMesh(m);
   MeshlabDrawer* d = new MeshlabDrawer((image*) mesh);
-  pb = new ProgressBar(ui.progressBar);
+  pb = new ProgressBar(ui.progressBar, ui.progressLabel);
   seg = Segmentor::Instance();
   seg->setUp(config, mesh, (Drawer*)d, (ProgressIndicator*) pb);
 
@@ -224,27 +224,33 @@ void segRecoverDialog::handleRestoreSettings() {
 
 void segRecoverDialog::placeSeeds() {
   qDebug() << "SLOT: place seeds";
+  obtainSettings();
   seg->placeSeeds();
 }
 
 void segRecoverDialog::grow() {
   qDebug() << "SLOT: grow";
+  obtainSettings();
   seg->grow();
 }
 
 void segRecoverDialog::selection() {
   qDebug() << "SLOT: selection";
+  obtainSettings();
   seg->selection();
 }
 
 void segRecoverDialog::finalSelection() {
   qDebug() << "SLOT: finalSelection";
+  obtainSettings();
   seg->finalSelection();
 }
 
 
-ProgressBar::ProgressBar(QProgressBar *_bar) {
+ProgressBar::ProgressBar(QProgressBar *_bar, QLabel *_label) {
   bar = _bar;
+  label = _label;
+  
   clear(0, 100);
 }
 
@@ -259,4 +265,8 @@ void ProgressBar::clear() {
 void ProgressBar::clear(int min, int max) {
   bar->reset();
   bar->setRange(min, max);
+}
+
+void ProgressBar::setProcessName(const char* name) {
+  label->setText(QString(name));
 }

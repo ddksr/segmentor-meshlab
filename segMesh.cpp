@@ -76,9 +76,7 @@ segMesh::segMesh(MeshModel *model) : image() {
 
 	i++;
   }
-
-  //calc_normals();
-
+  qDebug("Triangles: %d", i);  
 }
 
 segMesh::segMesh(int w1, int h1) : image()

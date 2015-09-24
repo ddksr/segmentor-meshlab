@@ -16,8 +16,10 @@
 
 class ProgressBar : public ProgressIndicator {
   QProgressBar *bar;
+  QLabel *label;
  public:
-  ProgressBar(QProgressBar*);
+  ProgressBar(QProgressBar*, QLabel*);
+  void setProcessName(const char*);
   void set(int);
   void clear();
   void clear(int, int);

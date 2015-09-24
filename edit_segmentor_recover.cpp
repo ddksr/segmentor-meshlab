@@ -56,3 +56,20 @@ void EditSegmentorRecoverPlugin::Decorate(MeshModel &_m, GLArea * _gla) {
 	d->draw();
   }
 }
+
+void EditSegmentorRecoverPlugin::mousePressEvent(QMouseEvent *event, MeshModel &mm, GLArea *gla) {
+  gla->suspendedEditor = true;
+  QCoreApplication::sendEvent(gla, event);
+  gla->suspendedEditor = false;
+}
+
+void EditSegmentorRecoverPlugin::mouseMoveEvent(QMouseEvent *event, MeshModel &mm, GLArea *gla) {
+  gla->suspendedEditor = true;
+  QCoreApplication::sendEvent(gla, event);
+  gla->suspendedEditor = false;
+}
+void EditSegmentorRecoverPlugin::mouseReleaseEvent(QMouseEvent *event, MeshModel &mm, GLArea *gla) {
+  gla->suspendedEditor = true;  
+  QCoreApplication::sendEvent(gla, event);
+  gla->suspendedEditor = false;
+}
