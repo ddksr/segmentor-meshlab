@@ -1,32 +1,51 @@
 #ifndef SEGMENTOR
 #define SEGMENTOR
 
+#define MAX_DESCRIPTION_LISTS 100
+#define NUM_OF_MODELS 7
+
 #include "common.h"
 #include "image.h"
+#include "segmentation.h"
+
 
 class Segmentor {
  public:
   ~Segmentor();
-  
-  int numOfDescriptors;
-  RecoverySettings config;
 
   static Segmentor* Instance();
 
-  void setUp(RecoverySettings*, image*, Drawer*);
+  void setUp(RecoverySettings*, image*, Drawer*, ProgressIndicator*);
+  
   Drawer* getDrawer();
+  void refreshConfig();
+  void placeSeeds();
+  void grow();
+  void selection();
+  void finalSelection();
 
  private:
   Segmentor();
 
-  bool initialized;
+  image *im, *normals;
+  MODELTYPE *modelType;
   
-  image *im;
+  ShapeSettings* models[NUM_OF_MODELS];
+	
+  segmentation* descriptions;
+  int numOfDescriptions;
+  bool initialized;
+
+  int sel, seld; // TODO: what?
+  int *dneigh; // TODO: what?
+  symatrix *A;
   
   RecoverySettings* conf;
   Drawer* drawer;
+  ProgressIndicator* progress;
   static Segmentor *_inst;
-  
+
+  void clear();
 };
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <QDialog>
 #include <QDockWidget>
+#include <QProgressBar>
 #include <qfiledialog.h>
 
 #include <common/interfaces.h>
@@ -12,6 +13,15 @@
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
 #include "ui_edit_segmentor_recover.h"
+
+class ProgressBar : public ProgressIndicator {
+  QProgressBar *bar;
+ public:
+  ProgressBar(QProgressBar*);
+  void set(int);
+  void clear();
+  void clear(int, int);
+};
 
 class segRecoverDialog : public QDockWidget
 {
@@ -31,6 +41,7 @@ class segRecoverDialog : public QDockWidget
   void closeEvent ( QCloseEvent * event ) ;
 
  private:
+  ProgressBar *pb;
   Segmentor *seg;
   QString settingsFile;
   RecoverySettings *config;
@@ -38,12 +49,16 @@ class segRecoverDialog : public QDockWidget
  private slots:
   void handleStoreSettings();
   void handleRestoreSettings();
+
+  void placeSeeds();
+  void grow();
+  void selection();
+  void finalSelection();
   
  signals:
   void closing();
   void released();
 
 };
-		
 
 #endif

@@ -41,4 +41,11 @@ class Drawer {
   virtual void clear() {}
 };
 
+class ProgressIndicator {
+ public:
+  virtual void clear() {}
+  virtual void clear(int, int) {}
+  virtual void set(int) {}
+};
+
 #endif

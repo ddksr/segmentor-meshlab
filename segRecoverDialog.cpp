@@ -31,8 +31,8 @@ segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : 
   this->setAllowedAreas(Qt::LeftDockWidgetArea);
   this->setFloating(true);
 
-  connect(ui.btnSaveSettings, SIGNAL(released()), this, SLOT(handleStoreSettings()));
-  connect(ui.btnRestoreSettings, SIGNAL(released()), this, SLOT(handleRestoreSettings()));
+  QObject::connect(ui.btnSaveSettings, SIGNAL(released()), this, SLOT(handleStoreSettings()));
+  QObject::connect(ui.btnRestoreSettings, SIGNAL(released()), this, SLOT(handleRestoreSettings()));
   
 
   settingsFile = QDir::homePath() + QDir::separator() + "segmentor.ini";
@@ -63,8 +63,15 @@ segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : 
 
   segMesh *mesh = new segMesh(m);
   MeshlabDrawer* d = new MeshlabDrawer((image*) mesh);
+  pb = new ProgressBar(ui.progressBar);
   seg = Segmentor::Instance();
-  seg->setUp(config, mesh, (Drawer*)d);
+  seg->setUp(config, mesh, (Drawer*)d, (ProgressIndicator*) pb);
+
+
+  QObject::connect(ui.btnPlaceSeeds, SIGNAL(clicked()), this, SLOT(placeSeeds()));
+  QObject::connect(ui.btnGrow, SIGNAL(clicked()), this, SLOT(grow()));
+  QObject::connect(ui.btnSelection, SIGNAL(clicked()), this, SLOT(selection()));
+  QObject::connect(ui.btnFinalSelection, SIGNAL(clicked()), this, SLOT(finalSelection()));
 }
 
 void segRecoverDialog::obtainSettings() {
@@ -213,4 +220,43 @@ void segRecoverDialog::handleStoreSettings() {
 void segRecoverDialog::handleRestoreSettings() {
   segRecoverDialog::recoverSettings();
   QMessageBox::information(this->parentWidget(), "Segmentor recovery", "Settings restored");
+}
+
+void segRecoverDialog::placeSeeds() {
+  qDebug() << "SLOT: place seeds";
+  seg->placeSeeds();
+}
+
+void segRecoverDialog::grow() {
+  qDebug() << "SLOT: grow";
+  seg->grow();
+}
+
+void segRecoverDialog::selection() {
+  qDebug() << "SLOT: selection";
+  seg->selection();
+}
+
+void segRecoverDialog::finalSelection() {
+  qDebug() << "SLOT: finalSelection";
+  seg->finalSelection();
+}
+
+
+ProgressBar::ProgressBar(QProgressBar *_bar) {
+  bar = _bar;
+  clear(0, 100);
+}
+
+void ProgressBar::set(int x) {
+  bar->setValue(x);
+}
+
+void ProgressBar::clear() {
+  clear(0, 100);
+}
+
+void ProgressBar::clear(int min, int max) {
+  bar->reset();
+  bar->setRange(min, max);
 }
