@@ -50,6 +50,7 @@ class ProgressIndicator {
   virtual void clear() {}
   virtual void clear(int, int) {}
   virtual void set(int) {}
+  virtual void inc() {}
 };
 
 

@@ -117,13 +117,20 @@ void Segmentor::refreshConfig() {
 }
 
 void Segmentor::placeSeeds() {
+  if (!initialized) return;
   drawer->clear();
+  refreshConfig();
   
   segmentation ls;
   bool found;
   qDebug() << "Started placing seeds";
   if (conf->seedSize <= 2) return;
   ls.init_list(descriptions[0].segmentationImage, descriptions[0].normals);
+
+  progress->clear(0, NUM_OF_MODELS);
+  progress->setProcessName("Placing seeds ... ");
+  
+  
   for (int i = 0; i < NUM_OF_MODELS; i++) {
 	if (! models[i]->on) { continue; }
 	for (int j = 0; j < numOfDescriptions; j++) {
@@ -144,18 +151,50 @@ void Segmentor::placeSeeds() {
 	  qDebug() << "no previous desc found";
 	  descriptions[numOfDescriptions].place_seeds(conf->seedSize, (MODELTYPE)i);
 	}
+	qDebug() << "placed" << descriptions[numOfDescriptions].n << "seeds";
 	if (descriptions[numOfDescriptions].n > 0) { numOfDescriptions++; }
-	
+
+	progress->inc();
   }
-  qDebug() << "Finished placing seeds:" << numOfDescriptions;
+  progress->clear();
 }
 
 void Segmentor::grow() {
+  if (!initialized) return;
+  refreshConfig();
+  int i,j,c, n = 0, k;
+
+  progress->clear(0, numOfDescriptions * (conf->growingSteps + 1));
+  progress->setProcessName("Growing ... ");
+  
+  for (i = 0; i < numOfDescriptions; i++) n+= descriptions[i].n;
+  k = 0;
+  for (i = 0; i < conf->growingSteps; i++) {
+	for (j = 0; j < numOfDescriptions; j++) {
+	  descriptions[j].grow(1);
+	}
+	progress->inc();
+  }
+
+  progress->setProcessName("Checking ... ");
+
+  for (j = 0; j < numOfDescriptions; j++) {
+	c = 0;
+	for (i = 0; i < descriptions[j].n; i++) {
+	  if (descriptions[j].d[descriptions[j].handle[i]]->can_grow()) c++; // TODO: check handle
+	}
+	progress->inc();
+  }
+
+  progress->clear();
   
 }
 
 void Segmentor::selection() {
+  if (!initialized) return;
   
 }
 
-void Segmentor::finalSelection() {}
+void Segmentor::finalSelection() {
+  if (!initialized) return;
+}

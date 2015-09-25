@@ -21,6 +21,7 @@ class ProgressBar : public ProgressIndicator {
   ProgressBar(QProgressBar*, QLabel*);
   void setProcessName(const char*);
   void set(int);
+  void inc();
   void clear();
   void clear(int, int);
 };

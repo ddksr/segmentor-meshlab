@@ -260,13 +260,19 @@ void ProgressBar::set(int x) {
 
 void ProgressBar::clear() {
   clear(0, 100);
+  label->setText(QString(""));
 }
 
 void ProgressBar::clear(int min, int max) {
   bar->reset();
   bar->setRange(min, max);
+  label->setText(QString(""));
 }
 
 void ProgressBar::setProcessName(const char* name) {
   label->setText(QString(name));
+}
+
+void ProgressBar::inc() {
+  bar->setValue(bar->value() + 1);
 }

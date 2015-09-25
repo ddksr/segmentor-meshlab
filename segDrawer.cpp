@@ -44,10 +44,10 @@ void MeshlabDrawer::draw() {
 	qDebug() << "Problem :(";
 	return;
   }
+  qDebug() << "Models:" << models.size() << "Regions:" << regions.size();
   for (int i = 0; i < models.size(); ++i) {
 	model* m = models.at(i);
 	Color* c = modelColors.at(i);
-	qDebug() << "Drawing model" << m->what_model();
 	switch(m->what_model()) {
 	case CPLANE:
 	  draw_plane((plane*) m, c);
@@ -73,9 +73,9 @@ void MeshlabDrawer::draw() {
 	}
   }
   for (int i = 0; i < regions.size(); ++i) {
-	qDebug() << "Drawing region";
 	region* r = regions.at(i);
 	Color* c = regionColors.at(i);
+	//draw_region(r, c);
   }
 }
 
@@ -143,35 +143,44 @@ void MeshlabDrawer::draw_region(region* r, Color* c) {
 void MeshlabDrawer::draw_sq(sq* s, Color* c) {
   double eta,omega;
   vector vert(4);
-  
+
   glPushMatrix();
-  glColor3f(c->r, c->g, c->b);
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
+  glEnable(GL_COLOR_MATERIAL);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    
+  
   for (eta = -PI/2; eta <= PI/2; eta+=PI/12)         // constant eta lines
 	{ glBegin(GL_POLYGON);
 	  for (omega = -PI; omega <= PI; omega+=PI/12)
 		{ vert = s->g_from_l*s->r(s->map_eta(eta),s->map_omega(omega));
-		  glVertex4f(vert.el(0),vert.el(1),vert.el(2),img->norm);
+		  //glVertex4f(vert.el(0),vert.el(1),vert.el(2),img->norm);
+		  glColor3f(c->r, c->g, c->b);
+		  glVertex3f(vert.el(0),vert.el(1),vert.el(2));
 		}
 	  glEnd();
     } 
   for (omega = -PI/2; omega <= PI/2; omega+=PI/12)         // constant omega lines
 	{ glBegin(GL_POLYGON);
+	  
 	  for (eta = -PI; eta <= PI; eta+=PI/12)
 		{ vert = s->g_from_l*s->r(s->map_eta(eta),s->map_omega(omega));
-		  glVertex4f(vert.el(0),vert.el(1),vert.el(2),img->norm);
+		  //glVertex4f(vert.el(0),vert.el(1),vert.el(2),img->norm);
+		  glColor3f(c->r, c->g, c->b);
+		  glVertex3f(vert.el(0),vert.el(1),vert.el(2));
 		}
 	  glEnd();
     } 
 
   glFlush();
   glPopMatrix();
+  glPopAttrib();
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
   glMatrixMode(GL_MODELVIEW);
 }
 
-void MeshlabDrawer::draw_plane(plane* m, Color* c) {}
+void MeshlabDrawer::draw_plane(plane* m, Color* c) {
+  
+}
 void MeshlabDrawer::draw_surface2(surface2* m, Color* c) {}
 void MeshlabDrawer::draw_cone(cone* m, Color* c) {}
 void MeshlabDrawer::draw_torus(torus* m, Color* c) {}
