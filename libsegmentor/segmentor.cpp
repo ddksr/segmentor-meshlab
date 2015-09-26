@@ -117,6 +117,10 @@ void Segmentor::refreshConfig() {
   cone_d::m_dist = conf->cone.err;
   torus_d::m_err = conf->torus.dist;
   torus_d::m_dist = conf->torus.err;
+
+  description::k2 = conf->k2;
+  description::k3 = conf->k3;
+  description::stdev = conf->varianceOfNoise;
 }
 
 void Segmentor::placeSeeds() {
@@ -202,8 +206,24 @@ void Segmentor::grow() {
 }
 
 void Segmentor::selection() {
-  if (!initialized) return;
+  int old;
+  if (!initialized || !numOfDescriptions) return;
+  refreshConfig();
+  std::ostringstream stream;
+
+  drawer->clear();
   
+  for (int j = 0; j < numOfDescriptions; j++) {
+	old = descriptions[j].n;
+	descriptions[j].selection();
+	stream << descriptions[j].n << " out of " << old << " descriptions selected.\n";
+
+	for (int i = 0; i < descriptions[j].n; i++) {
+	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mmodel);
+	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mregion);
+	}
+  }
+  message->info(stream.str().c_str());
 }
 
 void Segmentor::finalSelection() {
