@@ -16,6 +16,7 @@
 
 Drawer* segmentation::drawer = NULL;
 ProgressIndicator* segmentation::progress = NULL;
+Messaging* segmentation::message = NULL;
 
 std::ostream& operator<<(std::ostream&s, struct point& p)
 { int i;

@@ -20,6 +20,10 @@ void segRecoverDialog::closeEvent ( QCloseEvent * /*event*/ )
 
 segRecoverDialog::~segRecoverDialog() {
   delete config;
+  delete mesh;
+  delete d;
+  delete pb;
+  delete message;
 }
 
 segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : QDockWidget(parent)
@@ -61,11 +65,13 @@ segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : 
 
   segRecoverDialog::recoverSettings();
 
-  segMesh *mesh = new segMesh(m);
-  MeshlabDrawer* d = new MeshlabDrawer((image*) mesh);
+  mesh = new segMesh(m);
+  d = new MeshlabDrawer((image*) mesh);
   pb = new ProgressBar(ui.progressBar, ui.progressLabel);
   seg = Segmentor::Instance();
-  seg->setUp(config, mesh, (Drawer*)d, (ProgressIndicator*) pb);
+  message = new segMessaging(gl->window()->parentWidget());
+
+  seg->setUp(config, mesh, (Drawer*)d, (ProgressIndicator*) pb, message);
 
 
   QObject::connect(ui.btnPlaceSeeds, SIGNAL(clicked()), this, SLOT(placeSeeds()));

@@ -18,7 +18,9 @@ class segmentation
   static int dn;
   static int usingList;
   double min(double d1, double d2) { return(d1 > d2? d2:d1); }
-public:  
+public:
+  static Messaging* message;
+
   static description **d;
   static double pp_max_err,pp_max_dist;
 

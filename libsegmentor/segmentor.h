@@ -15,7 +15,7 @@ class Segmentor {
 
   static Segmentor* Instance();
 
-  void setUp(RecoverySettings*, image*, Drawer*, ProgressIndicator*);
+  void setUp(RecoverySettings*, image*, Drawer*, ProgressIndicator*, Messaging*);
   
   Drawer* getDrawer();
   void refreshConfig();
@@ -41,6 +41,7 @@ class Segmentor {
   symatrix *A;
   
   RecoverySettings* conf;
+  Messaging* message;
   Drawer* drawer;
   ProgressIndicator* progress;
   static Segmentor *_inst;

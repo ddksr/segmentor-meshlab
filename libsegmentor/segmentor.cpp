@@ -1,4 +1,5 @@
 #include <stddef.h>
+#include <sstream>
 
 #include "common.h"
 #include "segmentor.h"
@@ -23,15 +24,17 @@ Segmentor* Segmentor::Instance() {
   return _inst;
 }
 
-void Segmentor::setUp(RecoverySettings* c, image* img, Drawer* d, ProgressIndicator* pi) {
+void Segmentor::setUp(RecoverySettings* c, image* img, Drawer* d, ProgressIndicator* pi, Messaging* mess) {
   clear();
   initialized = true;
   conf = c;
   drawer = d;
   progress = pi;
+  message = mess;
 
   segmentation::drawer = d;
   segmentation::progress = pi;
+  segmentation::message = mess;
 
   im = img;
   normals = img->calcNormals();
@@ -118,18 +121,20 @@ void Segmentor::refreshConfig() {
 
 void Segmentor::placeSeeds() {
   if (!initialized) return;
+
   drawer->clear();
   refreshConfig();
   
   segmentation ls;
   bool found;
-  qDebug() << "Started placing seeds";
+
   if (conf->seedSize <= 2) return;
   ls.init_list(descriptions[0].segmentationImage, descriptions[0].normals);
 
   progress->clear(0, NUM_OF_MODELS);
   progress->setProcessName("Placing seeds ... ");
-  
+
+  std::ostringstream stream;
   
   for (int i = 0; i < NUM_OF_MODELS; i++) {
 	if (! models[i]->on) { continue; }
@@ -145,43 +150,49 @@ void Segmentor::placeSeeds() {
 	}
 	descriptions[numOfDescriptions].init_list(im, normals);
 	if (found) {
-	  qDebug() << "found one";
 	  descriptions[numOfDescriptions].place_seeds(conf->seedSize, (MODELTYPE)i, &ls);
 	} else {
-	  qDebug() << "no previous desc found";
 	  descriptions[numOfDescriptions].place_seeds(conf->seedSize, (MODELTYPE)i);
 	}
-	qDebug() << "placed" << descriptions[numOfDescriptions].n << "seeds";
+
+	stream << "Placed " << descriptions[numOfDescriptions].n << " seeds";
+	
 	if (descriptions[numOfDescriptions].n > 0) { numOfDescriptions++; }
 
 	progress->inc();
   }
   progress->clear();
+  message->info(stream.str().c_str());
 }
 
 void Segmentor::grow() {
   if (!initialized) return;
   refreshConfig();
-  int i,j,c, n = 0, k;
+  int i,j,c, n = 0;
 
   progress->clear(0, numOfDescriptions * (conf->growingSteps + 1));
   progress->setProcessName("Growing ... ");
+
+  drawer->clear();
   
   for (i = 0; i < numOfDescriptions; i++) n+= descriptions[i].n;
-  k = 0;
+
   for (i = 0; i < conf->growingSteps; i++) {
 	for (j = 0; j < numOfDescriptions; j++) {
 	  descriptions[j].grow(1);
+	  
 	}
 	progress->inc();
   }
 
-  progress->setProcessName("Checking ... ");
+  progress->setProcessName("Checking descriptions... ");
 
   for (j = 0; j < numOfDescriptions; j++) {
 	c = 0;
 	for (i = 0; i < descriptions[j].n; i++) {
 	  if (descriptions[j].d[descriptions[j].handle[i]]->can_grow()) c++; // TODO: check handle
+	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mmodel);
+	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mregion);
 	}
 	progress->inc();
   }

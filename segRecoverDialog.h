@@ -10,6 +10,8 @@
 #include <meshlab/glarea.h>
 
 #include "segMesh.h"
+#include "segMessaging.h"
+#include "segDrawer.h"
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
 #include "ui_edit_segmentor_recover.h"
@@ -44,6 +46,9 @@ class segRecoverDialog : public QDockWidget
   void closeEvent ( QCloseEvent * event ) ;
 
  private:
+  segMessaging* message;
+  segMesh *mesh;
+  MeshlabDrawer *d;
   ProgressBar *pb;
   Segmentor *seg;
   QString settingsFile;

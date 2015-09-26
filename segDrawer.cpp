@@ -37,6 +37,8 @@ void MeshlabDrawer::clear() {
   modelColors.clear();
   regions.clear();
   regionColors.clear();
+
+  qDebug() << "Models:" << models.size() << "Regions:" << regions.size();
 }
 
 void MeshlabDrawer::draw() {

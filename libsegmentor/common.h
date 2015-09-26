@@ -53,6 +53,11 @@ class ProgressIndicator {
   virtual void inc() {}
 };
 
-
+class Messaging {
+ public:
+  virtual void info(const char*) {}
+  virtual void error(const char*) {}
+  virtual void debug(const char*) {}
+};
 
 #endif

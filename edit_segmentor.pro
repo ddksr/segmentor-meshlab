@@ -5,14 +5,16 @@ HEADERS       = edit_segmentor_factory.h \
                 edit_segmentor_recover.h \
                 segRecoverDialog.h \
                 segMesh.h \
-                segDrawer.h \                
+                segDrawer.h \
+                segMessaging.h \                                
                 libsegmentor/*.h
                  
 SOURCES       = edit_segmentor_factory.cpp \
                 edit_segmentor_recover.cpp \
                 segRecoverDialog.cpp \
                 segMesh.cpp \
-                segDrawer.cpp \                
+                segDrawer.cpp \
+                segMessaging.cpp \                                
                 libsegmentor/*.cpp \
                 libsegmentor/*.c
 
