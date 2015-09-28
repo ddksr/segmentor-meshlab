@@ -73,8 +73,8 @@ Segmentor::Segmentor() {
 }
 
 Segmentor::~Segmentor() {
-  clear();
   if (initialized) {
+	clear();
 	delete conf;
   }
 }

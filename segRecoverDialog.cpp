@@ -236,7 +236,7 @@ void segRecoverDialog::placeSeeds() {
 	mesh->setSelectedPoints();
   }
   
-  seg->placeSeeds();
+  //seg->placeSeeds();
 }
 
 void segRecoverDialog::grow() {

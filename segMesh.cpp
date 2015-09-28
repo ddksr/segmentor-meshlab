@@ -197,14 +197,16 @@ void segMesh::setSelectedPoints() {
 
   for (i = 0; i < numOfSelectedPoints; i++) {
 	selectedPoints[i] = -1;
-	for (j = 0; j < number; j++) {
-	  struct point pp;
-	  pp.x = (double)vec->at(i)[0];
-	  pp.y = (double)vec->at(i)[1];
-	  pp.z = (double)vec->at(i)[2];
-	  double dist = distance(pix[j], pp);
+	struct point pp;
+	pp.x = (double)vec->at(i)[0];
+	pp.y = (double)vec->at(i)[1];
+	pp.z = (double)vec->at(i)[2];
 
-	  if (dist < 0.000001) {
+	double minDist = -1;
+	for (j = 0; j < number; j++) {
+	  double dist = distance(pix[j], pp);
+	  if (minDist < 0 || dist < minDist) {
+		minDist = dist;
 		selectedPoints[i] = j;
 	  }
 	}
