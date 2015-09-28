@@ -7,6 +7,7 @@
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
 #include "segRecoverDialog.h"
+#include "segDescriptionsDialog.h"
 #include "edit_segmentor_recover.h"
 #include "segMesh.h"
 #include "segDrawer.h"
@@ -24,9 +25,13 @@ segRecoverDialog::~segRecoverDialog() {
   delete d;
   delete pb;
   delete message;
+
+  if (desc != NULL) {
+	delete desc;
+  }
 }
 
-segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : QDockWidget(parent)
+segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) : QDockWidget(_parent)
 {
   
   segRecoverDialog::ui.setupUi(this);
@@ -73,11 +78,13 @@ segRecoverDialog::segRecoverDialog(QWidget *parent, MeshModel* m, GLArea* gl) : 
 
   seg->setUp(config, mesh, (Drawer*)d, (ProgressIndicator*) pb, message);
 
-
   QObject::connect(ui.btnPlaceSeeds, SIGNAL(clicked()), this, SLOT(placeSeeds()));
   QObject::connect(ui.btnGrow, SIGNAL(clicked()), this, SLOT(grow()));
   QObject::connect(ui.btnSelection, SIGNAL(clicked()), this, SLOT(selection()));
   QObject::connect(ui.btnFinalSelection, SIGNAL(clicked()), this, SLOT(finalSelection()));
+  QObject::connect(ui.btnShowDescriptions, SIGNAL(clicked()), this, SLOT(showDescriptions()));
+
+  desc = NULL;
 }
 
 void segRecoverDialog::obtainSettings() {
@@ -258,6 +265,16 @@ void segRecoverDialog::finalSelection() {
   qDebug() << "SLOT: finalSelection";
   obtainSettings();
   seg->finalSelection();
+}
+
+void segRecoverDialog::showDescriptions() {
+  if (desc == NULL) {
+	desc = new segDescriptionsDialog(this->parentWidget());
+	qDebug() << "descriptions dialog created";
+  } else {
+	qDebug() << "descriptions dialog exists";
+  }
+  desc->show();
 }
 
 

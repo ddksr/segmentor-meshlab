@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SegmentorDescriptionsDialog</class>
+ <widget class="QDockWidget" name="SegmentorDescriptionsDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>985</width>
+    <height>541</height>
+   </rect>
+  </property>
+  <property name="floating">
+   <bool>true</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Segmentor Descriptions</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents">
+   <widget class="QWidget" name="horizontalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>-1</x>
+      <y>-1</y>
+      <width>981</width>
+      <height>491</height>
+     </rect>
+    </property>
+    <layout class="QHBoxLayout" name="horizontalLayout" stretch="5,2">
+     <item>
+      <widget class="QListView" name="listDescriptions"/>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="verticalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushButton">
+         <property name="text">
+          <string>PushButton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

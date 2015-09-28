@@ -12,6 +12,7 @@
 #include "segMesh.h"
 #include "segMessaging.h"
 #include "segDrawer.h"
+#include "segDescriptionsDialog.h"
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
 #include "ui_edit_segmentor_recover.h"
@@ -39,6 +40,7 @@ class segRecoverDialog : public QDockWidget
 
  public:
   Ui::SegmentorRecoverDialog ui;
+  
   void obtainSettings();
   void storeSettings();
   void recoverSettings();
@@ -53,6 +55,8 @@ class segRecoverDialog : public QDockWidget
   Segmentor *seg;
   QString settingsFile;
   RecoverySettings *config;
+  
+  segDescriptionsDialog *desc;
 
  private slots:
   void handleStoreSettings();
@@ -62,6 +66,8 @@ class segRecoverDialog : public QDockWidget
   void grow();
   void selection();
   void finalSelection();
+  
+  void showDescriptions();
   
  signals:
   void closing();

@@ -364,7 +364,7 @@
        <item>
         <widget class="QRadioButton" name="radioRandomSeeds">
          <property name="text">
-          <string>Random</string>
+          <string>Place everywhere</string>
          </property>
          <property name="checked">
           <bool>true</bool>
@@ -374,7 +374,7 @@
        <item>
         <widget class="QRadioButton" name="radioSelectedPtSeeds">
          <property name="text">
-          <string>Selected points</string>
+          <string>Place over picked points</string>
          </property>
         </widget>
        </item>
@@ -418,6 +418,13 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnShowDescriptions">
+         <property name="text">
+          <string>Show descriptions</string>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QLabel" name="progressLabel">
