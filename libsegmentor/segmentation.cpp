@@ -16,7 +16,7 @@
 
 Drawer* segmentation::drawer = NULL;
 ProgressIndicator* segmentation::progress = NULL;
-Messaging* segmentation::message = NULL;
+Messaging* segmentation::message = NULL;  
 
 std::ostream& operator<<(std::ostream&s, struct point& p)
 { int i;
@@ -1403,13 +1403,4 @@ double segmentation::pp_max_err = 0.0;
 double segmentation::pp_max_dist = 0.0;
 int segmentation::dsize = 0;
 int segmentation::dn = 0;
-
-
-
-
-
-
-
-
-
 

@@ -162,7 +162,7 @@ image* segMesh::calcNormals(){
       }  
     }
   return (image*)c_normals;
-}  
+}
 
 
 

@@ -25,7 +25,7 @@ public:
   static double pp_max_err,pp_max_dist;
 
   static ProgressIndicator *progress;
-  static Drawer *drawer;
+  static Drawer *drawer;  
   
   int size,n,showtype;
   int *handle;

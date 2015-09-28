@@ -70,9 +70,6 @@ Segmentor::Segmentor() {
   descriptions = NULL;
   modelType = NULL;
   dneigh = NULL;
-  
-  A = new symatrix(3);
-  A->identity();
 }
 
 Segmentor::~Segmentor() {
@@ -215,6 +212,7 @@ void Segmentor::selection() {
   
   for (int j = 0; j < numOfDescriptions; j++) {
 	old = descriptions[j].n;
+	descriptions[j].set_sel_const(conf->k2, conf->k3);
 	descriptions[j].selection();
 	stream << descriptions[j].n << " out of " << old << " descriptions selected.\n";
 
@@ -227,5 +225,29 @@ void Segmentor::selection() {
 }
 
 void Segmentor::finalSelection() {
-  if (!initialized) return;
+  if (!initialized || !numOfDescriptions) return;
+  segmentation la;
+  int previous, i, j;
+  std::ostringstream stream;
+  
+  refreshConfig();
+  
+  for (i = 0; i < numOfDescriptions; i++) la += descriptions[i];
+  la.set_sel_const(conf->k2, conf->k3);
+  previous = la.n;
+  la.selection();
+  stream << la.n << " out of " << previous << " descriptions selected in final selection. ";
+
+  drawer->clear();
+  for (j = 0; j < numOfDescriptions; j++) {
+	previous = descriptions[j].n;
+	descriptions[j].grow(0); // throw away handles that point to NULL
+
+	for (i = 0; i < descriptions[j].n; i++) {
+	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mmodel);
+	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mregion);
+	}
+  }
+  message->info(stream.str().c_str());
 }
+

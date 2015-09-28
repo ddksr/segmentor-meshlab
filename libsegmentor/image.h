@@ -24,6 +24,10 @@ public:
 
   static double camX,camY,camZ;
   double camOrientationX,camOrientationY,camOrientationZ;
+
+  int* selectedPoints = NULL;
+  int numOfSelectedPoints = 0;
+
   
 protected:  
   double max(double c1, double c2) { return(c1 > c2? c1:c2); }

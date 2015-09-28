@@ -38,7 +38,6 @@ class Segmentor {
 
   int sel, seld; // TODO: what?
   int *dneigh; // TODO: what?
-  symatrix *A;
   
   RecoverySettings* conf;
   Messaging* message;

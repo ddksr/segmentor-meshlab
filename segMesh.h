@@ -4,6 +4,7 @@
 #include <common/interfaces.h>
 
 #include "libsegmentor/image.h"
+#include "libsegmentor/region.h"
 
 class segMesh : public image
 {
@@ -20,6 +21,7 @@ class segMesh : public image
   void mark_boundary();
   
   image* calcNormals();
+
 
   //segMesh& operator=(const segMesh &im);
   
