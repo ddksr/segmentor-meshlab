@@ -391,5 +391,15 @@ region::~region()
 { delete b;
   }  
 
+bool region::is_selected(int i, int j) {
+  return is_selected(i);
+}
 
+bool region::is_selected(int i) {
+  if (theImage->numOfSelectedPoints == 0) return true;
+  for (int k = 0; k < theImage->numOfSelectedPoints; k++) {
+	if (theImage->selectedPoints[k] == i) return true;
+  }
+  return false;
+}
 

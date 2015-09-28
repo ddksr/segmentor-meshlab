@@ -78,6 +78,9 @@ public:
   int connected();                         // returns 1 if region is connected.
   region closest(region &r);          // returns closest subregion of r
   ~region();
+
+  bool is_selected(int i, int j);
+  bool is_selected(int i);
   };
   
   

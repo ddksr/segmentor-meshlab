@@ -123,7 +123,8 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type)
       if (segmentationImage->valid_point(r.get_point(i,j))) r.set_point(i,j);
   
   for (j = r.miny; j <= r.maxy; j++)
-    for (i = r.minx; i <= r.maxx; i++)
+    for (i = r.minx; i <= r.maxx; i++) {
+	  if (!r.is_selected(i, j)) continue;
       if (r.included(i,j)) {
 		rn = new region(segmentationImage);
         rn -> set_point(i,j);
@@ -147,6 +148,7 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type)
         r &= (~(*rn));  
         delete rn;
 	  }
+	}
   qDebug() << "Placing seeds done";
   }
 
@@ -166,7 +168,8 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l)
   r &= ~rest;
 
     for (j = r.miny; j <= r.maxy; j++)
-      for (i = r.minx; i <= r.maxx; i++)
+      for (i = r.minx; i <= r.maxx; i++) {
+		if (!r.is_selected(i, j)) continue;
         if (r.included(i,j))
         { rn = new region(segmentationImage);
           rn -> set_point(i,j);
@@ -197,6 +200,7 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l)
           r &= (~(*rn));  
           delete rn;
           }
+	  }
   }
 
 void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l, int maxseeds)

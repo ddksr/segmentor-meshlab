@@ -234,9 +234,12 @@ void segRecoverDialog::placeSeeds() {
 
   if (ui.radioSelectedPtSeeds->isChecked()) {
 	mesh->setSelectedPoints();
+  } else if (mesh->numOfSelectedPoints > 0) {
+	mesh->numOfSelectedPoints = 0;
+	delete mesh->selectedPoints;
   }
   
-  //seg->placeSeeds();
+  seg->placeSeeds();
 }
 
 void segRecoverDialog::grow() {
