@@ -231,6 +231,11 @@ void segRecoverDialog::handleRestoreSettings() {
 void segRecoverDialog::placeSeeds() {
   qDebug() << "SLOT: place seeds";
   obtainSettings();
+
+  if (ui.radioSelectedPtSeeds->isChecked()) {
+	mesh->setSelectedPoints();
+  }
+  
   seg->placeSeeds();
 }
 

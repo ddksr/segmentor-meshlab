@@ -1,6 +1,9 @@
 #include <Qt>
 
+#include <common/meshmodel.h>
 #include <common/interfaces.h>
+
+#include <meshlabplugins/edit_pickpoints/pickedPoints.h>
 
 #include "libsegmentor/image.h"
 #include "libsegmentor/plane.h"
@@ -76,6 +79,9 @@ segMesh::segMesh(MeshModel *model) : image() {
 
 	i++;
   }
+
+  mesh = model;
+  
   qDebug("Triangles: %d", i);  
 }
 
@@ -164,6 +170,46 @@ image* segMesh::calcNormals(){
   return (image*)c_normals;
 }
 
+void segMesh::setSelectedPoints() {
+  
+  PickedPoints *points = 0;
 
+  std::string key = PickedPoints::Key;
+  
+  if(vcg::tri::HasPerMeshAttribute(mesh->cm, key) ) {
+	CMeshO::PerMeshAttributeHandle<PickedPoints*> ppHandle;
+	ppHandle = vcg::tri::Allocator<CMeshO>::GetPerMeshAttribute<PickedPoints*>(mesh->cm, key);
+	
+	points = ppHandle();
+	if (points == NULL) {
+	  qDebug() << "problem casting to picked points";
+	  return;
+	}
+  } else {
+	// TODO from file
+	return;
+  }
+
+  std::vector<vcg::Point3f> *vec = points->getPoint3fVector();
+  int i, j;
+
+  selectedPoints = new int[numOfSelectedPoints = vec->size()];
+
+  for (i = 0; i < numOfSelectedPoints; i++) {
+	selectedPoints[i] = -1;
+	for (j = 0; j < number; j++) {
+	  struct point pp;
+	  pp.x = (double)vec->at(i)[0];
+	  pp.y = (double)vec->at(i)[1];
+	  pp.z = (double)vec->at(i)[2];
+	  double dist = distance(pix[j], pp);
+
+	  if (dist < 0.000001) {
+		selectedPoints[i] = j;
+	  }
+	}
+	qDebug() << "Selected point" << i << selectedPoints[i];
+  }
+}
 
 //segMesh& segMesh::operator=(const segMesh &im) {}

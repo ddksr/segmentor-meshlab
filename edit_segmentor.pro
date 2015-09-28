@@ -14,7 +14,8 @@ SOURCES       = edit_segmentor_factory.cpp \
                 segRecoverDialog.cpp \
                 segMesh.cpp \
                 segDrawer.cpp \
-                segMessaging.cpp \                                
+                segMessaging.cpp \
+                ../../meshlabplugins/edit_pickpoints/pickedPoints.cpp \
                 libsegmentor/*.cpp \
                 libsegmentor/*.c
 

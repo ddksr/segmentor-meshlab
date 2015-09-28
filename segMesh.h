@@ -2,6 +2,7 @@
 #define SEGMESH_H
 
 #include <common/interfaces.h>
+#include <meshlabplugins/edit_pickpoints/pickedPoints.h>
 
 #include "libsegmentor/image.h"
 #include "libsegmentor/region.h"
@@ -9,6 +10,8 @@
 class segMesh : public image
 {
  public:
+  MeshModel* mesh;
+  
   segMesh(MeshModel*);
   segMesh(int, int);
   ~segMesh();
@@ -22,7 +25,10 @@ class segMesh : public image
   
   image* calcNormals();
 
+  void setSelectedPoints();
 
+  
+  
   //segMesh& operator=(const segMesh &im);
   
 };
