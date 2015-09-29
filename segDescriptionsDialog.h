@@ -20,6 +20,7 @@ class segDescriptionsDialog : public QDockWidget
   //~segDescriptionsDialog();
 
   void closeEvent (QCloseEvent * );
+  void fillList();
 
   Ui::SegmentorDescriptionsDialog ui;
 
@@ -28,7 +29,7 @@ class segDescriptionsDialog : public QDockWidget
   QStringList *stringList;
   QStringListModel *listModel;
 
-  void fillList();
+  
   void setIJ(int, int&, int&);
 
  signals:

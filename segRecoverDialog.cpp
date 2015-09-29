@@ -272,6 +272,7 @@ void segRecoverDialog::showDescriptions() {
 	desc = new segDescriptionsDialog(this->parentWidget());
 	qDebug() << "descriptions dialog created";
   } else {
+	desc->fillList();
 	qDebug() << "descriptions dialog exists";
   }
   desc->show();

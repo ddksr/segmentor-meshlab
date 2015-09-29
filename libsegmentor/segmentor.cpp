@@ -80,10 +80,6 @@ Segmentor::~Segmentor() {
 }
 
 void Segmentor::clear() {
-  if (im != NULL) {
-	delete im;
-    im = NULL;
-  }
   if (normals != NULL) {
 	delete normals;
     normals = NULL;

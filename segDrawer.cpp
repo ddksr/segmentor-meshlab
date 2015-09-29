@@ -1,8 +1,10 @@
 #include "segDrawer.h"
+#include "segMesh.h"
 #include "libsegmentor/common.h"
 #include "libsegmentor/model.h"
 #include "libsegmentor/sq.h"
 
+#include <common/meshmodel.h>
 #include <common/interfaces.h>
 
 #include <GL/glew.h>
@@ -85,6 +87,10 @@ void MeshlabDrawer::draw_region(region* r, Color* c) {
   int i,j,n,n1,k,l,j1,j2,rob;
   struct point p,p1;
   static int cl = 0;
+
+  glPushMatrix();
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
+  glEnable(GL_COLOR_MATERIAL);
   
   cl = (cl + 1) % 12;
  
@@ -103,14 +109,11 @@ void MeshlabDrawer::draw_region(region* r, Color* c) {
 			  
 			glBegin(GL_TRIANGLES);
 			p = r->theImage->pixel(i,j);
-			glVertex4f(p.x,p.y,p.z,r->theImage->norm);
-			//if (r->theImage->nGL) glNormal3f(p.nx,p.ny,p.nz);
+			glVertex3f(p.x,p.y,p.z);
 			p = r->theImage->pixel(j1);
-			glVertex4f(p.x,p.y,p.z,r->theImage->norm);
-			//if (r->theImage->nGL) glNormal3f(p.nx,p.ny,p.nz);
+			glVertex3f(p.x,p.y,p.z);
 			p = r->theImage->pixel(j2);
-			glVertex4f(p.x,p.y,p.z,r->theImage->norm);   
-			//if (r->theImage->nGL) glNormal3f(p.nx,p.ny,p.nz);         
+			glVertex3f(p.x,p.y,p.z);   
 			glEnd();
 		  } else { rob = 1; }
 		  if (rob) {
@@ -129,8 +132,8 @@ void MeshlabDrawer::draw_region(region* r, Color* c) {
 				if (rob) {
 				  glBegin(GL_LINES);
 				  glColor3f(0.0,0.0,0.0);
-				  glVertex4f(p.x,p.y,p.z,r->theImage->norm);
-				  glVertex4f(p1.x,p1.y,p1.z,r->theImage->norm);
+				  glVertex3f(p.x,p.y,p.z);
+				  glVertex3f(p1.x,p1.y,p1.z);
 				  glEnd();
 				}
 			  } 
@@ -140,6 +143,11 @@ void MeshlabDrawer::draw_region(region* r, Color* c) {
 	  }
 	}
   }
+  glFlush();
+  glPopMatrix();
+  glPopAttrib();
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glMatrixMode(GL_MODELVIEW);
 }
 
 void MeshlabDrawer::draw_sq(sq* s, Color* c) {
@@ -155,7 +163,6 @@ void MeshlabDrawer::draw_sq(sq* s, Color* c) {
 	{ glBegin(GL_POLYGON);
 	  for (omega = -PI; omega <= PI; omega+=PI/12)
 		{ vert = s->g_from_l*s->r(s->map_eta(eta),s->map_omega(omega));
-		  //glVertex4f(vert.el(0),vert.el(1),vert.el(2),img->norm);
 		  glColor3f(c->r, c->g, c->b);
 		  glVertex3f(vert.el(0),vert.el(1),vert.el(2));
 		}
@@ -166,7 +173,6 @@ void MeshlabDrawer::draw_sq(sq* s, Color* c) {
 	  
 	  for (eta = -PI; eta <= PI; eta+=PI/12)
 		{ vert = s->g_from_l*s->r(s->map_eta(eta),s->map_omega(omega));
-		  //glVertex4f(vert.el(0),vert.el(1),vert.el(2),img->norm);
 		  glColor3f(c->r, c->g, c->b);
 		  glVertex3f(vert.el(0),vert.el(1),vert.el(2));
 		}
@@ -181,7 +187,40 @@ void MeshlabDrawer::draw_sq(sq* s, Color* c) {
 }
 
 void MeshlabDrawer::draw_plane(plane* m, Color* c) {
-  // TODO
+  return;
+  MeshModel* model = ((segMesh*)m->theImage)->mesh;
+  CMeshO::FaceIterator fi;
+
+  glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
+  
+  for(fi=model->cm.face.begin(); fi!=model->cm.face.end(); ++fi) {
+	vcg::Point3f ma = fi->cV(0)->P(), mb = fi->cV(1)->P(), mc = fi->cV(2)->P();
+	struct point a, b, c;
+	
+	a.x = ma[0];
+	a.y = ma[1];
+	a.z = ma[2];
+
+	b.x = mb[0];
+	b.y = mb[1];
+	b.z = mb[2];
+	
+	c.x = mc[0];
+	c.y = mc[1];
+	c.z = mc[2];
+
+	double dist = abs(m->abs_signed_distance(a));
+	dist += abs(m->abs_signed_distance(b));
+	dist += abs(m->abs_signed_distance(c));
+
+	if (dist < 0.1) {
+	  // (*fi).C()[0] = 255;
+	  // (*fi).C()[0] = 0;
+	  // (*fi).C()[0] = 0;
+	  // (*fi).C()[0] = 255;
+	}
+	
+  }  
 }
 void MeshlabDrawer::draw_surface2(surface2* m, Color* c) {
   // TODO
@@ -445,7 +484,6 @@ void MeshlabDrawer::draw_cylinder(cylinder* m, Color* c) {
   if (rot > 100) rot = 100;
   if (rot < 30) rot = 30;
 
-  glPushMatrix();
   glColor3f(1.0,0.0,0.0);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 

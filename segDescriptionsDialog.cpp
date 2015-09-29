@@ -51,6 +51,7 @@ void segDescriptionsDialog::fillList() {
 	  }
 	  out += ")";
 	  stringList->append(out);
+	  qDebug() << out;
 	}
   }
   
