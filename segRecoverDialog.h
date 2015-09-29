@@ -55,6 +55,7 @@ class segRecoverDialog : public QDockWidget
   Segmentor *seg;
   QString settingsFile;
   RecoverySettings *config;
+  GLArea* gla;
   
   segDescriptionsDialog *desc;
 

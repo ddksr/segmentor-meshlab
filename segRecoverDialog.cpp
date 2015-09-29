@@ -33,7 +33,7 @@ segRecoverDialog::~segRecoverDialog() {
 
 segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) : QDockWidget(_parent)
 {
-  
+  gla = gl;
   segRecoverDialog::ui.setupUi(this);
 
   this->setFeatures(QDockWidget::AllDockWidgetFeatures);
@@ -247,29 +247,33 @@ void segRecoverDialog::placeSeeds() {
   }
   
   seg->placeSeeds();
+  gla->update();
 }
 
 void segRecoverDialog::grow() {
   qDebug() << "SLOT: grow";
   obtainSettings();
   seg->grow();
+  gla->update();
 }
 
 void segRecoverDialog::selection() {
   qDebug() << "SLOT: selection";
   obtainSettings();
   seg->selection();
+  gla->update();
 }
 
 void segRecoverDialog::finalSelection() {
   qDebug() << "SLOT: finalSelection";
   obtainSettings();
   seg->finalSelection();
+  gla->update();
 }
 
 void segRecoverDialog::showDescriptions() {
   if (desc == NULL) {
-	desc = new segDescriptionsDialog(this->parentWidget());
+	desc = new segDescriptionsDialog(this->parentWidget(), gla);
 	qDebug() << "descriptions dialog created";
   } else {
 	desc->fillList();

@@ -13,7 +13,8 @@ void segDescriptionsDialog::closeEvent ( QCloseEvent * /*event*/ )
   emit closing();
 }
 
-segDescriptionsDialog::segDescriptionsDialog(QWidget *parent) : QDockWidget(parent) {
+segDescriptionsDialog::segDescriptionsDialog(QWidget *parent, GLArea* gl) : QDockWidget(parent) {
+  gla = gl;
   segDescriptionsDialog::ui.setupUi(this);
 
   this->setFeatures(QDockWidget::AllDockWidgetFeatures);
@@ -83,6 +84,7 @@ void segDescriptionsDialog::handleSelect() {
 	description *d = seg->descriptions[i].d[seg->descriptions[i].handle[j]];
 	seg->getDrawer()->prepare(d->mmodel);
   }
+  gla->update();
 }
 
 void segDescriptionsDialog::handleDelete() {
@@ -130,6 +132,7 @@ void segDescriptionsDialog::reprepareDrawer() {
 	  seg->getDrawer()->prepare(mmodel);
 	}
   }
+  gla->update();
 }
 
 // segDescriptionsDialog::~segDescriptionsDialog() {}

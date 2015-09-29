@@ -7,6 +7,8 @@
 #include <QStringList>
 #include <QStringListModel>
 
+#include <meshlab/glarea.h>
+
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
 #include "ui_edit_segmentor_descriptions.h"
@@ -16,7 +18,7 @@ class segDescriptionsDialog : public QDockWidget
   Q_OBJECT
 
  public:
-  segDescriptionsDialog(QWidget *);
+  segDescriptionsDialog(QWidget *, GLArea*);
   //~segDescriptionsDialog();
 
   void closeEvent (QCloseEvent * );
@@ -26,6 +28,7 @@ class segDescriptionsDialog : public QDockWidget
 
  private:
   Segmentor *seg;
+  GLArea* gla;
   QStringList *stringList;
   QStringListModel *listModel;
 
