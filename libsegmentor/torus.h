@@ -16,7 +16,6 @@ class torus: public model {
   // double m_error;  // provide maximum point distance and description error
   // double m_dist;   // for all objects of the class
 
-  double a[14];  
   /* In Gabor rep 
      a[1]  = rho, a[2] =phi, a[3] = theta.
      a[4] for sigma and a[5]  for  tau and a[6] for k 
@@ -27,8 +26,8 @@ class torus: public model {
    
 public:  
    
-  
-   hmatrix g_from_l;  // homogenuos matrix representation
+  double a[14];    
+  hmatrix g_from_l;  // homogenuos matrix representation
   hmatrix l_from_g;
 
   //void torus_draw(int no_hidding = 0) const;

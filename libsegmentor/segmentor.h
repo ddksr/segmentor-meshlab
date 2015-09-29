@@ -24,6 +24,9 @@ class Segmentor {
   void selection();
   void finalSelection();
 
+  segmentation* descriptions;
+  int numOfDescriptions;
+
  private:
   Segmentor();
 
@@ -31,9 +34,7 @@ class Segmentor {
   MODELTYPE *modelType;
   
   ShapeSettings* models[NUM_OF_MODELS];
-	
-  segmentation* descriptions;
-  int numOfDescriptions;
+  
   bool initialized;
 
   int sel, seld; // TODO: what?

@@ -10,13 +10,15 @@
 #include <math.h>
 
 class sphere: public model
-{ double a,b,c,radius;
+{ 
   double data[20];
 
   double sqr(double x) { return(x*x); }
   double euclidian(struct point& p) { return(p.x*p.x+p.y*p.y+p.z*p.z); }
 
 public:
+  double a,b,c,radius;
+  
   sphere() {}
   sphere(region& r);
   sphere(FILE *f);

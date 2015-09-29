@@ -181,10 +181,341 @@ void MeshlabDrawer::draw_sq(sq* s, Color* c) {
 }
 
 void MeshlabDrawer::draw_plane(plane* m, Color* c) {
-  
+  // TODO
 }
-void MeshlabDrawer::draw_surface2(surface2* m, Color* c) {}
-void MeshlabDrawer::draw_cone(cone* m, Color* c) {}
-void MeshlabDrawer::draw_torus(torus* m, Color* c) {}
-void MeshlabDrawer::draw_sphere(sphere* m, Color* c) {}
-void MeshlabDrawer::draw_cylinder(cylinder* m, Color* c) {}
+void MeshlabDrawer::draw_surface2(surface2* m, Color* c) {
+  // TODO
+}
+
+void MeshlabDrawer::draw_cone(cone* m, Color* c) {
+  glPushMatrix();
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
+  
+  vector3D axis,n, orig, n2, v1, v2, point, m1, m2, axis2, min_axis, axis3, axis4;
+  vector3D axispoint;
+
+  int rot = (int)fabs(1/m->a[6]), i, j;
+  double dz;
+  double kot, rad, pi = 3.1415926535, rad1;
+
+  axis.el(0) = cos(m->a[4]) * sin(m->a[5]);
+  axis.el(1) = sin(m->a[4]) * sin(m->a[5]);
+  axis.el(2) = cos(m->a[5]);
+
+  min_axis = axis;
+  if (m->a[6] > 0.0) min_axis.multiply_col(0,-1);
+
+  n.el(0) = cos(m->a[2]) * sin(m->a[3]);
+  n.el(1) = sin(m->a[2]) * sin(m->a[3]);
+  n.el(2) = cos(m->a[3]);
+
+  kot = acos(n.inner(min_axis));
+  axis3 = axis;
+  axis3.multiply_col(0,(1/fabs(m->a[6]))/cos(kot));
+
+  for (i = 0; i < 3; i++) orig.el(i) = m->a[11+i];
+
+  n2 = n;
+  n2.multiply_col(0,m->a[1]+1/m->a[6]);
+
+  v1 = axis.outer(n);
+  v1 = v1.normalize();
+  v2 = axis.outer(v1);
+  
+  if (rot > 100) rot = 100;
+  if (rot < 30) rot = 30;
+
+  glColor3f(0.0,1.0,0.0);
+  glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);  
+  
+  dz = (m->zmax-m->zmin)/10;
+
+  for (j = 0; j <= 10; j++)
+  { rad = (m->zmin + j * dz) / tan(kot);
+    axis2 = axis;
+    axis2.multiply_col(0,m->zmin+j*dz);
+     
+    glBegin(GL_POLYGON);
+    axispoint = orig + n2 + axis3 + axis2;
+    for (i = 0; i < rot; i++)
+    { m1 = v1;
+      m2 = v2;
+      
+      m1.multiply_col(0,rad * cos(2 * i * pi / rot));
+      m2.multiply_col(0,rad * sin(2 * i * pi / rot));
+      point = axispoint + m1 + m2;
+      glVertex3f(point.el(0),point.el(1),point.el(2));
+      }
+    glEnd();
+    } 
+
+  axis4 = orig + n2 + axis3;
+
+  rad = m->zmin / tan(kot);
+  rad1 = m->zmax / tan(kot);
+
+  axis2 = axis;
+  axis2.multiply_col(0,m->zmin);
+  axis4 = axis;
+  axis4.multiply_col(0,m->zmax);
+
+  for (i = 0; i < rot; i++)
+  { glBegin(GL_LINES);
+    m1 = v1;
+    m2 = v2;
+    m1.multiply_col(0,rad1 * cos(2 * i * pi / rot));
+    m2.multiply_col(0,rad1 * sin(2 * i * pi / rot));    
+    point = orig + n2 + axis3 + axis4 + m1 + m2;
+    glVertex3f(point.el(0),point.el(1),point.el(2));
+    m1 = v1;
+    m2 = v2;
+    m1.multiply_col(0,rad * cos(2 * i * pi / rot));
+    m2.multiply_col(0,rad * sin(2 * i * pi / rot));
+    point = orig + n2 + axis3 + axis2 + m1 + m2;
+    glVertex3f(point.el(0),point.el(1),point.el(2));
+
+    glEnd();
+    }
+
+  glFlush();
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+
+}
+
+void MeshlabDrawer::draw_torus(torus* m, Color* col) {
+  glPushMatrix();
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
+  
+  vector3D axis,n,r1,r2,c,n2,a2,m1,m2,r,rm,m3,m4,pt;
+
+  double rot1, rot2;
+ 
+  double pi = 3.1415926535;
+  double kot,h,vr;
+  int i,j;
+
+  axis.el(0) = cos(m->a[4])*sin(m->a[5]);
+  axis.el(1) = sin(m->a[4])*sin(m->a[5]);
+  axis.el(2) = cos(m->a[5]);
+
+  n.el(0) = cos(m->a[2])*sin(m->a[3]);
+  n.el(1) = sin(m->a[2])*sin(m->a[3]);
+  n.el(2) = cos(m->a[3]);
+
+  std::cout << "Axis:" << axis << "N:" << n;
+
+  kot = acos(n.inner(axis));
+
+  r1 = axis.outer(n);
+  r1 = r1.normalize();
+  r2 = axis.outer(r1);  
+  r2 = r2.normalize();
+
+  n2 = n;
+  n2.multiply_col(0,m->a[1]+1/m->a[7]);
+
+  a2 = axis;
+  h = fabs(1/m->a[7]-1/m->a[6])*cos(kot);
+  a2.multiply_col(0,h);
+  vr = fabs(1/m->a[7]-1/m->a[6])*sin(kot);  
+
+  c = n2 + a2;
+
+  c.el(0) += m->a[11];
+  c.el(1) += m->a[12];
+  c.el(2) += m->a[13];
+
+  rot2 = 1/m->a[6];
+  rot1 = vr;
+
+  if (rot1 < 30) rot1 = 30;
+  if (rot1 > 100) rot1 = 100;
+  
+  if (rot2 < 20) rot2 = 20;
+  if (rot2 > 50) rot2 = 50;
+
+  rm = r1;
+  rm.multiply_col(0,vr);
+
+  glColor3f(0.0,0.0,1.0);
+  glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);  
+
+  for (i = 0; i < rot1; i++)
+  { glBegin(GL_POLYGON);
+
+    m1 = r1;
+    m2 = r2;
+    m1.multiply_col(0,cos(i*2*pi/rot1));
+    m2.multiply_col(0,sin(i*2*pi/rot1));
+    r = m1 + m2;
+    rm = r;
+    rm.multiply_col(0,vr);
+
+    for (j = 0; j < rot2; j++)
+    { m3 = axis;
+      m4 = r;
+      m3.multiply_col(0,cos(j*2*pi/rot2)/m->a[6]);
+      m4.multiply_col(0,sin(j*2*pi/rot2)/m->a[6]);
+      pt = c + rm + m3 + m4;
+      glVertex3f(pt.el(0),pt.el(1),pt.el(2));
+      }
+    glEnd();
+    }
+
+  for (j = 0; j < rot2; j++)
+  { glBegin(GL_POLYGON);
+    m3 = axis;
+    m3.multiply_col(0,cos(j*2*pi/rot2)/m->a[6]);
+    
+    for (i = 0; i < rot1; i++)
+    { m1 = r1;
+      m2 = r2;
+      m1.multiply_col(0,cos(i*2*pi/rot1));
+      m2.multiply_col(0,sin(i*2*pi/rot1));
+      r = m1 + m2;
+      rm = r;
+      rm.multiply_col(0,vr);
+      m4 = r.normalize();
+      m4.multiply_col(0,sin(j*2*pi/rot2)/m->a[6]);
+      pt = c + rm + m3 + m4;  
+      glVertex3f(pt.el(0),pt.el(1),pt.el(2));
+      } 
+
+    glEnd();
+    } 
+
+  glFlush();
+  glPopMatrix();
+  glPopAttrib();
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glMatrixMode(GL_MODELVIEW);
+}
+
+void MeshlabDrawer::draw_sphere(sphere* m, Color* c) {
+  glPushMatrix();
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+  double ksi, phi;
+  double dk = PI / 12;
+  double va,vb,vc;
+
+  glColor3f(0.0,0.0,0.0);
+
+  for (phi = -PI / 2; phi < PI / 2; phi+=dk)     // const phi circles
+  { glBegin(GL_LINE_LOOP);
+    for (ksi = -PI; ksi < PI; ksi+=dk)
+    { va = m->a + m->radius * cos(phi) * cos(ksi);
+      vb = m->b + m->radius * cos(phi) * sin(ksi);
+      vc = m->c + m->radius * sin(phi);
+      // dist = sqrt((va-a)*(va-a)+(vb-b)*(vb-b)+(vc-c)*(vc-c)) - m->radius;
+      glVertex3f(va,vb,vc);
+      }
+    glEnd();
+    }
+
+  for (ksi = -PI / 2; ksi < PI / 2; ksi+=dk)            // const ksi circles
+  { glBegin(GL_LINE_LOOP);
+    for (phi = -PI; phi < PI; phi+=dk)
+    { va = m->a + m->radius * cos(phi) * cos(ksi);
+      vb = m->b + m->radius * cos(phi) * sin(ksi);
+      vc = m->c + m->radius * sin(phi);
+      // dist = sqrt((va-a)*(va-a)+(vb-b)*(vb-b)+(vc-c)*(vc-c)) - m->radius;
+      glVertex3f(va,vb,vc);
+      }
+    glEnd();
+    }
+
+  
+  glFlush();
+  glPopMatrix();
+  glPopAttrib();
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glMatrixMode(GL_MODELVIEW);
+}
+
+void MeshlabDrawer::draw_cylinder(cylinder* m, Color* c) {
+  glPushMatrix();
+  glPushAttrib(GL_ALL_ATTRIB_BITS);
+
+  vector3D axis,n,n1,n2,m1,m2,vr,axis2;
+  int i,j,rot = (int)(1/fabs(m->a[5]));
+  double d = m->a[1] + 1 / m->a[5], z;
+  double dz = (m->zmax - m->zmin)/10;
+  if (rot > 100) rot = 100;
+  if (rot < 30) rot = 30;
+
+  glPushMatrix();
+  glColor3f(1.0,0.0,0.0);
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  axis.el(0) = cos(m->a[2])*cos(m->a[3])*cos(m->a[4]) - sin(m->a[2])*sin(m->a[4]);
+  axis.el(1) = sin(m->a[2])*cos(m->a[3])*cos(m->a[4]) + cos(m->a[2])*sin(m->a[4]);
+  axis.el(2) = -sin(m->a[3])*cos(m->a[4]);
+    
+  n.el(0) = cos(m->a[2])*sin(m->a[3]);
+  n.el(1) = sin(m->a[2])*sin(m->a[3]);
+  n.el(2) = cos(m->a[3]);
+
+  n1 = n;
+
+  n.multiply_col(0,d);
+
+  n2 = axis.outer(n1);
+
+  for (j = 0; j <= 10; j++)
+  { z = m->zmin + j * dz;
+    glBegin(GL_POLYGON);
+    if (j == 10) glColor3f(0.0,0.0,1.0);
+    for (i = 0; i < rot; i++)
+    { m1 = n1;
+      m2 = n2;
+      axis2 = axis;
+      m1.multiply_col(0,cos(2 * i * PI / rot) / m->a[5]);
+      m2.multiply_col(0,sin(2 * i * PI / rot) / m->a[5]);
+      axis2.multiply_col(0,z);
+      vr = n + axis2 + m1 + m2;
+      glVertex3f(vr.el(0)+m->a[11],vr.el(1)+m->a[12],vr.el(2)+m->a[13]);
+      }
+    glEnd();
+    }
+
+  glColor3f(1.0,0.0,0.0);
+  if (rot % 2) rot++;
+  for (i = 0; i < rot; i++)
+  { glBegin(GL_QUADS);
+    m1 = n1;
+    m2 = n2;
+    axis2 = axis;
+    m1.multiply_col(0,cos(2 * i * PI / rot) / m->a[5]);
+    m2.multiply_col(0,sin(2 * i * PI / rot) / m->a[5]);
+    axis2.multiply_col(0,m->zmin);
+    vr = n + axis2 + m1 + m2;
+    glVertex3f(vr.el(0)+m->a[11],vr.el(1)+m->a[12],vr.el(2)+m->a[13]);
+    axis2 = axis;
+    axis2.multiply_col(0,m->zmax);
+    vr = n + axis2 + m1 + m2;
+    glVertex3f(vr.el(0)+m->a[11],vr.el(1)+m->a[12],vr.el(2)+m->a[13]);
+
+    m1 = n1;
+    m2 = n2;
+    axis2 = axis;
+    m1.multiply_col(0,cos(PI + 2 * i * PI / rot) / m->a[5]);
+    m2.multiply_col(0,sin(PI + 2 * i * PI / rot) / m->a[5]);
+    axis2.multiply_col(0,m->zmax);
+    vr = n + axis2 + m1 + m2;
+    glVertex3f(vr.el(0)+m->a[11],vr.el(1)+m->a[12],vr.el(2)+m->a[13]);
+    axis2 = axis;
+    axis2.multiply_col(0,m->zmin);
+    vr = n + axis2 + m1 + m2;
+    glVertex3f(vr.el(0)+m->a[11],vr.el(1)+m->a[12],vr.el(2)+m->a[13]);
+    glEnd();
+    }
+  
+
+  glFlush();
+  glPopMatrix();
+  glPopAttrib();
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  glMatrixMode(GL_MODELVIEW);
+}

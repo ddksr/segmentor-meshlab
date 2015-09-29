@@ -84,6 +84,8 @@ public:
   void setDiscrepancy(int d = 0) { discrepancy = d; }
   static void setMSC(int m = 0) { msc = m; }
   static void setDeviation(double d) { stdev = d; }
+
+  virtual char* pretty() {}
   };
   
 

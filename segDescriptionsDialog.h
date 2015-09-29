@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QDockWidget>
 #include <QProgressBar>
+#include <QStringList>
+#include <QStringListModel>
 
 #include "libsegmentor/common.h"
 #include "libsegmentor/segmentor.h"
@@ -23,8 +25,11 @@ class segDescriptionsDialog : public QDockWidget
 
  private:
   Segmentor *seg;
+  QStringList *stringList;
+  QStringListModel *listModel;
 
   void fillList();
+  void setIJ(int, int&, int&);
 
  signals:
   void closing();

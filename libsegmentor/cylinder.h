@@ -19,7 +19,7 @@ class cylinder : public model
      a[4] for alpha and a[5] for k 
      a[11 - 13] for local Origin */
 
-  double a[14];  
+
   /* In Gabor rep use a[1 - 3] for polar axes, 
      a[1]  = rho, a[2] =phi, a[3] = theta.
      a[4] for alpha and a[5] for k 
@@ -31,12 +31,15 @@ class cylinder : public model
   // Added by Bojan Kverh 19.2.1998
   // For accurate drawing
 
-  double zmin,zmax;
+  
 
   struct point norm, disp;
   double r;
 
 public:
+
+  double a[14];
+  double zmin,zmax;
 
   static double max_radius;  
 
