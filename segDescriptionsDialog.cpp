@@ -20,6 +20,11 @@ segDescriptionsDialog::segDescriptionsDialog(QWidget *parent) : QDockWidget(pare
   this->setAllowedAreas(Qt::LeftDockWidgetArea);
   this->setFloating(true);
 
+  QObject::connect(ui.btnGrowStep, SIGNAL(released()), this, SLOT(handleGrowStep()));
+  QObject::connect(ui.btnGrowFull, SIGNAL(released()), this, SLOT(handleGrowFull()));
+  QObject::connect(ui.btnDelete, SIGNAL(released()), this, SLOT(handleDelete()));
+  QObject::connect(ui.btnSelect, SIGNAL(released()), this, SLOT(handleSelect()));
+
   seg = Segmentor::Instance();
 
   stringList = new QStringList();
@@ -62,9 +67,67 @@ void segDescriptionsDialog::fillList() {
 
 void segDescriptionsDialog::setIJ(int k, int &i, int &j) {
   for (i = 0; i < seg->numOfDescriptions; i++) {
-	for (int j = 0; j < seg->descriptions[i].n; j++) {
+	for (j = 0; j < seg->descriptions[i].n; j++) {
 	  if (k == 0) return;
 	  k--;
+	}
+  }
+}
+
+void segDescriptionsDialog::handleSelect() {
+  seg->getDrawer()->clear();
+  foreach(const QModelIndex &index, 
+		  ui.listDescriptions->selectionModel()->selectedIndexes()) {
+	int i, j;
+	setIJ(index.row(), i, j);
+	description *d = seg->descriptions[i].d[seg->descriptions[i].handle[j]];
+	seg->getDrawer()->prepare(d->mmodel);
+  }
+}
+
+void segDescriptionsDialog::handleDelete() {
+  foreach(const QModelIndex &index, 
+		  ui.listDescriptions->selectionModel()->selectedIndexes()) {
+	int i, j;
+	setIJ(index.row(), i, j);
+	seg->descriptions[i].delete_description(j);
+  }
+  fillList();
+  reprepareDrawer();
+}
+
+void segDescriptionsDialog::handleGrowStep() {
+  foreach(const QModelIndex &index, 
+		  ui.listDescriptions->selectionModel()->selectedIndexes()) {
+	int i, j;
+	setIJ(index.row(), i, j);
+	description *d = seg->descriptions[i].d[seg->descriptions[i].handle[j]];
+	d->grow();
+  }
+  fillList();
+  reprepareDrawer();
+}
+
+void segDescriptionsDialog::handleGrowFull() {
+  foreach(const QModelIndex &index, 
+		  ui.listDescriptions->selectionModel()->selectedIndexes()) {
+	int i, j;
+	setIJ(index.row(), i, j);
+	description *d = seg->descriptions[i].d[seg->descriptions[i].handle[j]];
+	while(d->can_grow()) {
+	  d->grow();
+	}
+  }
+  fillList();
+  reprepareDrawer();
+}
+
+void segDescriptionsDialog::reprepareDrawer() {
+  seg->getDrawer()->clear();
+  for (int i = 0; i < seg->numOfDescriptions; i++) {
+	for (int j = 0; j < seg->descriptions[i].n; j++) {
+	  model* mmodel = seg->descriptions[i].d[seg->descriptions[i].handle[j]]->mmodel;
+	  seg->getDrawer()->prepare(mmodel);
 	}
   }
 }

@@ -31,6 +31,14 @@ class segDescriptionsDialog : public QDockWidget
 
   
   void setIJ(int, int&, int&);
+  void reprepareDrawer();
+
+ private slots:
+  void handleGrowStep();
+  void handleGrowFull();
+  void handleDelete();
+  void handleSelect();
+  
 
  signals:
   void closing();

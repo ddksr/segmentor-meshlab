@@ -28,14 +28,45 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="5,2">
      <item>
-      <widget class="QListView" name="listDescriptions"/>
+      <widget class="QListView" name="listDescriptions">
+       <property name="editTriggers">
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="tabKeyNavigation">
+        <bool>true</bool>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::ExtendedSelection</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QPushButton" name="pushButton">
+        <widget class="QPushButton" name="btnSelect">
          <property name="text">
-          <string>PushButton</string>
+          <string>Select</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnGrowStep">
+         <property name="text">
+          <string>Grow step</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnGrowFull">
+         <property name="text">
+          <string>Grow full</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnDelete">
+         <property name="text">
+          <string>Delete</string>
          </property>
         </widget>
        </item>
