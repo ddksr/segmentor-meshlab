@@ -421,7 +421,55 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="btnFillGaps">
+         <property name="text">
+          <string>Fill gaps</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnRefinement">
+         <property name="text">
+          <string>Refinement</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnMerging">
+         <property name="text">
+          <string>Merging</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnBasicRas">
+         <property name="text">
+          <string>Basic RAS</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnImprovedRas">
+         <property name="text">
+          <string>Improved RAS</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
          </property>

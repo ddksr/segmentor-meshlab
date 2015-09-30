@@ -86,7 +86,14 @@ segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) :
   QObject::connect(ui.btnShowDescriptions, SIGNAL(clicked()), this, SLOT(showDescriptions()));
   QObject::connect(ui.btnDeleteWrong, SIGNAL(clicked()), this, SLOT(deleteWrong()));
 
+  QObject::connect(ui.btnMerging, SIGNAL(clicked()), this, SLOT(merging()));
+  QObject::connect(ui.btnFillGaps, SIGNAL(clicked()), this, SLOT(fillGaps()));
+  QObject::connect(ui.btnRefinement, SIGNAL(clicked()), this, SLOT(refinement()));
+  QObject::connect(ui.btnBasicRas, SIGNAL(clicked()), this, SLOT(basicRAS()));
+  QObject::connect(ui.btnImprovedRas, SIGNAL(clicked()), this, SLOT(improvedRAS()));
+
   desc = NULL;
+  seg->enableMessaging(true);
 }
 
 void segRecoverDialog::obtainSettings() {
@@ -279,6 +286,85 @@ void segRecoverDialog::deleteWrong() {
   obtainSettings();
   seg->deleteWrong();
   gla->update();
+}
+
+
+void segRecoverDialog::merging() {
+  obtainSettings();
+  seg->mergeDescriptions();
+  gla->update();
+}
+
+void segRecoverDialog::fillGaps() {
+  obtainSettings();
+  seg->fillGaps();
+  gla->update();
+}
+void segRecoverDialog::refinement() {
+  obtainSettings();
+  seg->intersectionRefinement();
+  gla->update();
+}
+
+void segRecoverDialog::basicRAS() {
+  seg->enableMessaging(false);
+  obtainSettings();
+  if (ui.radioSelectedPtSeeds->isChecked()) {
+	mesh->setSelectedPoints();
+  } else if (mesh->numOfSelectedPoints > 0) {
+	mesh->numOfSelectedPoints = 0;
+	delete mesh->selectedPoints;
+  }
+  seg->placeSeeds();
+  gla->update();
+  int nk;
+  for (int i = 0; i < config->selections; i++) {
+	nk = 1 << i;
+	for (int j = 0; j < nk; j++) {
+	  seg->grow();
+	  gla->update();
+	}
+	seg->selection();
+	gla->update();
+  }
+  message->info("Basic RAS completed");
+  seg->enableMessaging(true);
+}
+void segRecoverDialog::improvedRAS() {
+  seg->enableMessaging(false);
+  obtainSettings();
+  if (ui.radioSelectedPtSeeds->isChecked()) {
+	mesh->setSelectedPoints();
+  } else if (mesh->numOfSelectedPoints > 0) {
+	mesh->numOfSelectedPoints = 0;
+	delete mesh->selectedPoints;
+  }
+  seg->placeSeeds();
+
+  int nk;
+  for (int i = 0; i < config->selections; i++) {
+	nk = 1 << i;
+	for (int j = 0; j < nk; j++) {
+	  seg->grow();
+	  gla->update();
+	}
+	seg->selection();
+  }
+  seg->finalSelection();
+  seg->fillGaps();
+  int ok = 1;
+  while(ok) {
+	ok = 0;
+	for (int i = 0; i < seg->numOfDescriptions; i++) { ok+= seg->descriptions[i].n; }
+	seg->intersectionRefinement();
+	seg->mergeDescriptions();
+	for (int i = 0; i < seg->numOfDescriptions; i++) {
+	  seg->descriptions[i].throw_away();
+	  ok -= seg->descriptions[i].n;
+	}
+  }
+  seg->enableMessaging(true);
+  message->info("Improved RAS completed");
 }
 
 void segRecoverDialog::showDescriptions() {

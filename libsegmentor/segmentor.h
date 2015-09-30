@@ -25,6 +25,12 @@ class Segmentor {
   void finalSelection();
   void deleteWrong();
 
+  void mergeDescriptions();
+  void fillGaps();
+  void intersectionRefinement();
+
+  void enableMessaging(bool x) { messagingEnabled = x; }
+
   segmentation* descriptions;
   int numOfDescriptions;
 
@@ -37,6 +43,7 @@ class Segmentor {
   ShapeSettings* models[NUM_OF_MODELS];
   
   bool initialized;
+  bool messagingEnabled;
 
   int sel, seld; // TODO: what?
   int *dneigh; // TODO: what?
@@ -48,6 +55,12 @@ class Segmentor {
   static Segmentor *_inst;
 
   void clear();
+  void merge(segmentation &);
+  void refine(segmentation &l, region *r = NULL);
+  description *bestDescription(region *r, description *old=NULL, double iq = 0.0);
 };
 
 #endif
+
+
+

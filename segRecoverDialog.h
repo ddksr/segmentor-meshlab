@@ -68,6 +68,13 @@ class segRecoverDialog : public QDockWidget
   void selection();
   void finalSelection();
   void deleteWrong();
+
+  void merging();
+  void fillGaps();
+  void refinement();
+
+  void basicRAS();
+  void improvedRAS();
   
   void showDescriptions();
   
