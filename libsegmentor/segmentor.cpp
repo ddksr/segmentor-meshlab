@@ -114,6 +114,10 @@ void Segmentor::refreshConfig() {
   description::k2 = conf->k2;
   description::k3 = conf->k3;
   description::stdev = conf->varianceOfNoise;
+  segmentation::pp_max_err = conf->postProcessingMaxError;
+  
+  description::discrepancy = conf->isNewDiscrepancy ? 1 : 0;
+  useStatistics = conf->useStatistics ? 1 : 0;
 }
 
 void Segmentor::placeSeeds() {
@@ -187,7 +191,7 @@ void Segmentor::grow() {
   for (j = 0; j < numOfDescriptions; j++) {
 	c = 0;
 	for (i = 0; i < descriptions[j].n; i++) {
-	  if (descriptions[j].d[descriptions[j].handle[i]]->can_grow()) c++; // TODO: check handle
+	  if (descriptions[j].d[descriptions[j].handle[i]]->can_grow()) c++;
 	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mmodel);
 	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mregion);
 	}
@@ -205,6 +209,8 @@ void Segmentor::selection() {
   std::ostringstream stream;
 
   drawer->clear();
+  progress->clear(0, numOfDescriptions);
+  progress->setProcessName("Selecting ... ");
   
   for (int j = 0; j < numOfDescriptions; j++) {
 	old = descriptions[j].n;
@@ -216,7 +222,9 @@ void Segmentor::selection() {
 	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mmodel);
 	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mregion);
 	}
+	progress->inc();
   }
+  progress->clear();
   message->info(stream.str().c_str());
 }
 
@@ -235,6 +243,8 @@ void Segmentor::finalSelection() {
   stream << la.n << " out of " << previous << " descriptions selected in final selection. ";
 
   drawer->clear();
+  progress->clear(0, numOfDescriptions);
+  progress->setProcessName("Final selection ... ");
   for (j = 0; j < numOfDescriptions; j++) {
 	previous = descriptions[j].n;
 	descriptions[j].grow(0); // throw away handles that point to NULL
@@ -243,7 +253,32 @@ void Segmentor::finalSelection() {
 	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mmodel);
 	  drawer->prepare(descriptions[j].d[descriptions[j].handle[i]]->mregion);
 	}
+	progress->inc();
   }
+  progress->clear();
   message->info(stream.str().c_str());
 }
 
+void Segmentor::deleteWrong() {
+  if (!initialized || !numOfDescriptions) return;
+  std::ostringstream stream;
+  refreshConfig();
+
+  drawer->clear();
+  progress->clear(0, numOfDescriptions);
+  progress->setProcessName("Final selection ... ");
+  
+  for (int i = 0; i < numOfDescriptions; i++) {
+	int prev = descriptions[i].n;
+	descriptions[i].delete_wrong();
+	stream << (prev - descriptions[i].n) << " out of " << prev << " descriptions not OK and deleted.";
+
+	for (int j = 0; j < descriptions[i].n; j++) {
+	  drawer->prepare(descriptions[i].d[descriptions[i].handle[j]]->mmodel);
+	  drawer->prepare(descriptions[i].d[descriptions[i].handle[j]]->mregion);
+	}
+	progress->inc();
+  }
+  progress->clear();
+  message->info(stream.str().c_str());
+}

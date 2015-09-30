@@ -67,6 +67,7 @@ class segRecoverDialog : public QDockWidget
   void grow();
   void selection();
   void finalSelection();
+  void deleteWrong();
   
   void showDescriptions();
   

@@ -23,6 +23,7 @@ class Segmentor {
   void grow();
   void selection();
   void finalSelection();
+  void deleteWrong();
 
   segmentation* descriptions;
   int numOfDescriptions;

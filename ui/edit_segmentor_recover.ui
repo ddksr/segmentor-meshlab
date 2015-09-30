@@ -318,6 +318,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="cbUseStatistics">
+         <property name="text">
+          <string>Use statistics at growing</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -407,6 +414,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="btnDeleteWrong">
+         <property name="text">
+          <string>Delete wrong</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -423,6 +437,13 @@
         <widget class="QPushButton" name="btnShowDescriptions">
          <property name="text">
           <string>Show descriptions</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnShowQuality">
+         <property name="text">
+          <string>Show quality</string>
          </property>
         </widget>
        </item>

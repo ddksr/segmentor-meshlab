@@ -28,10 +28,13 @@ struct RecoverySettings {
   int seedSize;
   float regionCompatibility;
   int maxNumOfSeeds;
+  
   float varianceOfNoise;
   float postProcessingMaxError;
+  
   bool isNewDiscrepancy;
   bool usePostProcessing;
+  bool useStatistics;
 };
 
 class Drawer {
