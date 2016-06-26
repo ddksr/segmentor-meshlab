@@ -79,6 +79,18 @@ Segmentor::~Segmentor() {
   }
 }
 
+void Segmentor::import(MODELTYPE mtype, double *params) {
+  if (!initialized) return;
+  
+  drawer->clear();
+  refreshConfig();
+  
+  descriptions[numOfDescriptions].init_list(im, normals);
+  descriptions[numOfDescriptions].import(mtype, params);
+  
+  numOfDescriptions++;
+}
+
 void Segmentor::clear() {
   if (normals != NULL) {
 	delete normals;

@@ -203,6 +203,28 @@ void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l)
 	  }
   }
 
+void segmentation::import(MODELTYPE mtype, double *params) {
+  region *rn = new region(segmentationImage);
+
+  switch(mtype) {
+  case CSQ:
+	d[dn] = create(*rn, mtype);
+	break;
+  default:
+	delete rn;
+	return;
+  }
+  
+  d[dn] -> normals = normals;
+  d[dn]->mmodel->set_parameters(params);
+  d[dn] -> print();
+  
+  segmentation::drawer->prepare(d[dn]->mmodel);
+  segmentation::drawer->prepare(rn);
+  handle[n++] = dn++;
+  delete rn;
+}
+
 void segmentation::place_seeds(int seed_size, MODELTYPE type, segmentation *l, int maxseeds)
 { region r(segmentationImage), *rn, nb(segmentationImage),rest(segmentationImage);
   int i,j,k,hd = 0;

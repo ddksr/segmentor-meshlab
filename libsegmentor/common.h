@@ -20,6 +20,7 @@ struct RecoverySettings {
   ShapeSettings cylinder;
   ShapeSettings cone;
   ShapeSettings torus;
+  ShapeSettings asq;
   float k2;
   float k3;
   float planarNormalCompatibility;

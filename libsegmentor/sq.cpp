@@ -396,4 +396,17 @@ void sq::set_parameters(double *value)
   px = value[8];
   py = value[9];
   pz = value[10];
+
+  // TODO: check if needed
+  int sing;
+  g_from_l.identity();
+  l_from_g.identity();
+  
+  g_from_l.translate_g(px, py, pz);
+  g_from_l.rotate_zr(phi);
+  g_from_l.rotate_yr(theta);
+  g_from_l.rotate_zr(psi);
+  
+  l_from_g = g_from_l.inverse(sing);
+  //print();
   }

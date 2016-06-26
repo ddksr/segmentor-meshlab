@@ -41,6 +41,8 @@ class segDescriptionsDialog : public QDockWidget
   void handleGrowFull();
   void handleDelete();
   void handleSelect();
+  void handleImport();
+  void handleExport();
   
 
  signals:

@@ -48,7 +48,8 @@ segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) :
 
   config = new RecoverySettings{
 	{false, 3.0, 2.0},
-	{false, 6.0, 5.0},
+	{true, 6.0, 5.0},
+	{false, 3.0, 2.0},
 	{false, 3.0, 2.0},
 	{false, 3.0, 2.0},
 	{false, 3.0, 2.0},
@@ -139,6 +140,10 @@ void segRecoverDialog::obtainSettings() {
   config->torus.on = ui.cbTorus->isChecked();
   config->torus.dist = ui.inputTorusDist->text().toFloat();
   config->torus.err = ui.inputTorusErr->text().toFloat();
+
+  config->asq.on = ui.cbASq->isChecked();
+  config->asq.dist = ui.inputASqDist->text().toFloat();
+  config->asq.err = ui.inputASqErr->text().toFloat();
 }
 
 void segRecoverDialog::storeSettings() {
@@ -187,6 +192,11 @@ void segRecoverDialog::storeSettings() {
   iniConfig.setValue("torus/on", config->torus.on);
   iniConfig.setValue("torus/maxDistance", (double)config->torus.dist);
   iniConfig.setValue("torus/maxError", (double)config->torus.err);
+
+  
+  iniConfig.setValue("asq/on", config->asq.on);
+  iniConfig.setValue("asq/maxDistance", (double)config->asq.dist);
+  iniConfig.setValue("asq/maxError", (double)config->asq.err);
 }
 
 void segRecoverDialog::recoverSettings() {
@@ -234,6 +244,10 @@ void segRecoverDialog::recoverSettings() {
   ui.cbTorus->setChecked(iniConfig.value("torus/on", config->torus.on).toBool());
   ui.inputTorusDist->setText(iniConfig.value("torus/maxDistance", config->torus.dist).toString());
   ui.inputTorusErr->setText(iniConfig.value("torus/maxError", config->torus.err).toString());
+
+  ui.cbASq->setChecked(iniConfig.value("asq/on", config->asq.on).toBool());
+  ui.inputASqDist->setText(iniConfig.value("asq/maxDistance", config->asq.dist).toString());
+  ui.inputASqErr->setText(iniConfig.value("asq/maxError", config->asq.err).toString());
 }
 
 void segRecoverDialog::handleStoreSettings() {

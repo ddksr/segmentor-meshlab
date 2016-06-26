@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>775</width>
-    <height>738</height>
+    <width>771</width>
+    <height>782</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,10 +17,10 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>701</height>
+      <height>737</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="main" stretch="60,30">
@@ -190,6 +190,27 @@
             </widget>
            </item>
           </layout>
+         </item>
+         <item row="8" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_10">
+           <item>
+            <widget class="QLineEdit" name="inputASqDist">
+             <property name="toolTip">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputASqErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="8" column="0">
+          <widget class="QCheckBox" name="cbASq">
+           <property name="text">
+            <string>Amphora Superquadric</string>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

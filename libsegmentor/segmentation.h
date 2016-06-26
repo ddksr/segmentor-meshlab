@@ -40,6 +40,7 @@ public:
   segmentation& operator=(const segmentation& l);
   segmentation& operator+=(const segmentation& l);
   segmentation operator+(const segmentation l);
+  void import(MODELTYPE, double*);
   void place_seeds(int seed_size, MODELTYPE type);
   void place_seeds(int seed_size, MODELTYPE type, segmentation *l);
   void place_seeds(int seed_size, MODELTYPE type, segmentation *l, int maxseeds);

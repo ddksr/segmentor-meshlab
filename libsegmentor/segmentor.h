@@ -16,6 +16,8 @@ class Segmentor {
   static Segmentor* Instance();
 
   void setUp(RecoverySettings*, image*, Drawer*, ProgressIndicator*, Messaging*);
+
+  void import(MODELTYPE, double*);
   
   Drawer* getDrawer();
   void refreshConfig();
