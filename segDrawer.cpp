@@ -74,6 +74,9 @@ void MeshlabDrawer::draw() {
 	case CTORUS:
 	  draw_torus((torus*) m, c);
 	  break;
+	case CASQ:
+	  draw_sq((sq*) m, c);
+	  break;
 	}
   }
   for (int i = 0; i < regions.size(); ++i) {

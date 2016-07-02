@@ -7,6 +7,7 @@
 
 #include "sphere_d.h"
 #include "sq_d.h"
+#include "asq_d.h"
 #include "torus_d.h"
 #include "planar_d.h"
 #include "cone_d.h"
@@ -52,6 +53,7 @@ void Segmentor::setUp(RecoverySettings* c, image* img, Drawer* d, ProgressIndica
   models[4] = &conf->cylinder;
   models[5] = &conf->cone;
   models[6] = &conf->torus;
+  models[7] = &conf->asq;
 }
 
 Drawer* Segmentor::getDrawer() {
@@ -122,6 +124,9 @@ void Segmentor::refreshConfig() {
   cone_d::m_dist = conf->cone.err;
   torus_d::m_err = conf->torus.dist;
   torus_d::m_dist = conf->torus.err;
+
+  asq_d::m_err = conf->asq.dist;
+  asq_d::m_dist = conf->asq.err;
 
   description::k2 = conf->k2;
   description::k3 = conf->k3;

@@ -6,6 +6,7 @@
 #include "cylinder_d.h"
 #include "cone_d.h"
 #include "torus_d.h"
+#include "asq_d.h"
 #include "image.h"
 #include "transformation.h"
 
@@ -422,7 +423,8 @@ description* segmentation::create(region& r, MODELTYPE type, model *m, int camer
     case CSPHERE: d1 = (new sphere_d(r)); break;
     case CCYLINDER: d1 = (new cylinder_d(r,m)); break;
     case CCONE: d1 = (new cone_d(r,m)); break;
-    case CTORUS: d1 = (new torus_d(r,m)); break; 
+    case CTORUS: d1 = (new torus_d(r,m)); break;
+    case CASQ: d1 = (new asq_d(r,m)); break; 
     }
 
    if (camera)
@@ -571,6 +573,8 @@ segmentation::segmentation(FILE *f, image *im_1, image *norm_1)
                       break;
       case CTORUS: d[handle[i]] = new torus_d(f,segmentationImage,normals, camera_set);
                       break;
+	  case CASQ: d[handle[i]] = new asq_d(f,segmentationImage,normals, camera_set);
+                      break;
       }
     d[handle[i]] -> normals = normals;
     }
@@ -632,6 +636,8 @@ void segmentation::load(FILE *f, image *im_1, image *norm_1)
       case CCONE: d[handle[i]] = new cone_d(f,segmentationImage,normals, camera_set);
                       break;
       case CTORUS: d[handle[i]] = new torus_d(f,segmentationImage,normals, camera_set);
+                      break;
+      case CASQ: d[handle[i]] = new asq_d(f,segmentationImage,normals, camera_set);
                       break;
       }
     d[handle[i]] -> normals = normals;
