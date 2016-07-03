@@ -22,6 +22,26 @@ double spow(double x, double y)
  
 }
 
+int recover_params(sq* model, vect* list, int no) {
+  if (State::lookup->on && State::lookup->isSet) {
+	// Reset SQ params to those from lookup
+	model->a1 = State::lookup->a;
+	model->a2 = State::lookup->b;
+	model->a3 = State::lookup->c;
+	model->e1 = State::lookup->e1;
+	model->e2 = State::lookup->e2;
+
+	double _kx = 0, _ky = 0;
+	return recover_search(list, no,
+						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
+						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
+						  &_kx, &_ky, RECOVER_SQ);
+  }
+  return recover(list, no,
+				 &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
+				 &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi);
+}
+
 sq::sq(region &r) {
 
   #define MAX_LEN 25000
@@ -59,7 +79,7 @@ sq::sq(region &r) {
   //std::cout << "------------\n";
   
   printf("\nSQ recovering from scratch    %d points", no); fflush(stdout);
-  if (!recover(list, no, &a1, &a2, &a3, &e1, &e2, &px, &py, &pz, &phi, &theta, &psi))
+  if (!recover_params(this, list, no))
   { printf("\nSQ recover procedure returned error!"); fflush(stdout);
     }
 
@@ -110,7 +130,7 @@ sq::sq(sq *m, region& r) {
    
  
   printf("\nSQ recovering from old parameters"); fflush(stdout);
-  if (!recover(list, no, &a1, &a2, &a3, &e1, &e2, &px, &py, &pz, &phi, &theta, &psi))
+  if (!recover_params(this, list, no))
   { printf("\nSQ recover procedure returned error!"); fflush(stdout);
     }
 

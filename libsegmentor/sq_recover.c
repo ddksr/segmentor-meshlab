@@ -14,6 +14,9 @@
 #define TRUE 1
 #define FALSE 0
 
+#define RECOVER_SQ 1
+#define RECOVER_SQ_TAPERING 2
+
 /* #define PI 3.141529 */
 
 struct vect {
@@ -829,10 +832,11 @@ read surface points:
    return(TRUE);
 }	
 	 
-recover_search(list, no, a1, a2, a3, e1, e2, px, py, pz, fi, theta, psi, kx, ky)
+recover_search(list, no, a1, a2, a3, e1, e2, px, py, pz, fi, theta, psi, kx, ky, rtype)
 struct vect list[];
 int no;
 double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky;
+int rtype;
 {
  extern int gliset;
  extern double glochisq, gloldm;
@@ -893,10 +897,6 @@ double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky;
  a[16] = 0.0000010;   /* k or 1/k ?? */
  a[17] = 0;           /* alpha angle */
 
- mfit = 5;  /* only first 11 parameters changed to minimize the function */
-
-/*  scanf("%d", &mfit); */
-
 
  lista[0] = 5;
  lista[1] = 6;
@@ -920,7 +920,13 @@ double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky;
  lista[19] = 19;
  lista[20] = 20;
 
-
+ switch(rtype) {
+ case RECOVER_SQ_TAPERING:
+   mfit = 7;
+ case RECOVER_SQ:
+ default:
+   mfit = 5;
+ }
 
  /* scanf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
          &lista[0], &lista[1], &lista[2], 

@@ -62,7 +62,6 @@ public:
   double map_eta(double);
   double map_omega(double);
 
-  
   };
 
 
