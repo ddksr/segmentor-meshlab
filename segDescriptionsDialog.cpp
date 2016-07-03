@@ -7,6 +7,11 @@
 
 #include "segDescriptionsDialog.h"
 #include "libsegmentor/segmentor.h"
+#include "libsegmentor/common.h"
+#include "libsegmentor/state.h"
+
+#include "libsegmentor/sq.h"
+#include "libsegmentor/model.h"
 
 char *modeltypes[] = {"Plane","Superquadric","2nd order surface","Sphere","Cylinder","Cone","Torus","ASQ"};
 
@@ -41,6 +46,9 @@ segDescriptionsDialog::segDescriptionsDialog(QWidget *parent, GLArea* gl) : QDoc
 
   QObject::connect(ui.btnImport, SIGNAL(released()), this, SLOT(handleImport()));
   QObject::connect(ui.btnExport, SIGNAL(released()), this, SLOT(handleExport()));
+  QObject::connect(ui.btnLookup, SIGNAL(released()), this, SLOT(handleLookup()));
+  QObject::connect(ui.btnSave, SIGNAL(released()), this, SLOT(handleSave()));
+  QObject::connect(ui.btnClear, SIGNAL(released()), this, SLOT(handleClear()));
 
   seg = Segmentor::Instance();
 
@@ -49,6 +57,18 @@ segDescriptionsDialog::segDescriptionsDialog(QWidget *parent, GLArea* gl) : QDoc
   ui.listDescriptions->setModel(listModel);
   
   fillList();
+
+  refreshLookup();
+}
+
+void segDescriptionsDialog::refreshLookup() {
+  ui.inputLookup_a->setText(QString::number(State::lookup->a));
+  ui.inputLookup_b->setText(QString::number(State::lookup->b));
+  ui.inputLookup_c->setText(QString::number(State::lookup->c));
+  ui.inputLookup_e1->setText(QString::number(State::lookup->e1));
+  ui.inputLookup_e2->setText(QString::number(State::lookup->e2));
+  ui.inputLookup_kx->setText(QString::number(State::lookup->kx));
+  ui.inputLookup_ky->setText(QString::number(State::lookup->ky));
 }
 
 void segDescriptionsDialog::fillList() {
@@ -174,14 +194,15 @@ void segDescriptionsDialog::handleImport() {
 	if (mtype >= NUM_OF_MODELS) {
 	  break; // ERROR
 	}
-	for (int k = 1; k <= paramSize; k++) {
-	  value[k] = parts.at(k).toDouble();
+	for (int k = 1; k < paramSize; k++) {
+	  value[k-1] = parts.at(k).toDouble();
 	}
 	seg->import((MODELTYPE)mtype, value); // TODO: doesn't really work well
   }
   file.close();
 
   fillList();
+  reprepareDrawer();
 }
 
 void segDescriptionsDialog::handleExport() {
@@ -231,6 +252,44 @@ void segDescriptionsDialog::reprepareDrawer() {
 	}
   }
   gla->update();
+}
+
+void segDescriptionsDialog::handleSave() {
+  State::lookup->isSet = true;
+
+  State::lookup->a = ui.inputLookup_a->text().toDouble();
+  State::lookup->b = ui.inputLookup_b->text().toDouble();
+  State::lookup->c = ui.inputLookup_c->text().toDouble();
+  State::lookup->e1 = ui.inputLookup_e1->text().toDouble();
+  State::lookup->e2 = ui.inputLookup_e2->text().toDouble();
+  State::lookup->kx = ui.inputLookup_kx->text().toDouble();
+  State::lookup->ky = ui.inputLookup_ky->text().toDouble();
+}
+
+void segDescriptionsDialog::handleLookup() {
+  foreach(const QModelIndex &index, 
+		  ui.listDescriptions->selectionModel()->selectedIndexes()) {
+	int i, j;
+	setIJ(index.row(), i, j);
+	model* mmodel = seg->descriptions[i].d[seg->descriptions[i].handle[j]]->mmodel;
+
+	switch(mmodel->what_model()) {
+	case CSQ:
+	  sq* sq_model = (sq*) mmodel;
+	  State::lookup->a = sq_model->a1;
+	  State::lookup->b = sq_model->a2;
+	  State::lookup->c = sq_model->a3;
+	  State::lookup->e1 = sq_model->e1;
+	  State::lookup->e2 = sq_model->e2;
+	  break;
+	}
+	refreshLookup();
+  }
+  State::lookup->isSet = true;
+}
+
+void segDescriptionsDialog::handleClear() {
+  refreshLookup();
 }
 
 // segDescriptionsDialog::~segDescriptionsDialog() {}

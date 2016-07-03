@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>771</width>
-    <height>782</height>
+    <height>867</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>737</height>
+      <height>766</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="main" stretch="60,30">
@@ -342,6 +342,13 @@
         <widget class="QCheckBox" name="cbUseStatistics">
          <property name="text">
           <string>Use statistics at growing</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="cbUseLookup">
+         <property name="text">
+          <string>Use lookup</string>
          </property>
         </widget>
        </item>

@@ -1,6 +1,7 @@
 // sq.C
 
 #include "sq.h"
+#include "state.h"
 
 #include <math.h>
 #include <iostream>
@@ -408,5 +409,5 @@ void sq::set_parameters(double *value)
   g_from_l.rotate_zr(psi);
   
   l_from_g = g_from_l.inverse(sing);
-  //print();
+  print();
   }

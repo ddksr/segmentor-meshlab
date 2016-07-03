@@ -36,6 +36,7 @@ struct RecoverySettings {
   bool isNewDiscrepancy;
   bool usePostProcessing;
   bool useStatistics;
+  bool useLookup;
 };
 
 class Drawer {

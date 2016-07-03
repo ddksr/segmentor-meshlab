@@ -2,6 +2,7 @@
 #include <sstream>
 
 #include "common.h"
+#include "state.h"
 #include "segmentor.h"
 #include "image.h"
 
@@ -15,6 +16,8 @@
 #include "surface2_d.h"
 
 #include <QDebug>
+
+LookupState* State::lookup = new LookupState;
 
 Segmentor* Segmentor::_inst = NULL;
 
@@ -135,6 +138,8 @@ void Segmentor::refreshConfig() {
   
   description::discrepancy = conf->isNewDiscrepancy ? 1 : 0;
   useStatistics = conf->useStatistics ? 1 : 0;
+
+  State::lookup->on = conf->useLookup;
 }
 
 description* Segmentor::bestDescription(region *r, description *old, double iq) {

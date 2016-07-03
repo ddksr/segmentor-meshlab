@@ -112,6 +112,7 @@ void segRecoverDialog::obtainSettings() {
   config->isNewDiscrepancy = ui.cbNewDiscrepancy->isChecked();
   config->usePostProcessing = ui.cbPostProcessing->isChecked();
   config->useStatistics = ui.cbUseStatistics->isChecked();
+  config->useLookup = ui.cbUseLookup->isChecked();
 
   config->plane.on = ui.cbPlane->isChecked();
   config->plane.dist = ui.inputPlaneDist->text().toFloat();
@@ -164,6 +165,7 @@ void segRecoverDialog::storeSettings() {
   iniConfig.setValue("recover/isNewDiscrepancy", config->isNewDiscrepancy);
   iniConfig.setValue("recover/usePostProcessing", config->usePostProcessing);
   iniConfig.setValue("recover/useStatistics", config->useStatistics);
+  iniConfig.setValue("recover/useLookup", config->useLookup);
 
   iniConfig.setValue("plane/on", config->plane.on);
   iniConfig.setValue("plane/maxDistance", (double)config->plane.dist);
@@ -216,6 +218,7 @@ void segRecoverDialog::recoverSettings() {
   ui.cbNewDiscrepancy->setChecked(iniConfig.value("recover/isNewDiscrepancy", config->isNewDiscrepancy).toBool());
   ui.cbPostProcessing->setChecked(iniConfig.value("recover/usePostProcessing", config->usePostProcessing).toBool());
   ui.cbUseStatistics->setChecked(iniConfig.value("recover/useStatistics", config->useStatistics).toBool());
+  ui.cbUseLookup->setChecked(iniConfig.value("recover/useLookup", config->useLookup).toBool());
 
   ui.cbPlane->setChecked(iniConfig.value("plane/on", config->plane.on).toBool());
   ui.inputPlaneDist->setText(iniConfig.value("plane/maxDistance", config->plane.dist).toString());

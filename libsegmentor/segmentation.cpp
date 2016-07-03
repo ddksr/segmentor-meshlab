@@ -220,8 +220,8 @@ void segmentation::import(MODELTYPE mtype, double *params) {
   d[dn]->mmodel->set_parameters(params);
   d[dn] -> print();
   
-  segmentation::drawer->prepare(d[dn]->mmodel);
-  segmentation::drawer->prepare(rn);
+  //segmentation::drawer->prepare(d[dn]->mmodel);
+  //segmentation::drawer->prepare(rn);
   handle[n++] = dn++;
   delete rn;
 }

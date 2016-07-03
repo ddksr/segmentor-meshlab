@@ -35,6 +35,7 @@ class segDescriptionsDialog : public QDockWidget
   
   void setIJ(int, int&, int&);
   void reprepareDrawer();
+  void refreshLookup();
 
  private slots:
   void handleGrowStep();
@@ -43,6 +44,9 @@ class segDescriptionsDialog : public QDockWidget
   void handleSelect();
   void handleImport();
   void handleExport();
+  void handleLookup();
+  void handleSave();
+  void handleClear();
   
 
  signals:
