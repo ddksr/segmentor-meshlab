@@ -47,14 +47,16 @@ segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) :
   settingsFile = QDir::homePath() + QDir::separator() + "segmentor.ini";
 
   config = new RecoverySettings{
-	{false, 3.0, 2.0},
-	{true, 6.0, 5.0},
-	{false, 3.0, 2.0},
-	{false, 3.0, 2.0},
-	{false, 3.0, 2.0},
-	{false, 3.0, 2.0},
-	{false, 3.0, 2.0},
-	{false, 3.0, 2.0},
+	{false, 3.0, 2.0}, //plane
+	{true, 6.0, 5.0}, // sq
+	{false, 3.0, 2.0}, // surface2
+	{false, 3.0, 2.0}, // sphere
+	{false, 3.0, 2.0}, // cylinder
+	{false, 3.0, 2.0}, // cone
+	{false, 3.0, 2.0}, // torus
+	{false, 3.0, 2.0}, // asq
+	{false, 6.0, 5.0}, // tsq
+	{false, 6.0, 5.0}, // bsq
 	0.2,
 	0.3,
 	0.75, 
@@ -92,6 +94,7 @@ segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) :
   QObject::connect(ui.btnRefinement, SIGNAL(clicked()), this, SLOT(refinement()));
   QObject::connect(ui.btnBasicRas, SIGNAL(clicked()), this, SLOT(basicRAS()));
   QObject::connect(ui.btnImprovedRas, SIGNAL(clicked()), this, SLOT(improvedRAS()));
+  QObject::connect(ui.btnClear, SIGNAL(clicked()), this, SLOT(clear()));
 
   desc = NULL;
   seg->enableMessaging(true);
@@ -145,6 +148,15 @@ void segRecoverDialog::obtainSettings() {
   config->asq.on = ui.cbASq->isChecked();
   config->asq.dist = ui.inputASqDist->text().toFloat();
   config->asq.err = ui.inputASqErr->text().toFloat();
+  
+  config->tsq.on = ui.cbTSq->isChecked();
+  config->tsq.dist = ui.inputTSqDist->text().toFloat();
+  config->tsq.err = ui.inputTSqErr->text().toFloat();
+
+  config->bsq.on = ui.cbBSq->isChecked();
+  config->bsq.dist = ui.inputBSqDist->text().toFloat();
+  config->bsq.err = ui.inputBSqErr->text().toFloat();
+
 }
 
 void segRecoverDialog::storeSettings() {
@@ -195,10 +207,18 @@ void segRecoverDialog::storeSettings() {
   iniConfig.setValue("torus/maxDistance", (double)config->torus.dist);
   iniConfig.setValue("torus/maxError", (double)config->torus.err);
 
-  
   iniConfig.setValue("asq/on", config->asq.on);
   iniConfig.setValue("asq/maxDistance", (double)config->asq.dist);
   iniConfig.setValue("asq/maxError", (double)config->asq.err);
+
+  iniConfig.setValue("tsq/on", config->tsq.on);
+  iniConfig.setValue("tsq/maxDistance", (double)config->tsq.dist);
+  iniConfig.setValue("tsq/maxError", (double)config->tsq.err);
+
+  iniConfig.setValue("bsq/on", config->bsq.on);
+  iniConfig.setValue("bsq/maxDistance", (double)config->bsq.dist);
+  iniConfig.setValue("bsq/maxError", (double)config->bsq.err);
+
 }
 
 void segRecoverDialog::recoverSettings() {
@@ -251,6 +271,14 @@ void segRecoverDialog::recoverSettings() {
   ui.cbASq->setChecked(iniConfig.value("asq/on", config->asq.on).toBool());
   ui.inputASqDist->setText(iniConfig.value("asq/maxDistance", config->asq.dist).toString());
   ui.inputASqErr->setText(iniConfig.value("asq/maxError", config->asq.err).toString());
+
+  ui.cbTSq->setChecked(iniConfig.value("tsq/on", config->tsq.on).toBool());
+  ui.inputTSqDist->setText(iniConfig.value("tsq/maxDistance", config->tsq.dist).toString());
+  ui.inputTSqErr->setText(iniConfig.value("tsq/maxError", config->tsq.err).toString());
+
+  ui.cbBSq->setChecked(iniConfig.value("bsq/on", config->bsq.on).toBool());
+  ui.inputBSqDist->setText(iniConfig.value("bsq/maxDistance", config->bsq.dist).toString());
+  ui.inputBSqErr->setText(iniConfig.value("bsq/maxError", config->bsq.err).toString());
 }
 
 void segRecoverDialog::handleStoreSettings() {
@@ -395,6 +423,10 @@ void segRecoverDialog::showDescriptions() {
   desc->show();
 }
 
+void segRecoverDialog::clear() {
+  seg->setUp(config, mesh, (Drawer*)d, (ProgressIndicator*) pb, message);
+  seg->enableMessaging(true);
+}
 
 ProgressBar::ProgressBar(QProgressBar *_bar, QLabel *_label) {
   bar = _bar;

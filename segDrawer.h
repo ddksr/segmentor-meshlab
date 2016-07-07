@@ -9,6 +9,7 @@
 #include "libsegmentor/model.h"
 
 #include "libsegmentor/sq.h"
+#include "libsegmentor/tsq.h"
 #include "libsegmentor/plane.h"
 #include "libsegmentor/surface2.h"
 #include "libsegmentor/sphere.h"
@@ -51,7 +52,7 @@ class MeshlabDrawer : public Drawer {
   void draw_torus(torus* m, Color*);
   void draw_sphere(sphere* m, Color*);
   void draw_cylinder(cylinder* m, Color*);
-
+  void draw_tsq(tsq*, Color*);
 };
 
 

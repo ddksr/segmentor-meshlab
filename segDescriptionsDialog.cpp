@@ -13,7 +13,7 @@
 #include "libsegmentor/sq.h"
 #include "libsegmentor/model.h"
 
-char *modeltypes[] = {"Plane","Superquadric","2nd order surface","Sphere","Cylinder","Cone","Torus","ASQ"};
+char *modeltypes[] = {"Plane","Superquadric","2nd order surface","Sphere","Cylinder","Cone","Torus","ASQ", "TSQ", "BSQ"};
 
 QString *qmodeltypes[] = {
   new QString("PL"),
@@ -23,7 +23,9 @@ QString *qmodeltypes[] = {
   new QString("CY"),
   new QString("CO"),
   new QString("TO"),
-  new QString("ASQ")
+  new QString("ASQ"),
+  new QString("TSQ"),
+  new QString("BSQ")
 };
 
 void segDescriptionsDialog::closeEvent ( QCloseEvent * /*event*/ )

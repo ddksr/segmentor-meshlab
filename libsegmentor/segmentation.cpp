@@ -7,6 +7,8 @@
 #include "cone_d.h"
 #include "torus_d.h"
 #include "asq_d.h"
+#include "tsq_d.h"
+#include "bsq_d.h"
 #include "image.h"
 #include "transformation.h"
 
@@ -319,35 +321,34 @@ void segmentation::selection()
       }
     not_in->n = in->n = n;
     // std::cout << "\nInclude models:";
-    do   
-    { max_ind = not_in -> handle[mind = 0];
+    do {
+	  max_ind = not_in -> handle[mind = 0];
       max_delta_f = sm.el(max_ind,max_ind);
-      for (i = 1; i < not_in->n; i++)
-      { ind = not_in -> handle[i];
+      for (i = 1; i < not_in->n; i++) {
+		ind = not_in -> handle[i];
         delta_f = sm.el(ind,ind);
-        if (delta_f > max_delta_f)
-        { max_delta_f = delta_f;
+        if (delta_f > max_delta_f) {
+		  max_delta_f = delta_f;
           max_ind = ind;
           mind = i;
-          }
-        }
-      if (max_delta_f > 0.0)
-      { in->handle[max_ind] = 1;
+		}
+	  }
+      if (max_delta_f > 0.0) {
+		in->handle[max_ind] = 1;
         not_in->handle[mind] = not_in->handle[--not_in->n];
-        for (j = 0; j < not_in->n; j++)
-        { ind = not_in->handle[j];
+        for (j = 0; j < not_in->n; j++) {
+		  ind = not_in->handle[j];
           sm.el(ind,ind) += 2*sm.el(ind,max_ind);
-          }
+		}
         // std::cout << ' ' << max_ind << ' ' << max_delta_f;
         // std::cout.flush();  
-        }  
-      } while (max_delta_f > 0.0 && not_in->n);
+	  }  
+	} while (max_delta_f > 0.0 && not_in->n);
     for (i = 0; i < n; i++)
-      if (!in->handle[i])
-      { delete d[handle[i]];
-        d[handle[i]] = NULL;
-        }      
-    
+      if (!in->handle[i]) {
+		delete d[handle[i]];
+		d[handle[i]] = NULL;
+	  }      
     throw_away();
     // std::cout << *this;
     // std::cout.flush();
@@ -424,7 +425,9 @@ description* segmentation::create(region& r, MODELTYPE type, model *m, int camer
     case CCYLINDER: d1 = (new cylinder_d(r,m)); break;
     case CCONE: d1 = (new cone_d(r,m)); break;
     case CTORUS: d1 = (new torus_d(r,m)); break;
-    case CASQ: d1 = (new asq_d(r,m)); break; 
+    case CASQ: d1 = (new asq_d(r,m)); break;
+    case CTSQ: d1 = (new tsq_d(r,m)); break;
+    case CBSQ: d1 = (new bsq_d(r,m)); break;
     }
 
    if (camera)
@@ -575,6 +578,10 @@ segmentation::segmentation(FILE *f, image *im_1, image *norm_1)
                       break;
 	  case CASQ: d[handle[i]] = new asq_d(f,segmentationImage,normals, camera_set);
                       break;
+	  case CTSQ: d[handle[i]] = new tsq_d(f,segmentationImage,normals, camera_set);
+		              break;
+	  case CBSQ: d[handle[i]] = new bsq_d(f,segmentationImage,normals, camera_set);
+                      break;
       }
     d[handle[i]] -> normals = normals;
     }
@@ -638,6 +645,10 @@ void segmentation::load(FILE *f, image *im_1, image *norm_1)
       case CTORUS: d[handle[i]] = new torus_d(f,segmentationImage,normals, camera_set);
                       break;
       case CASQ: d[handle[i]] = new asq_d(f,segmentationImage,normals, camera_set);
+                      break;
+	  case CTSQ: d[handle[i]] = new tsq_d(f,segmentationImage,normals, camera_set);
+                      break;
+	  case CBSQ: d[handle[i]] = new bsq_d(f,segmentationImage,normals, camera_set);
                       break;
       }
     d[handle[i]] -> normals = normals;

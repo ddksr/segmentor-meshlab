@@ -16,6 +16,9 @@
 
 #define RECOVER_SQ 1
 #define RECOVER_SQ_TAPERING 2
+#define RECOVER_SQ_BENDING 3
+#define RECOVER_SQ_GLOBAL 4
+#define RECOVER_ASQ 5
 
 /* #define PI 3.141529 */
 
@@ -830,12 +833,12 @@ read surface points:
    *pz = a[10];
 
    return(TRUE);
-}	
+}
 	 
-recover_search(list, no, a1, a2, a3, e1, e2, px, py, pz, fi, theta, psi, kx, ky, rtype)
+recover_search(list, no, a1, a2, a3, e1, e2, px, py, pz, fi, theta, psi, kx, ky, bk, ba, rtype)
 struct vect list[];
 int no;
-double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky;
+double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky, *bk, *ba;
 int rtype;
 {
  extern int gliset;
@@ -894,8 +897,8 @@ int rtype;
  a[13] = 0;           /* center of bending */
  a[14] = -500;        /* z min */
  a[15] = 500;         /* z max */
- a[16] = 0.0000010;   /* k or 1/k ?? */
- a[17] = 0;           /* alpha angle */
+ a[16] = *bk;   /* k or 1/k ?? */
+ a[17] = *ba;           /* alpha angle */
 
 
  lista[0] = 5;
@@ -904,15 +907,15 @@ int rtype;
  lista[3] = 8;
  lista[4] = 9;
  lista[5] = 10;
- lista[6] = 0;
- lista[7] = 1;
- lista[8] = 2;
- lista[9] = 3;
- lista[10] = 4;
- lista[11] = 11;
- lista[12] = 12;
- lista[13] = 16;
- lista[14] = 17;
+ lista[6] = 11;
+ lista[7] = 12;
+ lista[8] = 16;
+ lista[9] = 17;
+ lista[10] = 0;
+ lista[11] = 1;
+ lista[12] = 2;
+ lista[13] = 3;
+ lista[14] = 4;
  lista[15] = 13;
  lista[16] = 14;
  lista[17] = 15;
@@ -922,10 +925,21 @@ int rtype;
 
  switch(rtype) {
  case RECOVER_SQ_TAPERING:
-   mfit = 7;
+   mfit = 8;
+   break;
+ case RECOVER_SQ_BENDING:
+   mfit = 8;
+   lista[6] = 16;
+   lista[7] = 17;
+   lista[8] = 11;
+   lista[9] = 12;
+   break;
+ /* case RECOVER_SQ_GLOBAl: */
+ /*   mfit = 10; */
+ /*   break; */
  case RECOVER_SQ:
  default:
-   mfit = 5;
+   mfit = 6;
  }
 
  /* scanf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
@@ -1020,6 +1034,211 @@ read surface points:
    return(TRUE);
 }	
 
+recover2(list, no, a1, a2, a3, e1, e2, px, py, pz, fi, theta, psi, kx, ky, bk, ba, rtype)
+struct vect list[];
+int no;
+double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky, *bk, *ba;
+int rtype;
+{
+ extern int gliset;
+ extern double glochisq, gloldm;
+ extern glmma glatry, glbeta;
+
+ int npt, i, k, mfit, n_model_acc, iter;
+ /* double mrqmin_init(), mrqmin(), mrqcof(), funcs(), sqr(); */
+ double alamda, old_chisq;
+
+ glmma a;
+ glndata F, sig;
+ glndata2 xw;
+ gllista lista;
+ glcovar covar, alpha;
+ unsigned seed;
+
+ FILE *fopen(), *fp;
+
+ seed = 1955;
+ srand(seed);
+
+ gliset = 0;
+ gloldm = -1.0;
+ i_am_in_trouble = FALSE;
+
+
+/*
+
+ scanf("%*s");
+ scanf("%lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",
+         &a[5], &a[6], &a[7],
+         &a[8], &a[9], &a[10],
+         &a[0], &a[1], &a[2],
+         &a[3], &a[4],
+         &a[11], &a[12],
+         &a[13], &a[14], &a[15], &a[16], &a[17]);
+*/
+
+ a[0]  = *a1;
+ a[1]  = *a2;
+ a[2]  = *a3;
+ a[3]  = *e1;
+ a[4]  = *e2;
+ a[5]  = *fi;
+ a[6]  = *theta;
+ a[7]  = *psi;
+ a[8]  = *px;
+ a[9]  = *py;
+ a[10] = *pz;
+
+/* default values od deformation parameters to produce a nondeformed SQ */
+
+ a[11] = *kx;           /* kx: 0 */
+ a[12] = *ky;           /* ky: 0 */
+ a[13] = 0;           /* center of bending */
+ a[14] = -500;        /* z min */
+ a[15] = 500;         /* z max */
+ a[16] = *bk;   /* k or 1/k ?? : 0.0000010  */
+ a[17] = *ba;           /* alpha angle : 0 */
+
+ mfit = 11;  /* only first 11 parameters changed to minimize the function */
+
+/*  scanf("%d", &mfit); */
+
+
+ lista[0] = 0;
+ lista[1] = 1;
+ lista[2] = 2;
+ lista[3] = 3;
+ lista[4] = 4;
+ lista[5] = 5;
+ lista[6] = 6;
+ lista[7] = 7;
+ lista[8] = 8;
+ lista[9] = 9;
+ lista[10] = 10;
+ lista[11] = 11;
+ lista[12] = 12;
+ lista[13] = 16;
+ lista[14] = 17;
+ lista[15] = 13;
+ lista[16] = 14;
+ lista[17] = 15;
+ lista[18] = 18;
+ lista[19] = 19;
+ lista[20] = 20;
+
+ switch(rtype) {
+ case RECOVER_SQ_TAPERING:
+   mfit = 13;
+   break;
+ case RECOVER_SQ_BENDING:
+   mfit = 13;
+   lista[11] = 16;
+   lista[12] = 17;
+   lista[13] = 11;
+   lista[14] = 12;
+   break;
+ /* case RECOVER_SQ_GLOBAl: */
+ /*   mfit = 15; */
+ /*   break; */
+ case RECOVER_SQ:
+ default:
+   mfit = 11;
+ }
+
+
+ /* scanf("%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",
+         &lista[0], &lista[1], &lista[2], 
+         &lista[3], &lista[4], 
+         &lista[5], &lista[6], &lista[7], 
+         &lista[8], &lista[9], &lista[10],
+         &lista[11], &lista[12],
+         &lista[13], &lista[14], &lista[15], &lista[16], &lista[17]);
+ */
+
+
+/**************************************************************************
+read surface points:
+*/
+  i = 0;
+
+  for (i = 0; i < no; i++) {
+    xw[0][i] = list[i].x;
+    xw[1][i] = list[i].y;
+    xw[2][i] = list[i].z;
+    F[i] = 0;
+    sig[i] = 1;
+  }
+
+   
+
+     npt = no;
+
+     n_model_acc = npt;
+     glochisq = 10e31;
+     old_chisq = 1.0;
+     iter = 0;
+
+ /* printf("No. of points read [max. %d]: %d\n", arraysize, npt); */
+
+     for (k = 0; k < 50; k++) {
+       if (k == 0) 
+          alamda = mrqmin_init(xw, F, sig, npt, a, lista, mfit, alpha, mma, &n_model_acc);
+       else 
+          alamda = mrqmin(xw, F, sig, npt, a,lista, mfit, covar, alpha, alamda, &n_model_acc);
+
+       if (i_am_in_trouble)
+	 return(FALSE);
+
+        if(old_chisq  != glochisq) { 
+	  old_chisq = glochisq;
+	  
+	  /*   print_to_file(iter, a, glochisq); */
+
+          /*
+
+           printf("Iteration # %d    alamda = %lf         chisq = %lf\n",
+                    iter, alamda, glochisq);
+           printf("a[0]        a[1]        a[2]        a[3]        a[4]\n");
+           printf("%lf   %lf   %lf   %lf   %lf\n",
+                  a[0], a[1], a[2], a[3], a[4]);
+           printf("a[5]        a[6]        a[7]\n");
+           printf("%lf   %lf   %lf\n", a[5], a[6], a[7]);
+           printf("a[8]        a[9]        a[10]       a[11]       a[12]\n");
+           printf("%lf   %lf   %lf   %lf   %lf\n",
+                  a[8], a[9], a[10], a[11], a[12]);
+           printf("a[13]       a[14]       a[15]       a[16]       a[17]\n");
+           printf("%lf   %lf   %lf   %lf   %lf\n",
+                  a[13], a[14], a[15], a[16], a[17]);
+
+	   */
+
+           iter = iter + 1;
+	}
+     }
+	 
+   
+	 
+	
+  /* set return values */
+
+   *a1 = a[0];
+   *a2 = a[1];
+   *a3 = a[2];
+   *e1 = a[3];
+   *e2 = a[4];
+   *fi = a[5];
+   *theta = a[6];
+   *psi = a[7];
+   *px = a[8];
+   *py = a[9];
+   *pz = a[10];
+   *kx = a[11];
+   *ky = a[12];
+   *bk = a[16];
+   *ba = a[17];
+
+   return(TRUE);
+}
 
 /***************************************************************************/
 double mrqmin_init

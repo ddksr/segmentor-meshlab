@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>771</width>
-    <height>867</height>
+    <height>914</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -20,7 +20,7 @@
       <x>0</x>
       <y>0</y>
       <width>751</width>
-      <height>766</height>
+      <height>858</height>
      </rect>
     </property>
     <layout class="QHBoxLayout" name="main" stretch="60,30">
@@ -34,6 +34,27 @@
       <layout class="QVBoxLayout" name="paramsLayout">
        <item>
         <layout class="QGridLayout" name="gridLayout">
+         <item row="10" column="0">
+          <widget class="QCheckBox" name="cbBSq">
+           <property name="text">
+            <string>Superquadric w/ bending</string>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_12">
+           <item>
+            <widget class="QLineEdit" name="inputBSqDist">
+             <property name="toolTip">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputBSqErr"/>
+           </item>
+          </layout>
+         </item>
          <item row="4" column="0">
           <widget class="QCheckBox" name="cbSphere">
            <property name="text">
@@ -209,6 +230,27 @@
           <widget class="QCheckBox" name="cbASq">
            <property name="text">
             <string>Amphora Superquadric</string>
+           </property>
+          </widget>
+         </item>
+         <item row="9" column="1">
+          <layout class="QHBoxLayout" name="horizontalLayout_11">
+           <item>
+            <widget class="QLineEdit" name="inputTSqDist">
+             <property name="toolTip">
+              <string/>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="inputTSqErr"/>
+           </item>
+          </layout>
+         </item>
+         <item row="9" column="0">
+          <widget class="QCheckBox" name="cbTSq">
+           <property name="text">
+            <string>Superquadric w/ tapering</string>
            </property>
           </widget>
          </item>
@@ -520,6 +562,13 @@
         <widget class="QPushButton" name="btnShowQuality">
          <property name="text">
           <string>Show quality</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btnClear">
+         <property name="text">
+          <string>Clear</string>
          </property>
         </widget>
        </item>

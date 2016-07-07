@@ -9,6 +9,8 @@
 #include "sphere_d.h"
 #include "sq_d.h"
 #include "asq_d.h"
+#include "tsq_d.h"
+#include "bsq_d.h"
 #include "torus_d.h"
 #include "planar_d.h"
 #include "cone_d.h"
@@ -57,6 +59,8 @@ void Segmentor::setUp(RecoverySettings* c, image* img, Drawer* d, ProgressIndica
   models[5] = &conf->cone;
   models[6] = &conf->torus;
   models[7] = &conf->asq;
+  models[8] = &conf->tsq;
+  models[9] = &conf->bsq;
 }
 
 Drawer* Segmentor::getDrawer() {
@@ -97,6 +101,13 @@ void Segmentor::import(MODELTYPE mtype, double *params) {
 }
 
 void Segmentor::clear() {
+  if (drawer != NULL) {
+	drawer->clear();
+  }
+  if (progress != NULL) {
+	progress->clear();
+  }
+  
   if (normals != NULL) {
 	delete normals;
     normals = NULL;
@@ -130,6 +141,12 @@ void Segmentor::refreshConfig() {
 
   asq_d::m_err = conf->asq.dist;
   asq_d::m_dist = conf->asq.err;
+
+  tsq_d::m_err = conf->asq.dist;
+  tsq_d::m_dist = conf->asq.err;
+
+  bsq_d::m_err = conf->asq.dist;
+  bsq_d::m_dist = conf->asq.err;
 
   description::k2 = conf->k2;
   description::k3 = conf->k3;

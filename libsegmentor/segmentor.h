@@ -2,7 +2,7 @@
 #define SEGMENTOR
 
 #define MAX_DESCRIPTION_LISTS 100
-#define NUM_OF_MODELS 8
+#define NUM_OF_MODELS 10
 
 #include "common.h"
 #include "image.h"

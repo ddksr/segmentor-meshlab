@@ -1,19 +1,19 @@
 // sq.C
 
-#include "sq.h"
+#include "tsq.h"
 #include "state.h"
+#include "mathutil.h"
 
 #include <math.h>
 #include <iostream>
-
-#include "mathutil.h"
 
 extern "C" {
 #include "sq_recover.h"
  double sq_mindist(double a1, double a2, double a3, double e1, double e2, double x0, double y0, double z0);
 }
 
-int recover_params(sq* model, vect* list, int no) {
+int recover_params(tsq* model, vect* list, int no) {
+  double _bk= 0.0000010, _ba = 0;
   if (State::lookup->on && State::lookup->isSet) {
 	// Reset SQ params to those from lookup
 	model->a1 = State::lookup->a;
@@ -21,19 +21,25 @@ int recover_params(sq* model, vect* list, int no) {
 	model->a3 = State::lookup->c;
 	model->e1 = State::lookup->e1;
 	model->e2 = State::lookup->e2;
+	model->kx = State::lookup->kx;
+	model->ky = State::lookup->ky;
 
-	double _kx = 0, _ky = 0, _bk = 0.0000010, _ba = 0;
+	
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
 						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &_kx, &_ky, &_bk, &_ba, RECOVER_SQ);
+						  &model->kx, &model->ky, &_bk, &_ba, RECOVER_SQ);
   }
-  return recover(list, no,
-				 &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
-				 &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi);
+  // return recover(list, no,
+  // 				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
+  // 				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi);
+  return recover2(list, no,
+  				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
+  				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
+  				  &model->kx, &model->ky, &_bk, &_ba, RECOVER_SQ_TAPERING);
 }
 
-sq::sq(region &r) {
+tsq::tsq(region &r) {
 
   #define MAX_LEN 25000
   
@@ -68,6 +74,9 @@ sq::sq(region &r) {
   //std::cout << "Estimate: \n";
   //print();
   //std::cout << "------------\n";
+
+  kx = 0;
+  ky = 0;
   
   printf("\nSQ recovering from scratch    %d points", no); fflush(stdout);
   if (!recover_params(this, list, no))
@@ -85,9 +94,7 @@ sq::sq(region &r) {
 
 // creates an SQ model based on region and given initial estimate
 
-sq::sq(sq *m, region& r) {
-
-
+tsq::tsq(tsq *m, region& r) {
   #define MAX_LEN 25000
 
   struct vect list[MAX_LEN];
@@ -98,6 +105,9 @@ sq::sq(sq *m, region& r) {
   a1 = m->a1; a2 = m->a2; a3 = m->a3; e1 = m->e1; e2 = m->e2;
   phi = m->phi; theta = m->theta; psi = m->psi; px = m->px; py = m->py; 
   pz = m->pz;
+
+  kx = m->kx;
+  ky = m->ky;
   
   no = 0;
 
@@ -134,39 +144,25 @@ sq::sq(sq *m, region& r) {
   l_from_g = g_from_l.inverse(sing);
 }
 
-sq::sq(FILE *f)
-{ fread(&a1, 1, sizeof(double), f);
-  fread(&a2, 1, sizeof(double), f);
-  fread(&a3, 1, sizeof(double), f);
-  fread(&e1, 1, sizeof(double), f);
-  fread(&e2, 1, sizeof(double), f);
-  fread(&phi, 1, sizeof(double), f);
-  fread(&theta, 1, sizeof(double), f);
-  fread(&psi, 1, sizeof(double), f);
-  fread(&px, 1, sizeof(double), f);
-  fread(&py, 1, sizeof(double), f);
-  fread(&pz, 1, sizeof(double), f);
-  l_from_g.load(f);
-  g_from_l.load(f);
-  }
 
-double sq::map_eta(double eta) {
-
+double tsq::map_eta(double eta) {
+  // TODO: maybe?
   double x = a2 * spow(cos(eta), 1/e1);
   double y = a3 * spow(sin(eta), 1/e1);
   
   return (atan2(y, x));
 }
 
-double sq::map_omega(double omega) {
+double tsq::map_omega(double omega) {
+  // TODO: maybe?
   double x = a2 * spow(cos(omega), 1/e2);
   double y = a1 * spow(sin(omega), 1/e2);
 
   return (atan2(y, x));
 }
 
-vector sq::normal(double eta, double omega) const {
- 
+vector tsq::normal(double eta, double omega) const {
+  // TODO: maybe?
   vector result(4);
 
   result.el(0) = spow(cos(eta), 2.0 - e1) * spow(cos(omega), 2.0 - e2) / a1;
@@ -180,19 +176,23 @@ vector sq::normal(double eta, double omega) const {
   return result;
 }
 
-vector sq::r(double eta, double omega) const {
- 
+vector tsq::r(double eta, double omega) const {
+  
   vector result(4);
 
-  result.el(0) = a1 * spow(cos(eta), e1) * spow(cos(omega), e2);
-  result.el(1) = a2 * spow(cos(eta), e1) * spow(sin(omega), e2);
-  result.el(2) = a3 * spow(sin(eta), e1);
+  double z = a3 * spow(sin(eta), e1),
+	fx = kx * z / a3 + 1,
+	fy = ky * z / a3 + 1;
+
+  result.el(0) = a1 * spow(cos(eta), e1) * spow(cos(omega), e2) * fx;
+  result.el(1) = a2 * spow(cos(eta), e1) * spow(sin(omega), e2) * fy;
+  result.el(2) = z;
   result.el(3) = 1.0;
   
   return result;
 }
 
-double sq::abs_signed_distance(struct point& p)
+double tsq::abs_signed_distance(struct point& p)
 { vector tmp(4),r(4);
   double delta;
   tmp.el(0) = p.x;
@@ -207,181 +207,54 @@ double sq::abs_signed_distance(struct point& p)
   return(delta);
   }
   
-double sq::f(double x, double y, double z) const {
+double tsq::f(double x, double y, double z) const {
   
 
   // thid double pow is to prevent negative arguments to pow when the exponent is negative
   // do not try to optimize
 
-  double a = pow(pow((x / a1), 2), 1/e2);
-  double b = pow(pow((y / a2), 2), 1/e2);   
+  double fx = kx * z / a3 + 1,
+	fy = ky * z / a3 + 1; // TODO: this is probably wrong
+
+  double a = pow(pow((x/fx / a1), 2), 1/e2);
+  double b = pow(pow((y/fy / a2), 2), 1/e2);   
   double c = pow(pow((z / a3), 2), 1/e1);
   
   return pow(pow(a + b, e2/e1) + c, e1);
 }
 
-void sq::sq_draw(int no_hidding) {
-
-  #define PI 3.14159265359
-  #define N
-
-  int i, j;  
-  double omega, eta;
-  vector new_r(4),old_r(4),new_r1(4),old_r1(4);
-
-  new_r.el(0) = new_r.el(1) = new_r.el(2) = old_r.el(0) = old_r.el(1) = old_r.el(2) = 0;
-  new_r.el(3) = old_r.el(3) = 1;
-  
-  vector view_g(4);
-  view_g.el(0) = 0;
-  view_g.el(1) = 0;
-  view_g.el(2) = 1;
-  view_g.el(3) = 0;
-  
-  //setcolor(140);   // za create_gif
-  
-
-  vector view_l(4);
-  view_l = l_from_g * view_g;
- 
-  // form discrete arrays of eta and omega values to draw the "edges" correctly
-
-  double eta_array[100];
-  int eta_len = 0;
-  
-
-  double eta_up = atan2(a3, a2);
-  double eta_down = -PI/2.0 + eta_up;
-  double eta_over;
-
-  for(eta = -PI/2.0 ; eta < eta_down; eta += PI/12.0)
-    eta_array[eta_len++] = eta;
-  eta_array[eta_len++] = eta_down;
-  eta_over = eta;
-  for(eta = eta_over; eta < eta_up; eta += PI/12.0)
-    eta_array[eta_len++] = eta;
-  eta_array[eta_len++] = eta_up;
-  eta_over = eta;
-  for(eta = eta_over; eta < PI/2.0; eta += PI/12.0)
-    eta_array[eta_len++] = eta;
-  eta_array[eta_len++] = PI/2.0;
-
-  double omega_array[100];
-  int omega_len = 0;
-
-  for(omega = -PI; omega < +PI; omega += PI/12.0)
-    omega_array[omega_len++] = omega;
-  omega_array[omega_len++] = +PI;
-
-
-  // draw const eta lines
-
-  for(i = 0; i < eta_len; i++) {
- 
-    eta = eta_array[i];
-    j = 0;
-    omega = omega_array[j];
-    old_r = g_from_l*(this->r(map_eta(eta), map_omega(omega)));
-
-    for(j = 1; j < omega_len; j++) {
-
-      omega = omega_array[j];
-      new_r = g_from_l*((*this).r(map_eta(eta), map_omega(omega)));
-
-      // draw the line if visible or no_hidding = TRUE
-
-      if (no_hidding || ((view_l * normal(map_eta(eta), map_omega(omega))) >= -0.1))
-      { old_r1 = transform(old_r);
-        new_r1 = transform(new_r);
-        //line((int) old_r1.el(0), ih() - (int) old_r1.el(1), (int) new_r1.el(0), ih() - (int) new_r1.el(1));
-        }
-        
-        old_r = new_r;
-    }
-
-    //flush();
- 
-  }
-
-  // draw const omega lines
-
-  for(i = 0; i < omega_len; i++) {
- 
-    omega = omega_array[i];
-    j = 0;
-    eta = eta_array[j];
-    old_r = g_from_l*(this->r(map_eta(eta), map_omega(omega)));
-
-    for(j = 1; j < eta_len; j++) {
-
-      eta = eta_array[j];
-      new_r = g_from_l*((*this).r(map_eta(eta), map_omega(omega)));
-
-      // draw the line if visible
-
-      if (no_hidding || (view_l * normal(map_eta(eta), map_omega(omega))) >= -0.1)
-      { old_r1 = transform(old_r);
-        new_r1 = transform(new_r);
-        //line((int) old_r1.el(0), ih() - (int) old_r1.el(1), (int) new_r1.el(0), ih() - (int) new_r1.el(1));        
-        }
-        old_r = new_r;
-    }
-  }
-
-  //flush();  
-}
-
-void sq::print() 
+void tsq::print() 
 {
   
   std::cout << "\nSuperellipsoid parameters:\n";
   std::cout << "a1 = " << a1 << " a2 = " << a2 << " a3 = " << a3 << '\n';
   std::cout << "e1 = " << e1 << " e2 = " << e2 << '\n';
   std::cout << "phi = " << phi << " theta = " << theta << " psi = " << psi << '\n';
-  std::cout << "px = " << px << " py  = " << py << " pz = " << pz << '\n';  
+  std::cout << "px = " << px << " py  = " << py << " pz = " << pz << '\n';
+  std::cout << "kx = " << kx << " ky  = " << ky << '\n';  
   std::cout << g_from_l;
   std::cout << l_from_g; 
 
 }  
 
-void sq::fprint(FILE *f)
-{ fprintf(f,"2 %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf",a1,a2,a3,e1,e2,px,py,pz,theta,psi);
-}
-
-void sq::save(FILE *f)
-{ fwrite(&a1, 1, sizeof(double), f);
-  fwrite(&a2, 1, sizeof(double), f);
-  fwrite(&a3, 1, sizeof(double), f);
-  fwrite(&e1, 1, sizeof(double), f);
-  fwrite(&e2, 1, sizeof(double), f);
-  fwrite(&phi, 1, sizeof(double), f);
-  fwrite(&theta, 1, sizeof(double), f);
-  fwrite(&psi, 1, sizeof(double), f);
-  fwrite(&px, 1, sizeof(double), f);
-  fwrite(&py, 1, sizeof(double), f);
-  fwrite(&pz, 1, sizeof(double), f);
-  l_from_g.save(f);
-  g_from_l.save(f);
+model* tsq::improve(region& orig, region& added)
+{ region r = orig | added;
+  return(new tsq(r));
   }
   
-model* sq::improve(region& orig, region& added)
+model* tsq::improve(model *m, region& orig, region& added)
 { region r = orig | added;
-  return(new sq(r));
-  }
-  
-model* sq::improve(model *m, region& orig, region& added)
-{ region r = orig | added;
-  return(new sq((sq *)m,r));
+  return(new tsq((tsq *)m,r));
   }
 
-vector sq::transform(vector& v)
+vector tsq::transform(vector& v)
 { vector v1(4);
   v1.el(0) = iw() * (v.el(0) - minx) / dx;
   v1.el(1) = ih() * (v.el(1) - miny) / dy;
   return(v1);
   }  
 
-void sq::parameters(char **name, double *value)
+void tsq::parameters(char **name, double *value)
 { sprintf(name[0],"a1"); value[0] = a1;
   sprintf(name[1],"a2"); value[1] = a2;
   sprintf(name[2],"a3"); value[2] = a3;
@@ -393,10 +266,11 @@ void sq::parameters(char **name, double *value)
   sprintf(name[8],"px"); value[8] = px;
   sprintf(name[9],"py"); value[9] = py;
   sprintf(name[10],"pz"); value[10] = pz;
-
+  sprintf(name[11],"kx"); value[11] = kx;
+  sprintf(name[12],"ky"); value[12] = ky;
   }
 
-void sq::set_parameters(double *value)
+void tsq::set_parameters(double *value)
 { a1 = value[0];
   a2 = value[1];
   a3 = value[2];
@@ -408,8 +282,9 @@ void sq::set_parameters(double *value)
   px = value[8];
   py = value[9];
   pz = value[10];
+  kx = value[11];
+  ky = value[12];
 
-  // TODO: check if needed
   int sing;
   g_from_l.identity();
   l_from_g.identity();

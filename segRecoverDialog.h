@@ -77,6 +77,7 @@ class segRecoverDialog : public QDockWidget
   void improvedRAS();
   
   void showDescriptions();
+  void clear();
   
  signals:
   void closing();

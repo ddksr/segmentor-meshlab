@@ -21,6 +21,8 @@ struct RecoverySettings {
   ShapeSettings cone;
   ShapeSettings torus;
   ShapeSettings asq;
+  ShapeSettings tsq;
+  ShapeSettings bsq;
   float k2;
   float k3;
   float planarNormalCompatibility;
