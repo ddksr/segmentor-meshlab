@@ -390,7 +390,10 @@ double description::MDL(description *d)
   k1 = 1.0;
   
   if (d == NULL || d == this)
-  { rez = k1 * mregion->point_count() - k2 * residual2() - k3 * mmodel->no_param();
+  {
+	std::cout << "MDL: " << mregion->point_count() << " " << residual2() << " " << mmodel->no_param() << "\n";
+	  
+	rez = k1 * mregion->point_count() - k2 * residual2() - k3 * mmodel->no_param();
     } else
     { region r(*mregion);
       r &= *d->mregion;

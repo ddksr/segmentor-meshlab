@@ -312,7 +312,7 @@ void segmentation::selection()
   { throw_away();
 
     sm = get_sel_matrix();
-    //std::cout << "\n" << sm << "\n";
+    std::cout << "\n" << sm << "\n";
     in = new segmentation(size);
     not_in = new segmentation(size);
     for (i = 0; i < n; i++) 
