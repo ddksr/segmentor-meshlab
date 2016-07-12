@@ -8,7 +8,7 @@
 #include <math.h>
 #include <stdlib.h>
 #define RAND_MAX        2147483647
-#define mma 18
+#define mma 19
 
 #include "deftype.h"
 #define TRUE 1
@@ -715,6 +715,7 @@ double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi;
  a[15] = 500;         /* z max */
  a[16] = 0.0000010;   /* k or 1/k ?? */
  a[17] = 0;           /* alpha angle */
+ a[18] = 0;
 
  mfit = 11;  /* only first 11 parameters changed to minimize the function */
 
@@ -899,7 +900,7 @@ int rtype;
  a[15] = 500;         /* z max */
  a[16] = *bk;   /* k or 1/k ?? */
  a[17] = *ba;           /* alpha angle */
-
+ a[18] = 0;
 
  lista[0] = 5;
  lista[1] = 6;
@@ -1098,6 +1099,7 @@ int rtype;
  a[15] = 500;         /* z max */
  a[16] = *bk;   /* k or 1/k ?? : 0.0000010  */
  a[17] = *ba;           /* alpha angle : 0 */
+ a[18] = 0;
 
  mfit = 11;  /* only first 11 parameters changed to minimize the function */
 
@@ -1375,7 +1377,12 @@ int *n_model_acc;
         glatry[lista[j]] =
           glatry[lista[j]] - 2 * PI * (int)(glatry[lista[j]]/(2 * PI));
       }
-
+	 else if(lista[j] == 18)
+      {
+        if(a[lista[j]] + da[j] < 0.0) glatry[lista[j]] = 0.0;
+        else if(a[lista[j]] + da[j] > 2.0) glatry[lista[j]] = 1.0;
+        else glatry[lista[j]] = a[lista[j]] + da[j];
+      }
      else glatry[lista[j]] = a[lista[j]]+ da[j];
    }
 
@@ -1697,6 +1704,10 @@ double rotx[11], roty[11], rotz[11];
   double xb, yb, zb, koren;
   double O, Omin, Omax, zhat;
 
+  // ASQ:
+  glnparam dxa, dya, dza;
+  double xa, ya, za;
+
   double mypow(), mylog();
 
  coefx = (rotx[0]*x+
@@ -1725,7 +1736,7 @@ double rotx[11], roty[11], rotz[11];
  dx[9] = -roty[0];
  dx[10] = -rotz[0];
 
- for(i = 11; i < 18; i++) dx[i] = 0;
+ for(i = 11; i < mma; i++) dx[i] = 0;
 
  coefy = (rotx[1]*x+
           roty[1]*y + 
@@ -1753,7 +1764,7 @@ double rotx[11], roty[11], rotz[11];
  dy[9] = -roty[1];
  dy[10] = -rotz[1];
 
- for(i = 11; i < 18; i++) dy[i] = 0;
+ for(i = 11; i < mma; i++) dy[i] = 0;
 
  coefz = (rotx[2]*x+
           roty[2]*y + 
@@ -1778,18 +1789,18 @@ double rotx[11], roty[11], rotz[11];
  dz[9] = -roty[2];
  dz[10] = -rotz[2];
 
- for(i = 11; i < 18; i++) dz[i] = 0;
+ for(i = 11; i < mma; i++) dz[i] = 0;
 
 /********************************************/
 /*
   xb = coefx;
-  for (i = 0; i < 18; i++) dxb[i] = dx[i];
+  for (i = 0; i < mma; i++) dxb[i] = dx[i];
 
   yb = coefy;
-  for (i = 0; i < 18; i++) dyb[i] = dy[i];
+  for (i = 0; i < mma; i++) dyb[i] = dy[i];
 
   zb = coefz;
-  for (i = 0; i < 18; i++) dzb[i] = dz[i];
+  for (i = 0; i < mma; i++) dzb[i] = dz[i];
 */
 /********************************************/
 
@@ -1807,6 +1818,7 @@ double rotx[11], roty[11], rotz[11];
   for (i = 11; i < 16; i++) dR[i] = 0;
 
   dR[17] = SAB/(koren * sqr(CAB));
+  dR[18] = 0;
 
 /**********************************************/
 
@@ -1828,6 +1840,8 @@ double rotx[11], roty[11], rotz[11];
   dxb[17] = sin(a[17]) * (1/R - 1/a[16] + koren) +
             cos(a[17]) * dR[17] * (1/sqr(R) - (1/a[16] - 1/R)/(koren*sqr(R)));
 
+  dxb[18] = 0;
+
 /************************************************/
 
   yb = coefy - (1/R - 1/a[16] + koren) * sin(a[17]);
@@ -1845,6 +1859,7 @@ double rotx[11], roty[11], rotz[11];
   dyb[17] = -cos(a[17]) * (1/R - 1/a[16] + koren) -
             sin(a[17]) * dR[17] * (-1/sqr(R) + (1/a[16] - 1/R)/
                                                (koren* sqr(R)));
+  dyb[18] = 0;
 
 /***************************************************************/
 
@@ -1862,44 +1877,70 @@ double rotx[11], roty[11], rotz[11];
             (1/(a[16] * sqr(a[16]))) * coefz/(sqr(coefz) + sqr(1/a[16] - 1/R));
 
   dzb[17] = 0;
+  dzb[18] = 0;
 
 /******************************************************************/
+  // ASQ
 
- A = xb/(a[0]*(a[11]*zb/a[2] + 1));
+  // tmp pass
+  for (i = 0; i < mma; i++) {
+	dxa[i] = dxb[i];
+	dya[i] = dyb[i];
+	dza[i] = dzb[i];
+  }
+  xa = xb; ya = yb; 
+
+  // X
+  xa = xb / (mypow(mypow(sin(a[18] * zb) / x, 2), 0.5) + 1);
+  
+  // Y
+  ya = yb / (mypow(mypow(sin(a[18] * zb) / x, 2), 0.5) + 1);
+
+  // Z
+  za = zb;
+  for (i = 0; i < mma; i++) {
+	dza[i] = dzb[i];
+  }
+
+
+
+/******************************************************************/  
+
+ A = xa/(a[0]*(a[11]*za/a[2] + 1));
 
  dA[0] = -A/a[0];
  dA[1] = 0;
- dA[2] = (xb/a[0]) * (1.0/sqr(a[11]*zb/a[2] + 1))*a[11]*zb/sqr(a[2]);
+ dA[2] = (xa/a[0]) * (1.0/sqr(a[11]*za/a[2] + 1))*a[11]*za/sqr(a[2]);
 
  for(i = 3; i < 11; i++)
-   dA[i] = dxb[i]/(a[0]*(a[11]*zb/a[2] + 1)) - 
-            xb * a[11] * dzb[i]/(a[0]*sqr(a[11] * zb/a[2] + 1)*a[2]);
+   dA[i] = dxa[i]/(a[0]*(a[11]*za/a[2] + 1)) - 
+            xa * a[11] * dza[i]/(a[0]*sqr(a[11] * za/a[2] + 1)*a[2]);
 
-   dA[11] = -xb * zb/(a[0]*sqr(a[11]*zb/a[2] + 1)*a[2]);
+   dA[11] = -xa * za/(a[0]*sqr(a[11]*za/a[2] + 1)*a[2]);
 
    dA[12] = 0;
 
- for(i = 13; i < 18; i++)
-   dA[i] = dxb[i]/(a[0]*(a[11]*zb/a[2] + 1)) - 
-            xb * a[11] * dzb[i]/(a[0]*sqr(a[11] * zb/a[2] + 1)*a[2]);
+ for(i = 13; i < mma; i++)
+   dA[i] = dxa[i]/(a[0]*(a[11]*za/a[2] + 1)) - 
+            xa * a[11] * dza[i]/(a[0]*sqr(a[11] * za/a[2] + 1)*a[2]);
 
- B = yb/(a[1]*(a[12]*zb/a[2] + 1));
+ B = ya/(a[1]*(a[12]*za/a[2] + 1));
 
  dB[0] = 0;
  dB[1] = -B/a[1];
- dB[2] = (yb/a[1]) * (1.0/sqr(a[12]*zb/a[2] + 1))*a[12]*zb/sqr(a[2]);
+ dB[2] = (ya/a[1]) * (1.0/sqr(a[12]*za/a[2] + 1))*a[12]*za/sqr(a[2]);
 
  for(i = 3; i < 11; i++)
-   dB[i] = dyb[i]/(a[1]*(a[12]*zb/a[2] + 1)) - 
-            yb * a[12] * dzb[i]/(a[1]*sqr(a[12] * zb/a[2] + 1)*a[2]);
+   dB[i] = dya[i]/(a[1]*(a[12]*za/a[2] + 1)) - 
+            ya * a[12] * dza[i]/(a[1]*sqr(a[12] * za/a[2] + 1)*a[2]);
 
    dB[11] = 0;
 
-   dB[12] = -yb * zb/(a[1]*sqr(a[12]*zb/a[2] + 1)*a[2]);
+   dB[12] = -ya * za/(a[1]*sqr(a[12]*za/a[2] + 1)*a[2]);
 
- for(i = 13; i < 18; i++)
-   dB[i] = dyb[i]/(a[1]*(a[12]*zb/a[2] + 1)) - 
-            yb * a[12] * dzb[i]/(a[1]*sqr(a[12] * zb/a[2] + 1)*a[2]);
+ for(i = 13; i < mma; i++)
+   dB[i] = dya[i]/(a[1]*(a[12]*za/a[2] + 1)) - 
+            ya * a[12] * dza[i]/(a[1]*sqr(a[12] * za/a[2] + 1)*a[2]);
 
 /*********************************************/
  DA = mypow(sqr(A), 1.0/a[4]);   DB = mypow(sqr(B), 1.0/a[4]);
@@ -1913,30 +1954,30 @@ double rotx[11], roty[11], rotz[11];
    dD[4] = -DA * mylog(sqr(A))/sqr(a[4]) -
              DB * mylog(sqr(B))/sqr(a[4]);
 
- for(i = 5; i < 18; i++)
+ for(i = 5; i < mma; i++)
    dD[i] = (2/a[4]) * (DA/A) * dA[i] +
             (2/a[4]) * (DB/B) * dB[i];
 
 /**********************************************/
- GD = mypow(D, a[4]/a[3]);   Gz = mypow(sqr(zb/a[2]), 1.0/a[3]);
+ GD = mypow(D, a[4]/a[3]);   Gz = mypow(sqr(za/a[2]), 1.0/a[3]);
  G = GD + Gz;
  
  for(i = 0; i < 2; i++)
      dG[i] = (a[4]/a[3]) * (GD/D) * dD[i];
 
  dG[2] = (a[4]/a[3]) * (GD/D) * dD[2] -
-         (2/a[3]) * (a[2]/zb)* Gz * (zb/sqr(a[2]));
+         (2/a[3]) * (a[2]/za)* Gz * (za/sqr(a[2]));
 
  dG[3] = GD *
             (-a[4] * (1/sqr(a[3])) * mylog(D) + (a[4]/a[3])*(1/D) * dD[3]) -
-            (1.0/sqr(a[3])) * Gz * mylog(sqr(zb/a[2]));
+            (1.0/sqr(a[3])) * Gz * mylog(sqr(za/a[2]));
 
  dG[4] = GD *
             ((1/a[3]) * mylog(D) + (a[4]/a[3])*(1/D) * dD[4]);
 
- for(i = 5; i < 18; i++)
+ for(i = 5; i < mma; i++)
      dG[i] = (a[4]/a[3]) * (GD/D) * dD[i] + 
-             (2/a[3]) * (Gz/zb) * dzb[i];
+             (2/a[3]) * (Gz/za) * dza[i];
 
 /***********************************************/
  F = mypow(G, a[3]);
@@ -1945,12 +1986,12 @@ double rotx[11], roty[11], rotz[11];
 
    dFda[3] = F * (mylog(G) + (a[3]/G) * dG[3]);
 
- for(i = 4; i < 18; i++)
+ for(i = 4; i < mma; i++)
    dFda[i] = a[3] * (F/G) * dG[i];
 
 /****** correction of criteria function */
 /*
-        for(i = 0; i < 18; i++)
+        for(i = 0; i < mma; i++)
          dFda[i] = 0.5 * dFda[i] /sqrt(F);
         F = sqrt(fabs(F)) * F/fabs(F);
 */
@@ -1963,7 +2004,7 @@ double rotx[11], roty[11], rotz[11];
         dFda[2] = sqrt(a[0] * a[1]) * 
                   (F/(2*sqrt(a[2])) + sqrt(a[2]) * dFda[2]);
 
-        for(i = 3; i < 18; i++) 
+        for(i = 3; i < mma; i++) 
            dFda[i] = dFda[i] * sqrt(a[0] * a[1] * a[2]);
 
         F = sqrt(a[0] * a[1] * a[2]) * F;
