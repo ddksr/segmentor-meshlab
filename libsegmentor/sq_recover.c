@@ -8,7 +8,7 @@
 #include <math.h>
 #include <stdlib.h>
 #define RAND_MAX        2147483647
-#define mma 19
+#define mma 20
 
 #include "deftype.h"
 #define TRUE 1
