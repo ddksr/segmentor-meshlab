@@ -13,7 +13,7 @@ extern "C" {
 }
 
 int recover_params(tsq* model, vect* list, int no) {
-  double _bk= 0.0000010, _ba = 0;
+  double _bk= 0.0000010, _ba = 0, _asq1 = 0, _asq2 = 1;
   if (State::lookup->on && State::lookup->isSet) {
 	// Reset SQ params to those from lookup
 	model->a1 = State::lookup->a;
@@ -28,7 +28,7 @@ int recover_params(tsq* model, vect* list, int no) {
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
 						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &model->kx, &model->ky, &_bk, &_ba, RECOVER_SQ);
+						  &model->kx, &model->ky, &_bk, &_ba, &_asq1, &_asq2, RECOVER_SQ_TAPERING);
   }
   // return recover(list, no,
   // 				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
@@ -36,7 +36,7 @@ int recover_params(tsq* model, vect* list, int no) {
   return recover2(list, no,
   				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
   				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-  				  &model->kx, &model->ky, &_bk, &_ba, RECOVER_SQ_TAPERING);
+  				  &model->kx, &model->ky, &_bk, &_ba, &_asq1, &_asq2, RECOVER_SQ_TAPERING);
 }
 
 tsq::tsq(region &r) {

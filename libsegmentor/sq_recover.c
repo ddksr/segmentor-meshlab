@@ -18,7 +18,8 @@
 #define RECOVER_SQ_TAPERING 2
 #define RECOVER_SQ_BENDING 3
 #define RECOVER_SQ_GLOBAL 4
-#define RECOVER_ASQ 5
+#define RECOVER_SQ_SYM_TAPERING 5
+#define RECOVER_ASQ 6
 
 /* #define PI 3.141529 */
 
@@ -715,7 +716,8 @@ double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi;
  a[15] = 500;         /* z max */
  a[16] = 0.0000010;   /* k or 1/k ?? */
  a[17] = 0;           /* alpha angle */
- a[18] = 0;
+ a[18] = 0;           /* tapering */
+ a[19] = 1;           /* asq k */
 
  mfit = 11;  /* only first 11 parameters changed to minimize the function */
 
@@ -900,7 +902,8 @@ int rtype;
  a[15] = 500;         /* z max */
  a[16] = *bk;   /* k or 1/k ?? */
  a[17] = *ba;           /* alpha angle */
- a[18] = 0;
+ a[18] = 0;          /* sym tapering */
+ a[19] = 1;          /* asq k */
 
  lista[0] = 5;
  lista[1] = 6;
@@ -912,16 +915,16 @@ int rtype;
  lista[7] = 12;
  lista[8] = 16;
  lista[9] = 17;
- lista[10] = 0;
- lista[11] = 1;
- lista[12] = 2;
- lista[13] = 3;
- lista[14] = 4;
- lista[15] = 13;
- lista[16] = 14;
- lista[17] = 15;
- lista[18] = 18;
- lista[19] = 19;
+ lista[10] = 18;
+ lista[11] = 19;
+ lista[12] = 0;
+ lista[13] = 1;
+ lista[14] = 2;
+ lista[15] = 3;
+ lista[16] = 4;
+ lista[17] = 13;
+ lista[18] = 14;
+ lista[19] = 15;
  lista[20] = 20;
 
  switch(rtype) {
@@ -935,9 +938,20 @@ int rtype;
    lista[8] = 11;
    lista[9] = 12;
    break;
- /* case RECOVER_SQ_GLOBAl: */
- /*   mfit = 10; */
- /*   break; */
+ case RECOVER_SQ_SYM_TAPERING:
+   lista[6] = 18;
+   lista[7] = 19;
+   lista[10] = 11;
+   lista[11] = 19;
+   mfit = 7;
+   break;
+ case RECOVER_ASQ:
+   lista[6] = 18;
+   lista[7] = 19;
+   lista[10] = 11;
+   lista[11] = 19;
+   mfit = 8;
+   break;
  case RECOVER_SQ:
  default:
    mfit = 6;
@@ -1035,10 +1049,10 @@ read surface points:
    return(TRUE);
 }	
 
-recover2(list, no, a1, a2, a3, e1, e2, px, py, pz, fi, theta, psi, kx, ky, bk, ba, rtype)
+recover2(list, no, a1, a2, a3, e1, e2, px, py, pz, fi, theta, psi, kx, ky, bk, ba, symt, asqk, rtype)
 struct vect list[];
 int no;
-double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky, *bk, *ba;
+double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi, *kx, *ky, *bk, *ba, *symt, *asqk;
 int rtype;
 {
  extern int gliset;
@@ -1099,7 +1113,8 @@ int rtype;
  a[15] = 500;         /* z max */
  a[16] = *bk;   /* k or 1/k ?? : 0.0000010  */
  a[17] = *ba;           /* alpha angle : 0 */
- a[18] = 0;
+ a[18] = *symt;   /* sym tapering */
+ a[19] = *asqk;   /* asq k */
 
  mfit = 11;  /* only first 11 parameters changed to minimize the function */
 
@@ -1121,11 +1136,11 @@ int rtype;
  lista[12] = 12;
  lista[13] = 16;
  lista[14] = 17;
- lista[15] = 13;
- lista[16] = 14;
+ lista[15] = 18;
+ lista[16] = 19;
  lista[17] = 15;
- lista[18] = 18;
- lista[19] = 19;
+ lista[18] = 13;
+ lista[19] = 14;
  lista[20] = 20;
 
  switch(rtype) {
@@ -1139,9 +1154,19 @@ int rtype;
    lista[13] = 11;
    lista[14] = 12;
    break;
- /* case RECOVER_SQ_GLOBAl: */
- /*   mfit = 15; */
- /*   break; */
+ case RECOVER_ASQ:
+   mfit = 13;
+   lista[11] = 18;
+   lista[12] = 19;
+   lista[15] = 11;
+   lista[16] = 12; 
+ case RECOVER_SQ_SYM_TAPERING:
+   mfit = 12;
+   lista[11] = 18;
+   lista[12] = 19;
+   lista[15] = 11;
+   lista[16] = 12;   
+   break;
  case RECOVER_SQ:
  default:
    mfit = 11;
@@ -1238,6 +1263,8 @@ read surface points:
    *ky = a[12];
    *bk = a[16];
    *ba = a[17];
+   *symt = a[18];
+   *asqk = a[19];
 
    return(TRUE);
 }
@@ -1880,7 +1907,6 @@ double rotx[11], roty[11], rotz[11];
   dzb[18] = 0;
 
 /******************************************************************/
-  // ASQ
 
   // tmp pass
   for (i = 0; i < mma; i++) {
@@ -1888,20 +1914,9 @@ double rotx[11], roty[11], rotz[11];
 	dya[i] = dyb[i];
 	dza[i] = dzb[i];
   }
-  xa = xb; ya = yb; 
+  xa = xb; ya = yb; za = zb;
 
-  // X
-  xa = xb / (mypow(mypow(sin(a[18] * zb) / x, 2), 0.5) + 1);
   
-  // Y
-  ya = yb / (mypow(mypow(sin(a[18] * zb) / x, 2), 0.5) + 1);
-
-  // Z
-  za = zb;
-  for (i = 0; i < mma; i++) {
-	dza[i] = dzb[i];
-  }
-
 
 
 /******************************************************************/  
@@ -1923,6 +1938,7 @@ double rotx[11], roty[11], rotz[11];
  for(i = 13; i < mma; i++)
    dA[i] = dxa[i]/(a[0]*(a[11]*za/a[2] + 1)) - 
             xa * a[11] * dza[i]/(a[0]*sqr(a[11] * za/a[2] + 1)*a[2]);
+
 
  B = ya/(a[1]*(a[12]*za/a[2] + 1));
 

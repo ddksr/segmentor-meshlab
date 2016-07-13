@@ -22,11 +22,11 @@ int recover_params(sq* model, vect* list, int no) {
 	model->e1 = State::lookup->e1;
 	model->e2 = State::lookup->e2;
 
-	double _kx = 0, _ky = 0, _bk = 0.0000010, _ba = 0;
+	double _kx = 0, _ky = 0, _bk = 0.0000010, _ba = 0, _asq1 = 0, _asq2 = 1;
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
 						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &_kx, &_ky, &_bk, &_ba, RECOVER_SQ);
+						  &_kx, &_ky, &_bk, &_ba, &_asq1, &_asq2, RECOVER_SQ);
   }
   return recover(list, no,
 				 &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
