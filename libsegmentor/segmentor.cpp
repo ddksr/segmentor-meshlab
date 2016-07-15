@@ -134,19 +134,17 @@ void Segmentor::refreshConfig() {
   sphere_d::m_err = conf->sphere.err;
   cylinder_d::m_dist = conf->cylinder.dist;
   cylinder_d::m_err = conf->cylinder.err;
-  cone_d::m_err = conf->cone.dist;
-  cone_d::m_dist = conf->cone.err;
-  torus_d::m_err = conf->torus.dist;
-  torus_d::m_dist = conf->torus.err;
+  cone_d::m_dist = conf->cone.dist;
+  cone_d::m_err = conf->cone.err;
+  torus_d::m_dist = conf->torus.dist;  
+  torus_d::m_err = conf->torus.err;
 
-  asq_d::m_err = conf->asq.dist;
-  asq_d::m_dist = conf->asq.err;
-
-  tsq_d::m_err = conf->asq.dist;
-  tsq_d::m_dist = conf->asq.err;
-
-  bsq_d::m_err = conf->asq.dist;
-  bsq_d::m_dist = conf->asq.err;
+  asq_d::m_err = conf->asq.err;
+  asq_d::m_dist = conf->asq.dist;
+  tsq_d::m_err = conf->tsq.err;
+  tsq_d::m_dist = conf->tsq.dist;
+  bsq_d::m_err = conf->bsq.err;
+  bsq_d::m_dist = conf->bsq.dist;
 
   description::k2 = conf->k2;
   description::k3 = conf->k3;

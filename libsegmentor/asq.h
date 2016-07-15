@@ -1,7 +1,7 @@
 // sq.H
 
-#ifndef LIBSEGMENTOR_TSUPERQUADRIC
-#define LIBSEGMENTOR_TSUPERQUADRIC 1
+#ifndef LIBSEGMENTOR_ASUPERQUADRIC
+#define LIBSEGMENTOR_ASUPERQUADRIC 1
 
 #include "region.h"
 #include "matrix.h"

@@ -136,6 +136,7 @@ void description::grow(region *ra)
 
       d1 = error(plain);
       d2 = error(from_old);
+
       if (d1 < max_error() || d2 < max_error())
       { delete mmodel;
         if (d1 < d2) 

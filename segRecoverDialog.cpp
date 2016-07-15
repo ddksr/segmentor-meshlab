@@ -54,9 +54,11 @@ segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) :
 	{false, 3.0, 2.0}, // cylinder
 	{false, 3.0, 2.0}, // cone
 	{false, 3.0, 2.0}, // torus
+	
 	{false, 3.0, 2.0}, // asq
-	{false, 6.0, 5.0}, // tsq
-	{false, 6.0, 5.0}, // bsq
+	{false, 3.0, 2.0}, // tsq
+	{false, 3.0, 2.0}, // bsq
+	
 	0.2,
 	0.3,
 	0.75, 

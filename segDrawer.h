@@ -9,6 +9,7 @@
 #include "libsegmentor/model.h"
 
 #include "libsegmentor/sq.h"
+#include "libsegmentor/asq.h"
 #include "libsegmentor/tsq.h"
 #include "libsegmentor/plane.h"
 #include "libsegmentor/surface2.h"
@@ -46,6 +47,7 @@ class MeshlabDrawer : public Drawer {
 
   void draw_region(region*, Color*);
   void draw_sq(sq*, Color*);
+  void draw_asq(asq*, Color*);
   void draw_plane(plane* m, Color*);
   void draw_surface2(surface2* m, Color*);
   void draw_cone(cone* m, Color*);

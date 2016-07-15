@@ -210,8 +210,8 @@ double asq::f(double x, double y, double z) const {
   // thid double pow is to prevent negative arguments to pow when the exponent is negative
   // do not try to optimize
 
-  double fx = kxy * z / a3 + 1,
-	fy = kxy * z / a3 + 1; // TODO: this is probably wrong
+  double fx = kxy * z / a3 + 1.0,
+	fy = kxy * z / a3 + 1.0; 
 
   double a = pow(pow((x/fx / a1), 2), 1/e2);
   double b = pow(pow((y/fy / a2), 2), 1/e2);   
@@ -263,8 +263,8 @@ void asq::parameters(char **name, double *value)
   sprintf(name[8],"px"); value[8] = px;
   sprintf(name[9],"py"); value[9] = py;
   sprintf(name[10],"pz"); value[10] = pz;
-  sprintf(name[11],"kx"); value[11] = kxy;
-  sprintf(name[12],"ky"); value[12] = amp;
+  sprintf(name[11],"kxy"); value[11] = kxy;
+  sprintf(name[12],"amp"); value[12] = amp;
   }
 
 void asq::set_parameters(double *value)

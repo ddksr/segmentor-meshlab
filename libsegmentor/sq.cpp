@@ -14,6 +14,7 @@ extern "C" {
 }
 
 int recover_params(sq* model, vect* list, int no) {
+  double _kx = 0, _ky = 0, _bk = 0.0000010, _ba = 0, _asq1 = 0, _asq2 = 1;
   if (State::lookup->on && State::lookup->isSet) {
 	// Reset SQ params to those from lookup
 	model->a1 = State::lookup->a;
@@ -22,15 +23,23 @@ int recover_params(sq* model, vect* list, int no) {
 	model->e1 = State::lookup->e1;
 	model->e2 = State::lookup->e2;
 
-	double _kx = 0, _ky = 0, _bk = 0.0000010, _ba = 0, _asq1 = 0, _asq2 = 1;
+	
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
-						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &_kx, &_ky, &_bk, &_ba, &_asq1, &_asq2, RECOVER_SQ);
+						  &model->px, &model->py, &model->pz,
+						  &model->phi, &model->theta, &model->psi,
+						  &_kx, &_ky, &_bk, &_ba, &_asq1, &_asq2,
+						  RECOVER_SQ);
   }
-  return recover(list, no,
-				 &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
-				 &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi);
+  return recover2(list, no,
+				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
+				  &model->px, &model->py, &model->pz,
+				  &model->phi, &model->theta, &model->psi,
+				  &_kx, &_ky, &_bk, &_ba, &_asq1, &_asq2,
+				  RECOVER_SQ);
+  // return recover(list, no,
+  // 				 &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
+  // 				 &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi);
 }
 
 sq::sq(region &r) {
