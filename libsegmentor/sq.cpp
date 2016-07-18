@@ -14,7 +14,7 @@ extern "C" {
 }
 
 int recover_params(sq* model, vect* list, int no) {
-  double _kx = 0, _ky = 0, _bk = 0.0000010, _ba = 0, _asq1 = 0, _asq2 = 1;
+  double _kx = 0, _ky = 0, _bk = 0.0000010, _ba = 0, _asq1 = 0, _asq2 = 0;
   if (State::lookup->on && State::lookup->isSet) {
 	// Reset SQ params to those from lookup
 	model->a1 = State::lookup->a;

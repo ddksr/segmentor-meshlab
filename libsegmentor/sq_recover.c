@@ -903,7 +903,7 @@ int rtype;
  a[16] = *bk;   /* k or 1/k ?? */
  a[17] = *ba;           /* alpha angle */
  a[18] = 0;          /* sym tapering */
- a[19] = 1;          /* asq k */
+ a[19] = 0;          /* asq k */
 
  lista[0] = 5;
  lista[1] = 6;
@@ -1405,9 +1405,14 @@ int *n_model_acc;
           glatry[lista[j]] - 2 * PI * (int)(glatry[lista[j]]/(2 * PI));
       }
 	 else if(lista[j] == 18)
+      { if(a[lista[j]] + da[j] > 1) glatry[lista[j]] = 1;
+        else if(a[lista[j]] + da[j] < -1) glatry[lista[j]] = -1;
+        else glatry[lista[j]] = a[lista[j]] + da[j];
+      }
+	 else if(lista[j] == 19) // amp
       {
         if(a[lista[j]] + da[j] < 0.0) glatry[lista[j]] = 0.0;
-        else if(a[lista[j]] + da[j] > 2.0) glatry[lista[j]] = 1.0;
+        else if(a[lista[j]] + da[j] > 1.0) glatry[lista[j]] = 1.0;
         else glatry[lista[j]] = a[lista[j]] + da[j];
       }
      else glatry[lista[j]] = a[lista[j]]+ da[j];
@@ -1921,6 +1926,7 @@ double rotx[11], roty[11], rotz[11];
 
 /******************************************************************/  
 
+/* OLD SIMPLE TAPERING 
  A = xa/(a[0]*(a[11]*za/a[2] + 1));
 
  dA[0] = -A/a[0];
@@ -1957,6 +1963,55 @@ double rotx[11], roty[11], rotz[11];
  for(i = 13; i < mma; i++)
    dB[i] = dya[i]/(a[1]*(a[12]*za/a[2] + 1)) - 
             ya * a[12] * dza[i]/(a[1]*sqr(a[12] * za/a[2] + 1)*a[2]);
+
+*/
+
+  /*********************************************/
+
+  // Symetric tapering
+  /*********************************************/
+
+  
+/*********************************************/
+  // ASQ tapering
+
+  A = xa/(a[0]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[11]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+
+  dA[0] = -(xa/(pow(a[0],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[11]*za)/a[2])*(1 + (a[18]*za)/a[2])));
+
+  dA[1] = 0;
+
+  dA[2] = (a[18]*xa*za)/(a[0]*pow(a[2],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[11]*za)/a[2])*pow(1 + (a[18]*za)/a[2],2)) + (a[11]*xa*za)/(a[0]*pow(a[2],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*pow(1 + (a[11]*za)/a[2],2)*(1 + (a[18]*za)/a[2])) - (1.5707963267948966*a[19]*cos((a[19]*PI*za)/(2.*a[2]))*sin((a[19]*PI*za)/(2.*a[2]))*xa*za)/(a[0]*pow(a[2],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),1.5)*(1 + (a[11]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+
+  for (i = 3; i < 17; i++) {
+	if (i == 11 || i == 12) { continue; }
+	dA[i] = dxa[i]/(a[0]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[11]*za)/a[2])*(1 + (a[18]*za)/a[2])) - (a[18]*xa*dza[i])/(a[0]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[11]*za)/a[2])*pow(1 + (a[18]*za)/a[2],2)) - (a[11]*xa*dza[i])/(a[0]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*pow(1 + (a[11]*za)/a[2],2)*(1 + (a[18]*za)/a[2])) + (1.5707963267948966*a[19]*cos((a[19]*PI*za)/(2.*a[2]))*sin((a[19]*PI*za)/(2.*a[2]))*xa*dza[i])/(a[0]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),1.5)*(1 + (a[11]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+  }
+
+  dA[11] = -((xa*za)/(a[0]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*pow(1 + (a[11]*za)/a[2],2)*(1 + (a[18]*za)/a[2])));
+  dA[12] = 0;
+
+  dA[18] = -((xa*za)/(a[0]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[11]*za)/a[2])*pow(1 + (a[18]*za)/a[2],2)));
+
+  dA[19] = (1.5707963267948966*cos((a[19]*PI*za)/(2.*a[2]))*sin((a[19]*PI*za)/(2.*a[2]))*xa*za)/(a[0]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),1.5)*(1 + (a[11]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+
+
+
+  B = ya/(a[1]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[12]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+  dB[0] = 0;
+  dB[1] = -(ya/(pow(a[1],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[12]*za)/a[2])*(1 + (a[18]*za)/a[2])));
+  dB[2] = (a[18]*ya*za)/(a[1]*pow(a[2],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[12]*za)/a[2])*pow(1 + (a[18]*za)/a[2],2)) + (a[12]*ya*za)/(a[1]*pow(a[2],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*pow(1 + (a[12]*za)/a[2],2)*(1 + (a[18]*za)/a[2])) - (1.5707963267948966*a[19]*cos((a[19]*PI*za)/(2.*a[2]))*sin((a[19]*PI*za)/(2.*a[2]))*ya*za)/(a[1]*pow(a[2],2)*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),1.5)*(1 + (a[12]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+  for (i = 3; i < 17; i++) {
+	if (i == 11 || i == 12) { continue; }
+	dB[i] = dya[i]/(a[1]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[12]*za)/a[2])*(1 + (a[18]*za)/a[2])) - (a[18]*ya*dza[i])/(a[1]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[12]*za)/a[2])*pow(1 + (a[18]*za)/a[2],2)) - (a[12]*ya*dza[i])/(a[1]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*pow(1 + (a[12]*za)/a[2],2)*(1 + (a[18]*za)/a[2])) + (1.5707963267948966*a[19]*cos((a[19]*PI*za)/(2.*a[2]))*sin((a[19]*PI*za)/(2.*a[2]))*ya*dza[i])/(a[1]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),1.5)*(1 + (a[12]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+  }
+
+  dB[11] = 0;
+  dB[12] = -((ya*za)/(a[1]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*pow(1 + (a[12]*za)/a[2],2)*(1 + (a[18]*za)/a[2])));
+
+  dB[18] = -((ya*za)/(a[1]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),0.5)*(1 + (a[12]*za)/a[2])*pow(1 + (a[18]*za)/a[2],2)));
+  dB[19] = (1.5707963267948966*cos((a[19]*PI*za)/(2.*a[2]))*sin((a[19]*PI*za)/(2.*a[2]))*ya*za)/(a[1]*a[2]*pow(pow(cos((a[19]*PI*za)/(2.*a[2])),2),1.5)*(1 + (a[12]*za)/a[2])*(1 + (a[18]*za)/a[2]));
+  
 
 /*********************************************/
  DA = mypow(sqr(A), 1.0/a[4]);   DB = mypow(sqr(B), 1.0/a[4]);

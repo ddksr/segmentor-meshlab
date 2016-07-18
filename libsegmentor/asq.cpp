@@ -25,7 +25,7 @@ int recover_params(asq* model, vect* list, int no) {
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
 						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_SQ);
+						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_SQ_SYM_TAPERING);
   }
   // return recover(list, no,
   // 				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
@@ -33,7 +33,7 @@ int recover_params(asq* model, vect* list, int no) {
   return recover2(list, no,
   				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
   				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_SQ);
+  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_SQ_SYM_TAPERING);
 }
 
 asq::asq(region &r) {
@@ -73,7 +73,7 @@ asq::asq(region &r) {
   //std::cout << "------------\n";
 
   kxy = 0;
-  amp = 1;
+  amp = 0;
   
   printf("\nSQ recovering from scratch    %d points", no); fflush(stdout);
   if (!recover_params(this, list, no))
@@ -213,8 +213,8 @@ double asq::f(double x, double y, double z) const {
   double fx = kxy * z / a3 + 1.0,
 	fy = kxy * z / a3 + 1.0; 
 
-  double a = pow(pow((x/fx / a1), 2), 1/e2);
-  double b = pow(pow((y/fy / a2), 2), 1/e2);   
+  double a = pow(pow((x / (a1 * fx)), 2), 1/e2);
+  double b = pow(pow((y / (a2 * fy)), 2), 1/e2);   
   double c = pow(pow((z / a3), 2), 1/e1);
   
   return pow(pow(a + b, e2/e1) + c, e1);
