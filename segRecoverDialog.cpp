@@ -118,6 +118,7 @@ void segRecoverDialog::obtainSettings() {
   config->usePostProcessing = ui.cbPostProcessing->isChecked();
   config->useStatistics = ui.cbUseStatistics->isChecked();
   config->useLookup = ui.cbUseLookup->isChecked();
+  config->useAsqKf = ui.cbUseAsqKf->isChecked();
 
   config->plane.on = ui.cbPlane->isChecked();
   config->plane.dist = ui.inputPlaneDist->text().toFloat();
@@ -180,6 +181,7 @@ void segRecoverDialog::storeSettings() {
   iniConfig.setValue("recover/usePostProcessing", config->usePostProcessing);
   iniConfig.setValue("recover/useStatistics", config->useStatistics);
   iniConfig.setValue("recover/useLookup", config->useLookup);
+  iniConfig.setValue("recover/useAsqKf", config->useAsqKf);
 
   iniConfig.setValue("plane/on", config->plane.on);
   iniConfig.setValue("plane/maxDistance", (double)config->plane.dist);
@@ -241,6 +243,7 @@ void segRecoverDialog::recoverSettings() {
   ui.cbPostProcessing->setChecked(iniConfig.value("recover/usePostProcessing", config->usePostProcessing).toBool());
   ui.cbUseStatistics->setChecked(iniConfig.value("recover/useStatistics", config->useStatistics).toBool());
   ui.cbUseLookup->setChecked(iniConfig.value("recover/useLookup", config->useLookup).toBool());
+  ui.cbUseAsqKf->setChecked(iniConfig.value("recover/useAsqKf", config->useAsqKf).toBool());
 
   ui.cbPlane->setChecked(iniConfig.value("plane/on", config->plane.on).toBool());
   ui.inputPlaneDist->setText(iniConfig.value("plane/maxDistance", config->plane.dist).toString());

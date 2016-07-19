@@ -13,6 +13,8 @@ extern "C" {
 }
 
 int recover_params(asq* model, vect* list, int no) {
+  int rType = asq::asqType == ASQ_TYPE_TAPERING ? RECOVER_SQ_SYM_TAPERING : RECOVER_ASQ;
+  printf("\n -------- rType %d\n", rType);
   double _bk= 0.0000010, _ba = 0, _kx = 0, _ky = 0;
   if (State::lookup->on && State::lookup->isSet) {
 	// Reset SQ params to those from lookup
@@ -25,15 +27,12 @@ int recover_params(asq* model, vect* list, int no) {
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
 						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->kf, RECOVER_ASQ);
+						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->kf, rType);
   }
-  // return recover(list, no,
-  // 				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
-  // 				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi);
   return recover2(list, no,
   				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
   				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->kf, RECOVER_ASQ);
+  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->kf, rType);
 }
 
 asq::asq(region &r) {
@@ -72,8 +71,12 @@ asq::asq(region &r) {
   //print();
   //std::cout << "------------\n";
 
-  kxy = 0;
-  kf = 0;
+  kxy = 0.0;
+  kf = 0.0;
+  if (asq::asqType == ASQ_TYPE_SINUS) {
+	kf = 0.00000001;
+  }
+  
   
   printf("\nSQ recovering from scratch    %d points", no); fflush(stdout);
   if (!recover_params(this, list, no))
@@ -294,3 +297,5 @@ void asq::set_parameters(double *value)
   l_from_g = g_from_l.inverse(sing);
   print();
   }
+
+int asq::asqType = ASQ_TYPE_TAPERING;

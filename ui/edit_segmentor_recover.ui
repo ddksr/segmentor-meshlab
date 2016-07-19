@@ -395,6 +395,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QCheckBox" name="cbUseAsqKf">
+         <property name="text">
+          <string>Amphora superquadric using kf</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer name="verticalSpacer_2">
          <property name="orientation">
           <enum>Qt::Vertical</enum>

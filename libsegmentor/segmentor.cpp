@@ -9,6 +9,7 @@
 #include "sphere_d.h"
 #include "sq_d.h"
 #include "asq_d.h"
+#include "asq.h"
 #include "tsq_d.h"
 #include "bsq_d.h"
 #include "torus_d.h"
@@ -155,6 +156,13 @@ void Segmentor::refreshConfig() {
   useStatistics = conf->useStatistics ? 1 : 0;
 
   State::lookup->on = conf->useLookup;
+
+  asq::asqType = conf->useAsqKf ? ASQ_TYPE_SINUS : ASQ_TYPE_TAPERING;
+  if (conf->useAsqKf) {
+	qDebug() << "use sinus";
+  } else {
+	qDebug() << "use tapering only";
+  }
 }
 
 description* Segmentor::bestDescription(region *r, description *old, double iq) {

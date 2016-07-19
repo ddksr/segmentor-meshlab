@@ -1155,9 +1155,9 @@ int rtype;
    lista[14] = 12;
    break;
  case RECOVER_ASQ:
-   mfit = 12;
-   lista[11] = 19;
-   lista[12] = 18;
+   mfit = 13;
+   lista[11] = 18;
+   lista[12] = 19;
    lista[15] = 11;
    lista[16] = 12;
    break;
@@ -1344,11 +1344,14 @@ int *n_model_acc;
      oneda[j][0] = glbeta[j];
    }
 
+  
   if (gaussj(covar, mfit, oneda) == FALSE) {
 	printf("i am in truble \n");
      i_am_in_trouble = TRUE;
+	 
      return(0);
   }
+  
   for(j = 0; j < mfit; j++)
    { da[j] = oneda[j][0];
    }
@@ -1413,8 +1416,8 @@ int *n_model_acc;
       }
 	 else if(lista[j] == 19) // kf
       {
-        if(a[lista[j]] + da[j] < 0.0) glatry[lista[j]] = 0.0;
-        else if(a[lista[j]] + da[j] > 1.0) glatry[lista[j]] = 1.0;
+        if(a[lista[j]] + da[j] < 0.0) glatry[lista[j]] = a[lista[j]];
+        else if(a[lista[j]] + da[j] > 1.0) glatry[lista[j]] = a[lista[j]];
         else glatry[lista[j]] = a[lista[j]] + da[j];
       }
      else glatry[lista[j]] = a[lista[j]]+ da[j];
@@ -1621,7 +1624,11 @@ int n;
 
      indxr[i] = irow;
      indxc[i] = icol;
-     if (a[icol][icol] == 0.0) printf("pause 2 in GAUSSJ - singular matrix\n");
+     if (a[icol][icol] == 0.0) {
+	   printf("icol = %d\n", icol);
+	   printf("pause 2 in GAUSSJ - singular matrix\n");
+	   //return FALSE;
+	 }
 
      pivinv = 1.0/a[icol][icol];
      a[icol][icol] = 1.0;
@@ -2022,11 +2029,7 @@ double rotx[11], roty[11], rotz[11];
 /*********************************************/
 
  DA = mypow(sqr(A), 1.0/a[4]);   DB = mypow(sqr(B), 1.0/a[4]);
- printf("\n----- A=%f, B=%f, a[18] = %f, a[19] = %f\n", A, B, a[18], a[19]);
- if (isnan(DA)) {
-   
-   exit(0);
- }
+
  D = DA + DB;
  
  for(i = 0; i < 3; i++)
@@ -2071,6 +2074,7 @@ double rotx[11], roty[11], rotz[11];
 
  for(i = 4; i < mma; i++)
    dFda[i] = a[3] * (F/G) * dG[i];
+
 
 /****** correction of criteria function */
 /*

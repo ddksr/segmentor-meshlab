@@ -9,12 +9,17 @@
 
 #include <stdio.h>
 
+#define ASQ_TYPE_TAPERING 1 
+#define ASQ_TYPE_SINUS 2
+
 class asq : public model
 { 
   
   double f(double x, double y, double z) const;
 
 public:
+  static int asqType; // 
+  
   double a1,a2,a3,e1,e2,px,py,pz,phi,theta,psi,kxy,kf;    // SQ parameters
   hmatrix l_from_g,g_from_l;
   

@@ -39,6 +39,7 @@ struct RecoverySettings {
   bool usePostProcessing;
   bool useStatistics;
   bool useLookup;
+  bool useAsqKf;
 };
 
 class Drawer {
