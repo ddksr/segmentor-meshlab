@@ -25,7 +25,7 @@ int recover_params(asq* model, vect* list, int no) {
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
 						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_SQ_SYM_TAPERING);
+						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_ASQ);
   }
   // return recover(list, no,
   // 				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
@@ -33,7 +33,7 @@ int recover_params(asq* model, vect* list, int no) {
   return recover2(list, no,
   				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
   				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_SQ_SYM_TAPERING);
+  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_ASQ);
 }
 
 asq::asq(region &r) {
