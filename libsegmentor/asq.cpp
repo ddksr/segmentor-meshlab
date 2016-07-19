@@ -25,7 +25,7 @@ int recover_params(asq* model, vect* list, int no) {
 	return recover_search(list, no,
 						  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
 						  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_ASQ);
+						  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->kf, RECOVER_ASQ);
   }
   // return recover(list, no,
   // 				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
@@ -33,7 +33,7 @@ int recover_params(asq* model, vect* list, int no) {
   return recover2(list, no,
   				  &model->a1, &model->a2, &model->a3, &model->e1, &model->e2,
   				  &model->px, &model->py, &model->pz, &model->phi, &model->theta, &model->psi,
-  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->amp, RECOVER_ASQ);
+  				  &_kx, &_ky, &_bk, &_ba, &model->kxy, &model->kf, RECOVER_ASQ);
 }
 
 asq::asq(region &r) {
@@ -73,7 +73,7 @@ asq::asq(region &r) {
   //std::cout << "------------\n";
 
   kxy = 0;
-  amp = 0;
+  kf = 0;
   
   printf("\nSQ recovering from scratch    %d points", no); fflush(stdout);
   if (!recover_params(this, list, no))
@@ -104,7 +104,7 @@ asq::asq(asq *m, region& r) {
   pz = m->pz;
 
   kxy = m->kxy;
-  amp = m->amp;
+  kf = m->kf;
   
   no = 0;
 
@@ -228,7 +228,7 @@ void asq::print()
   std::cout << "e1 = " << e1 << " e2 = " << e2 << '\n';
   std::cout << "phi = " << phi << " theta = " << theta << " psi = " << psi << '\n';
   std::cout << "px = " << px << " py  = " << py << " pz = " << pz << '\n';
-  std::cout << "kxy = " << kxy << " amp  = " << amp << '\n';  
+  std::cout << "kxy = " << kxy << " kf  = " << kf << '\n';  
   std::cout << g_from_l;
   std::cout << l_from_g; 
 
@@ -264,7 +264,7 @@ void asq::parameters(char **name, double *value)
   sprintf(name[9],"py"); value[9] = py;
   sprintf(name[10],"pz"); value[10] = pz;
   sprintf(name[11],"kxy"); value[11] = kxy;
-  sprintf(name[12],"amp"); value[12] = amp;
+  sprintf(name[12],"kf"); value[12] = kf;
   }
 
 void asq::set_parameters(double *value)
@@ -280,7 +280,7 @@ void asq::set_parameters(double *value)
   py = value[9];
   pz = value[10];
   kxy = value[11];
-  amp = value[12];
+  kf = value[12];
 
   int sing;
   g_from_l.identity();

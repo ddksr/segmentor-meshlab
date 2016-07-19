@@ -15,7 +15,7 @@ class asq : public model
   double f(double x, double y, double z) const;
 
 public:
-  double a1,a2,a3,e1,e2,px,py,pz,phi,theta,psi,kxy,amp;    // SQ parameters
+  double a1,a2,a3,e1,e2,px,py,pz,phi,theta,psi,kxy,kf;    // SQ parameters
   hmatrix l_from_g,g_from_l;
   
   

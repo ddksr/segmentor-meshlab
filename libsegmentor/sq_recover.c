@@ -717,7 +717,7 @@ double *a1, *a2, *a3, *e1, *e2, *px, *py, *pz, *fi, *theta, *psi;
  a[16] = 0.0000010;   /* k or 1/k ?? */
  a[17] = 0;           /* alpha angle */
  a[18] = 0;           /* tapering */
- a[19] = 1;           /* asq k */
+ a[19] = 0;           /* asq k */
 
  mfit = 11;  /* only first 11 parameters changed to minimize the function */
 
@@ -1155,11 +1155,12 @@ int rtype;
    lista[14] = 12;
    break;
  case RECOVER_ASQ:
-   mfit = 13;
-   lista[11] = 18;
-   lista[12] = 19;
+   mfit = 12;
+   lista[11] = 19;
+   lista[12] = 18;
    lista[15] = 11;
-   lista[16] = 12; 
+   lista[16] = 12;
+   break;
  case RECOVER_SQ_SYM_TAPERING:
    mfit = 12;
    lista[11] = 18;
@@ -1344,6 +1345,7 @@ int *n_model_acc;
    }
 
   if (gaussj(covar, mfit, oneda) == FALSE) {
+	printf("i am in truble \n");
      i_am_in_trouble = TRUE;
      return(0);
   }
@@ -1404,12 +1406,12 @@ int *n_model_acc;
         glatry[lista[j]] =
           glatry[lista[j]] - 2 * PI * (int)(glatry[lista[j]]/(2 * PI));
       }
-	 else if(lista[j] == 18)
+	 else if(lista[j] == 18) // sym tap
       { if(a[lista[j]] + da[j] > 1) glatry[lista[j]] = 1;
         else if(a[lista[j]] + da[j] < -1) glatry[lista[j]] = -1;
         else glatry[lista[j]] = a[lista[j]] + da[j];
       }
-	 else if(lista[j] == 19) // amp
+	 else if(lista[j] == 19) // kf
       {
         if(a[lista[j]] + da[j] < 0.0) glatry[lista[j]] = 0.0;
         else if(a[lista[j]] + da[j] > 1.0) glatry[lista[j]] = 1.0;
@@ -1517,7 +1519,7 @@ double addnoise;
      chisq = 0.0;
      *n_model = 0;
      for(i = 0; i < ndata; i++)
-      { Fmod = funcs(x[0][i], x[1][i], x[2][i], rotx, roty, rotz, a, dFda);
+	   { Fmod = funcs(x[0][i], x[1][i], x[2][i], rotx, roty, rotz, a, dFda);
         dF = F[i] - Fmod;
 
         if (Fmod < treshold)
@@ -1851,6 +1853,7 @@ double rotx[11], roty[11], rotz[11];
 
   dR[17] = SAB/(koren * sqr(CAB));
   dR[18] = 0;
+  dR[19] = 0;
 
 /**********************************************/
 
@@ -1873,6 +1876,7 @@ double rotx[11], roty[11], rotz[11];
             cos(a[17]) * dR[17] * (1/sqr(R) - (1/a[16] - 1/R)/(koren*sqr(R)));
 
   dxb[18] = 0;
+  dxb[19] = 0;
 
 /************************************************/
 
@@ -1892,6 +1896,7 @@ double rotx[11], roty[11], rotz[11];
             sin(a[17]) * dR[17] * (-1/sqr(R) + (1/a[16] - 1/R)/
                                                (koren* sqr(R)));
   dyb[18] = 0;
+  dyb[19] = 0;
 
 /***************************************************************/
 
@@ -1910,6 +1915,7 @@ double rotx[11], roty[11], rotz[11];
 
   dzb[17] = 0;
   dzb[18] = 0;
+  dzb[19] = 0;
 
 /******************************************************************/
 
@@ -2014,7 +2020,13 @@ double rotx[11], roty[11], rotz[11];
   
 
 /*********************************************/
+
  DA = mypow(sqr(A), 1.0/a[4]);   DB = mypow(sqr(B), 1.0/a[4]);
+ printf("\n----- A=%f, B=%f, a[18] = %f, a[19] = %f\n", A, B, a[18], a[19]);
+ if (isnan(DA)) {
+   
+   exit(0);
+ }
  D = DA + DB;
  
  for(i = 0; i < 3; i++)
