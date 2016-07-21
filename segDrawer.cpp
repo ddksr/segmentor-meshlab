@@ -205,20 +205,22 @@ void MeshlabDrawer::draw_asq(asq* s, Color* c) {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
   glEnable(GL_COLOR_MATERIAL);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  double step = s->kf > 0.1 ? PI/24 : PI/12;
   
-  for (eta = -PI/2; eta <= PI/2; eta+=PI/12)         // constant eta lines
+  for (eta = -PI/2; eta <= PI/2; eta+=step)         // constant eta lines
 	{ glBegin(GL_POLYGON);
-	  for (omega = -PI; omega <= PI; omega+=PI/12)
+	  for (omega = -PI; omega <= PI; omega+=step)
 		{ vert = s->g_from_l*s->r(s->map_eta(eta),s->map_omega(omega));
 		  glColor3f(c->r, c->g, c->b);
 		  glVertex3f(vert.el(0),vert.el(1),vert.el(2));
 		}
 	  glEnd();
     } 
-  for (omega = -PI/2; omega <= PI/2; omega+=PI/12)         // constant omega lines
+  for (omega = -PI/2; omega <= PI/2; omega+=step)         // constant omega lines
 	{ glBegin(GL_POLYGON);
 	  
-	  for (eta = -PI; eta <= PI; eta+=PI/12)
+	  for (eta = -PI; eta <= PI; eta+=step)
 		{ vert = s->g_from_l*s->r(s->map_eta(eta),s->map_omega(omega));
 		  glColor3f(c->r, c->g, c->b);
 		  glVertex3f(vert.el(0),vert.el(1),vert.el(2));

@@ -74,7 +74,7 @@ asq::asq(region &r) {
   kxy = 0.0;
   kf = 0.0;
   if (asq::asqType == ASQ_TYPE_SINUS) {
-	kf = 0.00000001;
+	kf = 0.01;
   }
   
   
@@ -181,8 +181,8 @@ vector asq::r(double eta, double omega) const {
   vector result(4);
 
   double z = a3 * spow(sin(eta), e1),
-	fx = kxy * z / a3 + 1,
-	fy = kxy * z / a3 + 1;
+	fx = (kxy * z / a3 + 1)*sqrt(spow(cos(kf * 3.141529/2 * z/a3),2)),
+	fy = (kxy * z / a3 + 1)*sqrt(spow(cos(kf * 3.141529/2 * z/a3),2));
 
   result.el(0) = a1 * spow(cos(eta), e1) * spow(cos(omega), e2) * fx;
   result.el(1) = a2 * spow(cos(eta), e1) * spow(sin(omega), e2) * fy;
@@ -213,8 +213,8 @@ double asq::f(double x, double y, double z) const {
   // thid double pow is to prevent negative arguments to pow when the exponent is negative
   // do not try to optimize
 
-  double fx = kxy * z / a3 + 1.0,
-	fy = kxy * z / a3 + 1.0; 
+  double fx = (kxy * z / a3 + 1.0)*sqrt(spow(cos(kf * 3.141529/2 * z/a3),2)),
+	fy = (kxy * z / a3 + 1.0)*sqrt(spow(cos(kf * 3.141529/2 * z/a3),2)); 
 
   double a = pow(pow((x / (a1 * fx)), 2), 1/e2);
   double b = pow(pow((y / (a2 * fy)), 2), 1/e2);   
