@@ -113,6 +113,35 @@ void segDescriptionsDialog::setIJ(int k, int &i, int &j) {
   }
 }
 
+void debugDescription(description *d) {
+  char *s[20];
+  double value[20];
+  for (int i = 0; i < 20; i++) {
+    s[i] = new char[30];
+	s[i][0] = 0;
+  }
+  
+  d->mmodel->parameters(s,value);
+
+  QString allParams;
+  for (int k = 0; s[k][0]; k++) {
+	QString param;
+	param.sprintf("%s=%.2f;", s[k], value[k]);
+	allParams += param;
+  }
+  
+  qDebug() << "Description:" << *qmodeltypes[(int)d->mmodel->what_model()];
+  qDebug() << " - max dist:" << d->max_point_distance()
+		   << " - max err:" << d->max_error();
+  qDebug() << "Params:" << allParams;
+  qDebug() << "Error:" << d->error();
+  qDebug() << "Points:" << d->mregion->point_count();
+  qDebug() << "";
+
+  for (int i = 0; i < 20; i++)
+    delete [] s[i];
+}
+
 void segDescriptionsDialog::handleSelect() {
   seg->getDrawer()->clear();
   foreach(const QModelIndex &index, 
@@ -121,6 +150,7 @@ void segDescriptionsDialog::handleSelect() {
 	setIJ(index.row(), i, j);
 	description *d = seg->descriptions[i].d[seg->descriptions[i].handle[j]];
 	seg->getDrawer()->prepare(d->mmodel);
+	debugDescription(d);
   }
   gla->update();
 }

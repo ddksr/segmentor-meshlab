@@ -210,6 +210,7 @@ void segmentation::import(MODELTYPE mtype, double *params) {
   region *rn = new region(segmentationImage);
 
   switch(mtype) {
+  case CASQ:
   case CSQ:
 	d[dn] = create(*rn, mtype);
 	break;
