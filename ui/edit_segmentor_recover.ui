@@ -36,8 +36,14 @@
         <layout class="QGridLayout" name="gridLayout">
          <item row="10" column="0">
           <widget class="QCheckBox" name="cbBSq">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Superquadric w/ bending</string>
+           </property>
+           <property name="checkable">
+            <bool>false</bool>
            </property>
           </widget>
          </item>
@@ -57,8 +63,14 @@
          </item>
          <item row="4" column="0">
           <widget class="QCheckBox" name="cbSphere">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Sphere</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -78,13 +90,22 @@
          </item>
          <item row="5" column="0">
           <widget class="QCheckBox" name="cbCylinder">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Cylinder</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="1" column="0">
           <widget class="QCheckBox" name="cbPlane">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="maximumSize">
             <size>
              <width>65</width>
@@ -94,12 +115,21 @@
            <property name="text">
             <string>Plane</string>
            </property>
+           <property name="checkable">
+            <bool>true</bool>
+           </property>
           </widget>
          </item>
          <item row="3" column="0">
           <widget class="QCheckBox" name="cb2os">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>2nd order surface</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -115,15 +145,27 @@
          </item>
          <item row="7" column="0">
           <widget class="QCheckBox" name="cbTorus">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Torus</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
          <item row="6" column="0">
           <widget class="QCheckBox" name="cbCone">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
            <property name="text">
             <string>Cone</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -228,8 +270,14 @@
          </item>
          <item row="8" column="0">
           <widget class="QCheckBox" name="cbASq">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Amphora Superquadric</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
@@ -249,8 +297,14 @@
          </item>
          <item row="9" column="0">
           <widget class="QCheckBox" name="cbTSq">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
            <property name="text">
             <string>Superquadric w/ tapering</string>
+           </property>
+           <property name="checkable">
+            <bool>true</bool>
            </property>
           </widget>
          </item>
