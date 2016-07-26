@@ -76,7 +76,8 @@ Segmentor::Segmentor() {
 
   im = normals = NULL;
   numOfDescriptions = 0;
-  
+  drawer = NULL;
+  progress = NULL;
   descriptions = NULL;
   modelType = NULL;
   dneigh = NULL;
