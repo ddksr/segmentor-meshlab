@@ -25,20 +25,28 @@ LookupState* State::lookup = new LookupState;
 Segmentor* Segmentor::_inst = NULL;
 
 Segmentor* Segmentor::Instance() {
+  qDebug () << "Segmentor::Instance()";
   if (! _inst) {
-	_inst = new Segmentor();
+  	qDebug () << "new instance";
+  	_inst = new Segmentor();
   }
   return _inst;
+}
+
+void Segmentor::Destroy() {
+  if (! _inst) { return; }
+  delete _inst;
+  _inst = NULL;
 }
 
 void Segmentor::setUp(RecoverySettings* c, image* img, Drawer* d, ProgressIndicator* pi, Messaging* mess) {
   clear();
   initialized = true;
   conf = c;
+
   drawer = d;
   progress = pi;
   message = mess;
-
   segmentation::drawer = d;
   segmentation::progress = pi;
   segmentation::message = mess;
@@ -72,6 +80,7 @@ Drawer* Segmentor::getDrawer() {
 }
 
 Segmentor::Segmentor() {
+  qDebug() << "Segmentor()";
   initialized = false;
 
   im = normals = NULL;
@@ -84,9 +93,9 @@ Segmentor::Segmentor() {
 }
 
 Segmentor::~Segmentor() {
+  qDebug() << "~Segmentor()";
   if (initialized) {
 	clear();
-	delete conf;
   }
 }
 

@@ -14,6 +14,7 @@ class Segmentor {
   ~Segmentor();
 
   static Segmentor* Instance();
+  static void Destroy();
 
   void setUp(RecoverySettings*, image*, Drawer*, ProgressIndicator*, Messaging*);
 

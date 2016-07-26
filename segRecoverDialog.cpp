@@ -20,12 +20,14 @@ void segRecoverDialog::closeEvent ( QCloseEvent * /*event*/ )
 }
 
 segRecoverDialog::~segRecoverDialog() {
+  Segmentor::Destroy();
+  
   delete config;
   delete mesh;
   delete d;
   delete pb;
   delete message;
-
+  
   if (desc != NULL) {
 	delete desc;
   }
