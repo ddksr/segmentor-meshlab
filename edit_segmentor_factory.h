@@ -16,7 +16,6 @@ public:
 	EditSegmentorFactory();
 	virtual ~EditSegmentorFactory() {
 	  delete editSegmentorRecover;
-	  delete Segmentor::Instance();
 	}
 
 	//gets a list of actions available from this plugin

@@ -51,13 +51,24 @@ void Segmentor::setUp(RecoverySettings* c, image* img, Drawer* d, ProgressIndica
   segmentation::progress = pi;
   segmentation::message = mess;
 
+  qDebug() << "init segmentation";
   im = img;
-  normals = img->calcNormals();
+
+  normals = NULL;
+
+  // optimization, looks like we dont need normals right now
+  // maybe when we support other volumetric models
+  
+  // normals = img->calcNormals(); 
+
+  
   model::theImage = im;
   descriptions = new segmentation[MAX_DESCRIPTION_LISTS];
   modelType = new MODELTYPE[MAX_DESCRIPTION_LISTS];
   for (int i = 0; i < MAX_DESCRIPTION_LISTS; i++) descriptions[i].init_list(im, normals);
   numOfDescriptions = 0;
+
+  qDebug() << "finished: init segmentation";
 
   refreshConfig();
   models[0] = &conf->plane;

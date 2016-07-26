@@ -11,7 +11,6 @@
 
 class Segmentor {
  public:
-  ~Segmentor();
 
   static Segmentor* Instance();
   static void Destroy();
@@ -39,6 +38,7 @@ class Segmentor {
 
  private:
   Segmentor();
+  ~Segmentor();
 
   image *im, *normals;
   MODELTYPE *modelType;
