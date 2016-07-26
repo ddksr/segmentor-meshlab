@@ -35,7 +35,7 @@ public:
 	void drawFace(CMeshO::FacePointer fp,MeshModel &m, GLArea *gla, QPainter *p) {}
 
 	// IMPORTANT: because if true, dialog will fail
-	bool isSingleMeshEdit() const {return false;}
+	//bool isSingleMeshEdit() const {return false;}
 	
 	QFont qFont;
 
