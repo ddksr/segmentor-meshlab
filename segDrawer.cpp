@@ -17,8 +17,14 @@ MeshlabDrawer::MeshlabDrawer(image* im) {
   img = im;
 }
 
+void MeshlabDrawer::setDefaultColor(float r, float g, float b) {
+  defaultColor.r = r;
+  defaultColor.g = g;
+  defaultColor.b = b;
+}
+
 void MeshlabDrawer::prepare(model* m) {
-  prepare(m, 1.0, 0.0, 0.0);
+  prepare(m, defaultColor.r, defaultColor.g, defaultColor.b);
 }
 
 void MeshlabDrawer::prepare(model* m, float r, float g, float b) {

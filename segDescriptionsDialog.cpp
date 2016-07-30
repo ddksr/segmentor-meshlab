@@ -52,6 +52,9 @@ segDescriptionsDialog::segDescriptionsDialog(QWidget *parent, GLArea* gl) : QDoc
   QObject::connect(ui.btnSave, SIGNAL(released()), this, SLOT(handleSave()));
   QObject::connect(ui.btnClear, SIGNAL(released()), this, SLOT(handleClear()));
 
+  QObject::connect(ui.ddColor, SIGNAL(currentIndexChanged(const QString&)),
+				   this, SLOT(handleChangeColor(const QString&)));
+
   seg = Segmentor::Instance();
 
   stringList = new QStringList();
@@ -61,6 +64,22 @@ segDescriptionsDialog::segDescriptionsDialog(QWidget *parent, GLArea* gl) : QDoc
   fillList();
 
   refreshLookup();
+}
+
+
+void segDescriptionsDialog::handleChangeColor(const QString& color) {
+  if (color == "Red") {
+	seg->getDrawer()->setDefaultColor(1.0, 0.0, 0.0);
+  } else if (color == "Black") {
+	seg->getDrawer()->setDefaultColor(0.0, 0.0, 0.0);
+  } else if (color == "Yellow") {
+	seg->getDrawer()->setDefaultColor(1.0, 1.0, 0.0);
+  } else if (color == "Green") {
+	seg->getDrawer()->setDefaultColor(0.0, 1.0, 0.0);
+  } else if (color == "White") {
+	seg->getDrawer()->setDefaultColor(1.0, 1.0, 1.0);
+  }
+  reprepareDrawer();
 }
 
 void segDescriptionsDialog::refreshLookup() {

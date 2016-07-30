@@ -50,6 +50,7 @@ class Drawer {
   virtual void prepare(region*) {}
   virtual void draw() {}
   virtual void clear() {}
+  virtual void setDefaultColor(float, float, float) {}
 };
 
 class ProgressIndicator {

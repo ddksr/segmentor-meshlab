@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QDockWidget>
 #include <QProgressBar>
+#include <QString>
 #include <QStringList>
 #include <QStringListModel>
 
@@ -47,6 +48,8 @@ class segDescriptionsDialog : public QDockWidget
   void handleLookup();
   void handleSave();
   void handleClear();
+
+  void handleChangeColor(const QString&);
   
 
  signals:

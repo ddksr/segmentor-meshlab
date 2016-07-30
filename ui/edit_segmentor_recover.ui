@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Segmentor Recovery</string>
+   <string>MeshSegmentor Recovery</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <widget class="QWidget" name="layoutWidget">

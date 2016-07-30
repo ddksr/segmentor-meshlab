@@ -37,8 +37,11 @@ class MeshlabDrawer : public Drawer {
   
   void clear();
   void draw();
+  void setDefaultColor(float, float, float);
+  
 
  private:
+  Color defaultColor = Color{1.0, 0, 0};
   image* img;
   QList<model*> models;
   QList<Color*> modelColors;
