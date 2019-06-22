@@ -190,7 +190,7 @@ void segMesh::setSelectedPoints() {
 	return;
   }
 
-  std::vector<vcg::Point3f> *vec = points->getPoint3fVector();
+  std::vector<vcg::Point3f> *vec = points->getPoint3Vector();
   int i, j;
 
   selectedPoints = new int[numOfSelectedPoints = vec->size()];

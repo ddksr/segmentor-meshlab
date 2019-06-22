@@ -4,6 +4,10 @@
 #ifndef LIBSEGMENTOR_SLINE
 #define LIBSEGMENTOR_SLINE
 
+#ifndef HUGE
+#define HUGE FLT_MAX
+#endif
+
 #include "dualnumber.h"
 #include "ndm.h"
 
