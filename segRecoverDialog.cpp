@@ -100,6 +100,7 @@ segRecoverDialog::segRecoverDialog(QWidget *_parent, MeshModel* m, GLArea* gl) :
 
   desc = NULL;
   seg->enableMessaging(true);
+  qDebug() << "UI loaded.";
 }
 
 void segRecoverDialog::obtainSettings() {

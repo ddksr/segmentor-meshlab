@@ -24,7 +24,7 @@ const QString EditSegmentorRecoverPlugin::Info()
   return tr("Segmentor for Meshlab.");
 }
 
-bool EditSegmentorRecoverPlugin::StartEdit(MeshModel &_m, GLArea *_gla ) {
+bool EditSegmentorRecoverPlugin::StartEdit(MeshModel &_m, GLArea *_gla, MLSceneGLSharedDataContext* /*cont*/ ) {
   this->model = &_m;
   gla = _gla;
 
@@ -42,14 +42,14 @@ bool EditSegmentorRecoverPlugin::StartEdit(MeshModel &_m, GLArea *_gla ) {
   return true;
 }
 
-void EditSegmentorRecoverPlugin::EndEdit(MeshModel &_m, GLArea *_gla) {
+void EditSegmentorRecoverPlugin::EndEdit(MeshModel &_m, GLArea *_gla, MLSceneGLSharedDataContext* /*cont*/) {
   qDebug() << "SEG: End Edit";
   editDialogOn = false;
   recoverDialog->hide();
   delete recoverDialog;
 }
 
-void EditSegmentorRecoverPlugin::Decorate(MeshModel &_m, GLArea * _gla) {
+void EditSegmentorRecoverPlugin::Decorate(MeshModel &_m, GLArea * _gla, QPainter *painter) {
   qDebug() << "Decorate called";
   MeshlabDrawer* d = (MeshlabDrawer*)Segmentor::Instance()->getDrawer();
   if (d != NULL) {
